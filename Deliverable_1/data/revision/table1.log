@@ -1,0 +1,139 @@
+.         use $data,clear;
+.         *drop if l_lane_km_1983==.;
+.         drop if ln_km_IH_83==0;
+(47 observations deleted)
+.         * Per capita variables (rescaled);
+.         gen ln_pc_IH83 = ln_km_IH_83/pop80*10000;
+.         gen ln_pc_IH93 = ln_km_IH_93/pop90*10000;
+.         gen ln_pc_IH03 = ln_km_IH_03/pop00*10000;
+.         * Rescale so display is better;
+.         gen vmt_IH_83b = vmt_IH_83 / 1000;
+.         gen vmt_IH_93b = vmt_IH_93 / 1000;
+.         gen vmt_IH_03b = vmt_IH_03 / 1000;
+.         gen vmt_MRU_83b = vmt_MRU_83 / 1000;
+.         gen vmt_MRU_93b = vmt_MRU_93 / 1000;
+.         gen vmt_MRU_03b = vmt_MRU_03 / 1000;
+.         * Share urbanised
+>         replace vmt_IHU_83 = 0 if vmt_IHU_83 == .;
+.         replace vmt_IHU_93 = 0 if vmt_IHU_93 == .;
+(0 real changes made)
+.         replace vmt_IHU_03 = 0 if vmt_IHU_03 == .;
+(0 real changes made)
+.         gen Svmt_U_83 =  vmt_IHU_83 /vmt_IH_83 ;
+.         gen Svmt_U_93 =  vmt_IHU_93 /vmt_IH_93 ;
+.         gen Svmt_U_03 =  vmt_IHU_03 /vmt_IH_03 ;
+.         replace ln_km_IHU_83 = 0 if ln_km_IHU_83 == .;
+(0 real changes made)
+.         replace ln_km_IHU_93 = 0 if ln_km_IHU_93 == .;
+(0 real changes made)
+.         replace ln_km_IHU_03 = 0 if ln_km_IHU_03 == .;
+(0 real changes made)
+.         gen Sln_U_83 =  ln_km_IHU_83 /ln_km_IH_83 ;
+.         gen Sln_U_93 =  ln_km_IHU_93 /ln_km_IH_93 ;
+.         gen Sln_U_03 =  ln_km_IHU_03 /ln_km_IH_03 ;
+.         * VKT on IH;
+.         sum vmt_IH_83b vmt_IH_93b vmt_IH_03b;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  vmt_IH_83b |        228    7776.634    16623.98   7.131325   134536.3
+  vmt_IH_93b |        228    11904.95    24251.06   426.4949   213346.2
+  vmt_IH_03b |        228    15960.58    31579.29   668.8282   271078.1
+.         * AADT on IH;
+.         sum aadt_IH_83 aadt_IH_93 aadt_IH_03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  aadt_IH_83 |        228    4832.078    2726.297    809.819    16989.8
+  aadt_IH_93 |        228    7174.151    3413.235   1099.747   18490.25
+  aadt_IH_03 |        228    9360.781    4091.536   1303.593   23271.43
+.         * Lane km on IH;
+.         sum ln_km_IH_83 ln_km_IH_93 ln_km_IH_03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ ln_km_IH_83 |        228    1140.266    1649.762   8.304215   12611.23
+ ln_km_IH_93 |        228    1208.158    1729.432   111.3449   13628.85
+ ln_km_IH_03 |        228    1279.748    1857.578   118.1948   14582.28
+.         * Lane km per capita on IH;
+.         sum ln_pc_IH83 ln_pc_IH93 ln_pc_IH03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  ln_pc_IH83 |        228    26.67189    26.89164   .0692545   252.6726
+  ln_pc_IH93 |        228    24.30966    20.85236   3.673332   172.2071
+  ln_pc_IH03 |        228    22.05339    16.36661   4.196293   128.8846
+.         * VKT on MRU;
+.         sum vmt_MRU_83b vmt_MRU_93b vmt_MRU_03b;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ vmt_MRU_83b |        228    14553.36    36303.49          0   351938.1
+ vmt_MRU_93b |        228    22449.55    49132.38          0   419152.3
+ vmt_MRU_03b |        228    31242.38     70691.9          0   669382.8
+.         * AADT on MRU;
+.         sum aadt_MRU_83 aadt_MRU_93 aadt_MRU_03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ aadt_MRU_83 |        218    3146.135    846.7529        150    6514.54
+ aadt_MRU_93 |        226    3646.516    947.4159   1495.171   6311.133
+ aadt_MRU_03 |        227    3934.197    1059.111   1880.134   7293.936
+.         * Lane km on MRU;
+.         sum ln_km_MRU_83 ln_km_MRU_93 ln_km_MRU_03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ln_km_MRU_83 |        228    3884.814     7925.68          0   66638.73
+ln_km_MRU_93 |        228    5071.377    9118.726          0   72313.76
+ln_km_MRU_03 |        228    6471.454    12426.76          0   118625.2
+.         * Share of urbanised in MSA;
+.         sum Svmt_U_83 Svmt_U_93 Svmt_U_03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   Svmt_U_83 |        228    .3754731    .2851817          0          1
+   Svmt_U_93 |        228    .4356089    .2783206          0   .9540725
+   Svmt_U_03 |        228    .4777371    .2701153          0          1
+.         sum Sln_U_83 Sln_U_93 Sln_U_03 ;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    Sln_U_83 |        228    .2951977    .2443776          0          1
+    Sln_U_93 |        228    .3566303    .2487723          0   .8970882
+    Sln_U_03 |        228    .4033981    .2541134          0          1
+.         * Share trucks;
+.         gen S_t_IH83 = t_aadt_IH_83 / aadt_IH_83 ;
+.         gen S_t_IH93 = t_aadt_IH_93 / aadt_IH_93 ;
+.         gen S_t_IH03 = t_aadt_IH_03 / aadt_IH_03 ;
+.         sum S_t_IH83 S_t_IH93 S_t_IH03;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    S_t_IH83 |        228    .1092739    .0615715          0   .3274879
+    S_t_IH93 |        228    .1201087    .0627796          0   .3700283
+    S_t_IH03 |        228    .1277118    .0696671          0   .3970084
+.         * Buses;
+.         gen bus_pp_84 = max_84bus / pop80 *10000;
+.         gen bus_pp_94 = max_94bus / pop90 *10000;
+.         gen bus_pp_04 = max_04bus / pop00 *10000;
+.         sum  bus_pp_84  bus_pp_94  bus_pp_04 ;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   bus_pp_84 |        228    1.204017    1.021818          0   5.085993
+   bus_pp_94 |        228    1.087795    .9791538          0    4.49782
+   bus_pp_04 |        228    1.344943    .9818608          0   5.645951
+.         sum  max_84bus  max_94bus  max_04bus ;
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   max_84bus |        228    168.8772     562.926          0       6573
+   max_94bus |        228    165.2588    561.7234          0       6732
+   max_04bus |        228    217.1623    741.9811          0       8763
+.         log close;
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto 1\data\revision/table1.log
+  log type:  text
+ closed on:  16 Feb 2022, 10:21:54
+----------------------------------------------------------------------------------------------------------------------------------------------
