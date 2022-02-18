@@ -1,994 +1,339 @@
-.         use $data, clear;
-.         * Generate non urbanised area variables;
-.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83);
+.         use $data, clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
 (50 missing values generated)
-.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83);
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
 (50 missing values generated)
-.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83);
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
 (50 missing values generated)
-.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93);
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
 (39 missing values generated)
-.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93);
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
 (39 missing values generated)
-.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93);
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
 (39 missing values generated)
-.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03);
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
 (38 missing values generated)
-.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03);
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
 (38 missing values generated)
-.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03);
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
 (38 missing values generated)
-.         * Selection of observations;
-.         drop if l_ln_km_IH_83==0;
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
 (47 observations deleted)
-.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_
-> 93);
-.         rename sprawl_1992 sprawl_2003;
-.         rename sprawl_1976 sprawl_1993;
-.         *rescale so display is better;
-.         replace elevat_range_msa = elevat_range_msa/1000;
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         rename sprawl_1992 sprawl_2003
+.         rename sprawl_1976 sprawl_1993
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
 variable elevat_range_msa was int now float
 (228 real changes made)
-.         replace ruggedness_msa = ruggedness_msa/1000;
+.         replace ruggedness_msa = ruggedness_msa/1000
 (228 real changes made)
-.         replace heating_dd = heating_dd/100;
+.         replace heating_dd = heating_dd/100
 (228 real changes made)
-.         replace cooling_dd = cooling_dd/100;
+.         replace cooling_dd = cooling_dd/100
 (228 real changes made)
-.         *Generate first differences;
-.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83;
-.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93;
-.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83;
-.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93;
-.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83;
-.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93;
-.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83;
-.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93;
-.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83;
+. 
+.         *Generate first differences
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93 
+. 
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93 
+. 
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83
 (3 missing values generated)
-.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93;
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93
 (1 missing value generated)
-.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83;
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83 
 (3 missing values generated)
-.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93;
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93 
 (1 missing value generated)
-.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83;
-.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93;
-.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83;
-.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93;
-.         gen Dl_pop_1993 = l_pop90 -l_pop80;
-.         gen Dl_pop_2003 = l_pop00 -l_pop90;
-.       gen l_pop_1983 = l_pop80;
-.        gen l_pop_1993 = l_pop90;
-.        gen l_pop_2003 = l_pop00;
-.             rename l_vmt_IHNU_83 l_vmt_IHNU_1993;
-.       rename l_vmt_IHNU_93 l_vmt_IHNU_2003;
-.       rename l_vmt_IHU_83 l_vmt_IHU_1993;
-.       rename l_vmt_IHU_93 l_vmt_IHU_2003;
-.       rename l_vmt_IH_83 l_vmt_IH_1993;
-.       rename l_vmt_IH_93 l_vmt_IH_2003;
-.       rename l_vmt_MRU_83 l_vmt_MRU_1993;
-.       rename l_vmt_MRU_93 l_vmt_MRU_2003;
-.         rename S_somecollege_80 S_somecollege_1993;
-.         rename l_mean_income_80 l_mean_income_1993;
-.         rename S_poor_80 S_poor_1993;
-.         rename S_manuf83 S_manuf_1993;
-.         rename S_somecollege_90 S_somecollege_2003;
-.         rename l_mean_income_90 l_mean_income_2003;
-.         rename S_poor_90 S_poor_2003;
-.         rename S_manuf93 S_manuf_2003;
-.         rename g_exp00_90 g_exp_2003;
-.         rename g_exp90_80 g_exp_1993;
+. 
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93 
+. 
+.         gen Dl_pop_1993 = l_pop90 -l_pop80
+.         gen Dl_pop_2003 = l_pop00 -l_pop90
+. 
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+.      
+.       rename l_vmt_IHNU_83 l_vmt_IHNU_1993
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_2003
+.       rename l_vmt_IHU_83 l_vmt_IHU_1993
+.       rename l_vmt_IHU_93 l_vmt_IHU_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1993
+.       rename l_vmt_IH_93 l_vmt_IH_2003
+.       rename l_vmt_MRU_83 l_vmt_MRU_1993
+.       rename l_vmt_MRU_93 l_vmt_MRU_2003
+.  
+.         rename S_somecollege_80 S_somecollege_1993 
+.         rename l_mean_income_80 l_mean_income_1993 
+.         rename S_poor_80 S_poor_1993 
+.         rename S_manuf83 S_manuf_1993 
+.  
+.         rename S_somecollege_90 S_somecollege_2003 
+.         rename l_mean_income_90 l_mean_income_2003 
+.         rename S_poor_90 S_poor_2003 
+.         rename S_manuf93 S_manuf_2003 
+. 
+.         rename g_exp00_90 g_exp_2003 
+.         rename g_exp90_80 g_exp_1993 
+. 
 .         reshape long Dl_ln_IH Dl_ln_IHU Dl_ln_MRU Dl_ln_IHNU 
->                    Dl_vmt_IH Dl_vmt_IHU Dl_vmt_MRU Dl_vmt_IHNU
->                    l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU 
->                    sprawl S_somecollege l_mean_income S_poor S_manuf 
->                          Dl_pop l_pop g_exp, i(msa ) j(year _1993 _2003);
+option i() required
 
-Data                               Wide   ->   Long
------------------------------------------------------------------------------
-Number of observations              228   ->   456         
-Number of variables                 244   ->   225         
-j variable (2 values)                     ->   year
-xij variables:
-            Dl_ln_IH_1993 Dl_ln_IH_2003   ->   Dl_ln_IH
-          Dl_ln_IHU_1993 Dl_ln_IHU_2003   ->   Dl_ln_IHU
-          Dl_ln_MRU_1993 Dl_ln_MRU_2003   ->   Dl_ln_MRU
-        Dl_ln_IHNU_1993 Dl_ln_IHNU_2003   ->   Dl_ln_IHNU
-          Dl_vmt_IH_1993 Dl_vmt_IH_2003   ->   Dl_vmt_IH
-        Dl_vmt_IHU_1993 Dl_vmt_IHU_2003   ->   Dl_vmt_IHU
-        Dl_vmt_MRU_1993 Dl_vmt_MRU_2003   ->   Dl_vmt_MRU
-      Dl_vmt_IHNU_1993 Dl_vmt_IHNU_2003   ->   Dl_vmt_IHNU
-            l_vmt_IH_1993 l_vmt_IH_2003   ->   l_vmt_IH
-          l_vmt_IHU_1993 l_vmt_IHU_2003   ->   l_vmt_IHU
-        l_vmt_IHNU_1993 l_vmt_IHNU_2003   ->   l_vmt_IHNU
-          l_vmt_MRU_1993 l_vmt_MRU_2003   ->   l_vmt_MRU
-                sprawl_1993 sprawl_2003   ->   sprawl
-  S_somecollege_1993 S_somecollege_2003   ->   S_somecollege
-  l_mean_income_1993 l_mean_income_2003   ->   l_mean_income
-                S_poor_1993 S_poor_2003   ->   S_poor
-              S_manuf_1993 S_manuf_2003   ->   S_manuf
-                Dl_pop_1993 Dl_pop_2003   ->   Dl_pop
-                  l_pop_1993 l_pop_2003   ->   l_pop
-                  g_exp_1993 g_exp_2003   ->   g_exp
------------------------------------------------------------------------------
-.         local i=0;
-.         *Threshold for road growth;
-.         local k=0.05;
-.         local m=-0.05;
-.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl";
-.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  ;
-.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
-.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
-.         *instructions for outreg;
-.         iis msa;
-.         local R "IH";
-.         local cond " ";
-.         local cond2 "if (Dl_ln_IH >`k')";
-.         local cond3 "if (Dl_ln_IH <`m')";
-.                         capture drop Dl_vmt Dl_ln l_vmt;
-.         gen Dl_vmt = Dl_vmt_`R' ;
-.         gen Dl_ln  = Dl_ln_`R' ;
-.         gen l_vmt = l_vmt_`R' ;
-.         local V "4a";
-.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
-.         xi: reg    Dl_vmt Dl_ln i.year `cond', cl(msa) robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
+         long                                wide
+        +---------------+                   +------------------+
+        | i   j   a   b |                   | i   a1 a2  b1 b2 |
+        |---------------| <--- reshape ---> |------------------|
+        | 1   1   1   2 |                   | 1   1   3   2  4 |
+        | 1   2   3   4 |                   | 2   5   7   6  8 |
+        | 2   1   5   6 |                   +------------------+
+        | 2   2   7   8 |
+        +---------------+
 
-Linear regression                               Number of obs     =        456
-                                                F(2, 227)         =     266.89
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.8651
-                                                Root MSE          =     .17334
-
-                                  (Std. err. adjusted for 228 clusters in msa)
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |    1.04491   .0460036    22.71   0.000     .9542611    1.135559
-    _Iyear_2 |  -.1439591   .0155335    -9.27   0.000    -.1745675   -.1133508
-       _cons |   .4227528   .0132657    31.87   0.000     .3966131    .4488926
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond',  cl(msa) robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-
-Linear regression                               Number of obs     =        456
-                                                F(3, 227)         =     183.96
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.8727
-                                                Root MSE          =     .16859
-
-                                  (Std. err. adjusted for 228 clusters in msa)
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |   1.048205   .0470218    22.29   0.000     .9555498     1.14086
-      Dl_pop |   .3405365    .100919     3.37   0.001     .1416787    .5393943
-    _Iyear_2 |  -.1530321   .0156836    -9.76   0.000    -.1839361    -.122128
-       _cons |   .3896851   .0144591    26.95   0.000     .3611939    .4181764
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt i.year `cond',  cl(msa) robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-
-Linear regression                               Number of obs     =        456
-                                                F(4, 227)         =     179.05
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.8897
-                                                Root MSE          =     .15713
-
-                                  (Std. err. adjusted for 228 clusters in msa)
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |   1.019337    .040002    25.48   0.000     .9405144     1.09816
-      Dl_pop |   .3955721   .0975642     4.05   0.000     .2033248    .5878194
-       l_vmt |  -.0466221   .0059895    -7.78   0.000    -.0584242     -.03482
-    _Iyear_2 |  -.1317135     .01475    -8.93   0.000    -.1607779   -.1026492
-       _cons |   1.076733   .0912143    11.80   0.000     .8969979    1.256468
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-note: div9 omitted because of collinearity.
-
-Linear regression                               Number of obs     =        456
-                                                F(17, 227)        =      54.34
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.8973
-                                                Root MSE          =     .15383
-
-                                      (Std. err. adjusted for 228 clusters in msa)
-----------------------------------------------------------------------------------
-                 |               Robust
-          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
------------------+----------------------------------------------------------------
-           Dl_ln |     .99767   .0403951    24.70   0.000     .9180727    1.077267
-          Dl_pop |   .4393807   .1101652     3.99   0.000     .2223036    .6564579
-           l_vmt |  -.0565664   .0069293    -8.16   0.000    -.0702203   -.0429125
-elevat_range_msa |   .0404112   .0167575     2.41   0.017      .007391    .0734314
-  ruggedness_msa |  -.7429687   .8809719    -0.84   0.400    -2.478897    .9929596
-      heating_dd |  -.0010883    .001204    -0.90   0.367    -.0034608    .0012842
-      cooling_dd |  -.0027447   .0034693    -0.79   0.430    -.0095809    .0040915
-          sprawl |   -.002327   .0009095    -2.56   0.011    -.0041191   -.0005349
-            div1 |    .150446   .0552215     2.72   0.007     .0416338    .2592582
-            div2 |   .1170944   .0491084     2.38   0.018     .0203277    .2138611
-            div3 |   .1220362   .0549703     2.22   0.027     .0137188    .2303536
-            div4 |   .1047551   .0562759     1.86   0.064    -.0061348    .2156451
-            div5 |   .1350628   .0505451     2.67   0.008     .0354652    .2346604
-            div6 |   .1660914   .0520051     3.19   0.002     .0636168    .2685659
-            div7 |   .0142852   .0559348     0.26   0.799    -.0959325    .1245029
-            div8 |   .0076767   .0347063     0.22   0.825     -.060711    .0760644
-            div9 |          0  (omitted)
-        _Iyear_2 |   -.127232   .0148889    -8.55   0.000    -.1565701   -.0978939
-           _cons |   1.301169   .1717439     7.58   0.000     .9627532    1.639585
-----------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-note: div9 omitted because of collinearity.
-
-Linear regression                               Number of obs     =        456
-                                                F(29, 227)        =      41.58
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.9059
-                                                Root MSE          =     .14927
-
-                                      (Std. err. adjusted for 228 clusters in msa)
-----------------------------------------------------------------------------------
-                 |               Robust
-          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
------------------+----------------------------------------------------------------
-           Dl_ln |   .9285984   .0380637    24.40   0.000      .853595    1.003602
-          Dl_pop |   .3931255   .1299043     3.03   0.003     .1371529     .649098
-           l_vmt |  -.1236512   .0194032    -6.37   0.000    -.1618845   -.0854178
-elevat_range_msa |   .0165275    .017225     0.96   0.338    -.0174137    .0504688
-  ruggedness_msa |  -.6196242   1.032371    -0.60   0.549    -2.653879    1.414631
-      heating_dd |  -.0001539   .0013151    -0.12   0.907    -.0027453    .0024375
-      cooling_dd |  -.0009248   .0038514    -0.24   0.810     -.008514    .0066643
-          sprawl |  -.0009621   .0010181    -0.94   0.346    -.0029683    .0010441
-            div1 |   .0559109   .0660113     0.85   0.398    -.0741623    .1859841
-            div2 |  -.0085936   .0650256    -0.13   0.895    -.1367246    .1195374
-            div3 |   .0331199   .0663107     0.50   0.618    -.0975434    .1637832
-            div4 |   .0448029   .0588389     0.76   0.447    -.0711374    .1607432
-            div5 |     .05754   .0611546     0.94   0.348    -.0629632    .1780432
-            div6 |    .081783   .0637758     1.28   0.201    -.0438854    .2074514
-            div7 |  -.0463884   .0619178    -0.75   0.455    -.1683955    .0756187
-            div8 |   .0162506    .036597     0.44   0.657    -.0558627     .088364
-            div9 |          0  (omitted)
-         l_pop80 |   .1879954   .1413525     1.33   0.185    -.0905355    .4665263
-         l_pop70 |   .0636039   .2032851     0.31   0.755    -.3369632     .464171
-         l_pop60 |  -.1677147   .1733871    -0.97   0.334    -.5093686    .1739392
-         l_pop50 |  -.0395936   .1134719    -0.35   0.727    -.2631865    .1839992
-         l_pop40 |   .0766945   .1080697     0.71   0.479    -.1362537    .2896426
-         l_pop30 |  -.0839698    .119213    -0.70   0.482    -.3188754    .1509359
-         l_pop20 |    .063936   .0621431     1.03   0.305     -.058515     .186387
-   S_somecollege |  -.1182444   .1654972    -0.71   0.476    -.4443515    .2078628
-   l_mean_income |   .0062309   .1151978     0.05   0.957    -.2207628    .2332246
-  seg1980_ghetto |   .0093124   .0201295     0.46   0.644    -.0303523     .048977
-          S_poor |   .2121626   .2003591     1.06   0.291    -.1826389     .606964
-         S_manuf |   .0527548   .0939351     0.56   0.575    -.1323415    .2378511
-        _Iyear_2 |  -.0638905   .0285781    -2.24   0.026    -.1202027   -.0075783
-           _cons |   .8695905   1.089955     0.80   0.426    -1.278133    3.017314
-----------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond2',  cl(msa) robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-
-Linear regression                               Number of obs     =        205
-                                                F(3, 156)         =     145.08
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.9117
-                                                Root MSE          =     .18293
-
-                                  (Std. err. adjusted for 157 clusters in msa)
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |   1.085589   .0583427    18.61   0.000      .970345    1.200832
-      Dl_pop |   .3099864    .165175     1.88   0.062    -.0162818    .6362545
-    _Iyear_2 |  -.1767062   .0234759    -7.53   0.000    -.2230778   -.1303345
-       _cons |   .3737457   .0267836    13.95   0.000     .3208405     .426651
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-note: div1 omitted because of collinearity.
-
-Linear regression                               Number of obs     =        205
-                                                F(29, 156)        =      33.76
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.9408
-                                                Root MSE          =     .16058
-
-                                      (Std. err. adjusted for 157 clusters in msa)
-----------------------------------------------------------------------------------
-                 |               Robust
-          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
------------------+----------------------------------------------------------------
-           Dl_ln |   .9024045   .0556586    16.21   0.000     .7924628    1.012346
-          Dl_pop |    .449952   .2055768     2.19   0.030     .0438788    .8560252
-           l_vmt |  -.1528513   .0342143    -4.47   0.000    -.2204344   -.0852682
-elevat_range_msa |   .0048123   .0235535     0.20   0.838    -.0417127    .0513372
-  ruggedness_msa |  -.7342984   1.459714    -0.50   0.616    -3.617653    2.149056
-      heating_dd |  -.0009541   .0025844    -0.37   0.713     -.006059    .0041508
-      cooling_dd |   .0019063   .0068925     0.28   0.782    -.0117085     .015521
-          sprawl |   .0000168   .0016637     0.01   0.992    -.0032695    .0033032
-            div1 |          0  (omitted)
-            div2 |  -.0426172   .0819512    -0.52   0.604    -.2044943      .11926
-            div3 |  -.0505075   .0761351    -0.66   0.508    -.2008962    .0998812
-            div4 |   .0058632   .0867306     0.07   0.946    -.1654546    .1771811
-            div5 |  -.0623863   .0876673    -0.71   0.478    -.2355544    .1107818
-            div6 |   .0435413   .0870619     0.50   0.618    -.1284309    .2155135
-            div7 |   -.168555   .1014158    -1.66   0.099    -.3688804    .0317703
-            div8 |  -.0098716   .1095436    -0.09   0.928    -.2262518    .2065086
-            div9 |   .0251055   .1185702     0.21   0.833    -.2091048    .2593158
-         l_pop80 |   .0624481   .2359208     0.26   0.792    -.4035633    .5284594
-         l_pop70 |   .3066487   .3319879     0.92   0.357     -.349123    .9624203
-         l_pop60 |  -.2618333   .3099583    -0.84   0.400      -.87409    .3504234
-         l_pop50 |  -.1552007    .214648    -0.72   0.471    -.5791923    .2687909
-         l_pop40 |   .1944425   .2575095     0.76   0.451    -.3142128    .7030978
-         l_pop30 |  -.1273562    .253184    -0.50   0.616    -.6274675     .372755
-         l_pop20 |   .0941738   .1072648     0.88   0.381     -.117705    .3060527
-   S_somecollege |   .0225831    .353197     0.06   0.949    -.6750825    .7202486
-   l_mean_income |   .0593997   .1814912     0.33   0.744    -.2990976    .4178969
-  seg1980_ghetto |    .016548     .03313     0.50   0.618    -.0488933    .0819893
-          S_poor |  -.2193889   .3301916    -0.66   0.507    -.8716123    .4328346
-         S_manuf |   .0598019   .1895929     0.32   0.753    -.3146986    .4343024
-        _Iyear_2 |  -.1156701   .0493849    -2.34   0.020    -.2132194   -.0181208
-           _cons |   .7521473   1.775945     0.42   0.672    -2.755854    4.260149
-----------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg   Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-note: div1 omitted because of collinearity.
-
-Linear regression                               Number of obs     =        115
-                                                F(29, 100)        =      12.91
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.6888
-                                                Root MSE          =     .14749
-
-                                      (Std. err. adjusted for 101 clusters in msa)
-----------------------------------------------------------------------------------
-                 |               Robust
-          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
------------------+----------------------------------------------------------------
-           Dl_ln |   .8216654   .0918033     8.95   0.000     .6395302    1.003801
-          Dl_pop |   .1647488   .2154637     0.76   0.446    -.2627251    .5922226
-           l_vmt |  -.1292803    .041038    -3.15   0.002    -.2106985   -.0478621
-elevat_range_msa |   .0969111   .0498369     1.94   0.055    -.0019638     .195786
-  ruggedness_msa |  -1.501845   2.239815    -0.67   0.504    -5.945574    2.941884
-      heating_dd |  -.0002544   .0021447    -0.12   0.906    -.0045095    .0040006
-      cooling_dd |   -.002401   .0050131    -0.48   0.633    -.0123468    .0075448
-          sprawl |  -.0013253   .0020766    -0.64   0.525    -.0054452    .0027946
-            div1 |          0  (omitted)
-            div2 |  -.0218798   .0642154    -0.34   0.734    -.1492813    .1055217
-            div3 |   .1974263   .0780123     2.53   0.013     .0426522    .3522004
-            div4 |   .0418226   .0729725     0.57   0.568    -.1029528     .186598
-            div5 |   .1790962   .0795814     2.25   0.027     .0212089    .3369835
-            div6 |   .0987548   .0868866     1.14   0.258    -.0736258    .2711353
-            div7 |  -.0211119   .0881422    -0.24   0.811    -.1959835    .1537596
-            div8 |  -.0777999   .1121423    -0.69   0.489    -.3002871    .1446873
-            div9 |  -.1468542   .1404812    -1.05   0.298    -.4255648    .1318565
-         l_pop80 |   .6707754   .2652841     2.53   0.013     .1444594    1.197091
-         l_pop70 |  -.7814569    .378599    -2.06   0.042    -1.532587   -.0303273
-         l_pop60 |  -.0203582   .2795274    -0.07   0.942    -.5749325    .5342161
-         l_pop50 |   .3100547   .3880452     0.80   0.426    -.4598159    1.079925
-         l_pop40 |   -.044235   .2686065    -0.16   0.870    -.5771426    .4886727
-         l_pop30 |  -.0405279   .2034827    -0.20   0.843    -.4442317    .3631758
-         l_pop20 |   .0388115   .0977618     0.40   0.692    -.1551452    .2327681
-   S_somecollege |   .2436915   .3721523     0.65   0.514    -.4946481    .9820312
-   l_mean_income |  -.2761915   .2210099    -1.25   0.214    -.7146687    .1622858
-  seg1980_ghetto |  -.0403814   .0400633    -1.01   0.316    -.1198659    .0391031
-          S_poor |   .0373095   .5801129     0.06   0.949    -1.113618    1.188237
-         S_manuf |  -.1225503   .1568669    -0.78   0.437    -.4337697    .1886691
-        _Iyear_2 |  -.0985786   .1013973    -0.97   0.333    -.2997479    .1025908
-           _cons |   3.329723   2.144345     1.55   0.124    -.9245975    7.584043
-----------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg  Dl_vmt Dl_ln i.year i.msa `cond', robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-i.msa             _Imsa_40-9360       (naturally coded; _Imsa_40 omitted)
-
-Linear regression                               Number of obs     =        456
-                                                F(229, 226)       =     186.99
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.9342
-                                                Root MSE          =     .17142
-
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |   1.027317   .0538634    19.07   0.000     .9211784    1.133456
-    _Iyear_2 |  -.1446832   .0153306    -9.44   0.000    -.1748925    -.114474
-   _Imsa_160 |   .2680394    .146772     1.83   0.069    -.0211772    .5572559
-   _Imsa_200 |   .2598883   .1687043     1.54   0.125    -.0725463    .5923228
-   _Imsa_240 |   .3051918   .1697623     1.80   0.074    -.0293276    .6397113
-   _Imsa_320 |   .1239014   .1991148     0.62   0.534    -.2684575    .5162602
-   _Imsa_450 |   .3319968   .1663271     2.00   0.047     .0042466    .6597471
-   _Imsa_480 |   .2721582   .1465043     1.86   0.065    -.0165309    .5608473
-   _Imsa_520 |   .1458286    .182445     0.80   0.425    -.2136823    .5053394
-   _Imsa_580 |   .4363923   .1475214     2.96   0.003     .1456991    .7270856
-   _Imsa_600 |   .3437599   .1757074     1.96   0.052    -.0024745    .6899943
-   _Imsa_640 |   .0477247   .1614723     0.30   0.768     -.270459    .3659085
-   _Imsa_680 |   .2868113   .1467473     1.95   0.052    -.0023566    .5759792
-   _Imsa_733 |   .2962385   .1723852     1.72   0.087    -.0434492    .6359263
-   _Imsa_760 |   .1235853   .1476351     0.84   0.403     -.167332    .4145026
-   _Imsa_840 |   .0165292   .2285981     0.07   0.942     -.433927    .4669854
-   _Imsa_860 |   .2444492   .1669079     1.46   0.144    -.0844455    .5733439
-   _Imsa_870 |   .1759681   .1521265     1.16   0.249    -.1237997    .4757359
-   _Imsa_880 |   .1642115   .1725706     0.95   0.342    -.1758418    .5042647
-   _Imsa_920 |   .2935613    .152282     1.93   0.055    -.0065128    .5936354
-   _Imsa_960 |    .193413   .1982614     0.98   0.330    -.1972642    .5840902
-  _Imsa_1000 |    .189507   .1577745     1.20   0.231    -.1213902    .5004043
-  _Imsa_1010 |   .0979814   .1684253     0.58   0.561    -.2339034    .4298662
-  _Imsa_1040 |   .3010228   .1472716     2.04   0.042     .0108217     .591224
-  _Imsa_1080 |   .3267401   .1778651     1.84   0.068    -.0237459    .6772262
-  _Imsa_1123 |   .1247418   .1465899     0.85   0.396    -.1641159    .4135996
-  _Imsa_1280 |   .1758633   .1500839     1.17   0.243    -.1198794    .4716059
-  _Imsa_1303 |   .2686798   .1827752     1.47   0.143    -.0914816    .6288413
-  _Imsa_1320 |   .0549888   .1487242     0.37   0.712    -.2380748    .3480523
-  _Imsa_1350 |  -.0157428   .2198188    -0.07   0.943    -.4488992    .4174137
-  _Imsa_1360 |   .3097659   .1830199     1.69   0.092    -.0508778    .6704096
-  _Imsa_1400 |   .1947011   .1465766     1.33   0.185    -.0941305    .4835328
-  _Imsa_1440 |   .2633894    .203392     1.29   0.197    -.1373978    .6641767
-  _Imsa_1480 |   .2593567   .2013306     1.29   0.199    -.1373684    .6560818
-  _Imsa_1520 |   .2437954   .1532017     1.59   0.113     -.058091    .5456818
-  _Imsa_1540 |   .2973259   .4865997     0.61   0.542    -.6615267    1.256178
-  _Imsa_1560 |   .1448964    .165693     0.87   0.383    -.1816043     .471397
-  _Imsa_1580 |   .2556419   .1749062     1.46   0.145    -.0890137    .6002974
-  _Imsa_1602 |   .1363491   .1627067     0.84   0.403    -.1842671    .4569653
-  _Imsa_1642 |   .1112204   .1466283     0.76   0.449    -.1777131    .4001539
-  _Imsa_1660 |   .4207706   .1582558     2.66   0.008     .1089251    .7326162
-  _Imsa_1692 |   .0091938    .159197     0.06   0.954    -.3045066    .3228941
-  _Imsa_1720 |   .2718177    .156066     1.74   0.083    -.0357129    .5793484
-  _Imsa_1740 |   .1709736    .146776     1.16   0.245    -.1182508     .460198
-  _Imsa_1760 |   .3113946    .154105     2.02   0.044     .0077281    .6150611
-  _Imsa_1800 |   .2449225   .1471919     1.66   0.098    -.0451217    .5349666
-  _Imsa_1840 |   .1520053   .1635146     0.93   0.354    -.1702028    .4742134
-  _Imsa_1880 |   .2846105   .1471402     1.93   0.054    -.0053316    .5745526
-  _Imsa_1922 |   .1892833   .1612936     1.17   0.242    -.1285483    .5071149
-  _Imsa_1960 |   .1313703    .187685     0.70   0.485     -.238466    .5012066
-  _Imsa_2000 |   .0289412   .1763673     0.16   0.870    -.3185934    .3764758
-  _Imsa_2020 |   .3185606   .1487443     2.14   0.033     .0254576    .6116637
-  _Imsa_2030 |   .3520088   .2114541     1.66   0.097    -.0646649    .7686826
-  _Imsa_2040 |   .2307349   .1583865     1.46   0.147    -.0813683     .542838
-  _Imsa_2082 |   .1216651   .1468229     0.83   0.408    -.1676517     .410982
-  _Imsa_2120 |   .2627409    .151318     1.74   0.084    -.0354337    .5609154
-  _Imsa_2162 |   .1041788   .1748256     0.60   0.552    -.2403179    .4486755
-  _Imsa_2240 |   .2255761   .2291616     0.98   0.326    -.2259905    .6771426
-  _Imsa_2290 |    .388515   .2543029     1.53   0.128    -.1125931    .8896231
-  _Imsa_2320 |   .2041724    .178654     1.14   0.254    -.1478682     .556213
-  _Imsa_2330 |   .2624916   .1902523     1.38   0.169    -.1124037    .6373868
-  _Imsa_2360 |   .1875506   .1482672     1.26   0.207    -.1046123    .4797136
-  _Imsa_2400 |   .1277326    .149024     0.86   0.392    -.1659215    .4213867
-  _Imsa_2440 |   .3784414   .1639542     2.31   0.022      .055367    .7015158
-  _Imsa_2520 |   .2759486    .147183     1.87   0.062    -.0140779    .5659752
-  _Imsa_2560 |   .2808143   .1880808     1.49   0.137     -.089802    .6514305
-  _Imsa_2620 |   .2679183   .1513422     1.77   0.078     -.030304    .5661407
-  _Imsa_2655 |   .3852256   .1946293     1.98   0.049     .0017055    .7687458
-  _Imsa_2670 |   .2867831   .1518607     1.89   0.060    -.0124608     .586027
-  _Imsa_2700 |    .660525    .233929     2.82   0.005     .1995641    1.121486
-  _Imsa_2710 |   .6461607   .3472719     1.86   0.064    -.0381441    1.330466
-  _Imsa_2720 |   .2681402   .1624557     1.65   0.100    -.0519814    .5882617
-  _Imsa_2750 |    .294294    .146409     2.01   0.046     .0057927    .5827953
-  _Imsa_2760 |   .3814204   .2467083     1.55   0.123    -.1047224    .8675632
-  _Imsa_2840 |   .2863386   .1644947     1.74   0.083    -.0378009     .610478
-  _Imsa_2880 |   .2994755   .1958892     1.53   0.128    -.0865274    .6854783
-  _Imsa_2900 |   .0120151   .1711514     0.07   0.944    -.3252415    .3492716
-  _Imsa_2975 |   .2058605   .2165665     0.95   0.343    -.2208873    .6326083
-  _Imsa_2985 |   .3027655   .1493194     2.03   0.044     .0085292    .5970017
-  _Imsa_2995 |   .2102441   .2606967     0.81   0.421    -.3034629    .7239511
-  _Imsa_3000 |    .290149   .2430734     1.19   0.234    -.1888311    .7691292
-  _Imsa_3040 |    .105757   .1466698     0.72   0.472    -.1832582    .3947723
-  _Imsa_3080 |   .3888757   .2328664     1.67   0.096    -.0699914    .8477428
-  _Imsa_3120 |   .0834337   .1542532     0.54   0.589    -.2205247     .387392
-  _Imsa_3160 |   .2750524   .1945226     1.41   0.159    -.1082575    .6583624
-  _Imsa_3240 |   .2955729   .1511403     1.96   0.052    -.0022515    .5933972
-  _Imsa_3283 |   .4203787   .3702895     1.14   0.257    -.3092828     1.15004
-  _Imsa_3285 |   .3272543   .1491242     2.19   0.029     .0334026    .6211059
-  _Imsa_3290 |   .3306102   .1683781     1.96   0.051    -.0011816    .6624021
-  _Imsa_3362 |  -.0424301   .2393976    -0.18   0.859    -.5141671    .4293068
-  _Imsa_3400 |   .2204088   .1464045     1.51   0.134    -.0680837    .5089013
-  _Imsa_3440 |   .5259584   .2967755     1.77   0.078    -.0588426    1.110759
-  _Imsa_3480 |   .2456417   .2252277     1.09   0.277    -.1981732    .6894566
-  _Imsa_3500 |   .2538056   .1473334     1.72   0.086    -.0365173    .5441286
-  _Imsa_3520 |   .2283857   .1879001     1.22   0.225    -.1418745     .598646
-  _Imsa_3560 |   .2382429   .1498251     1.59   0.113      -.05699    .5334758
-  _Imsa_3580 |   .3072123   .1482403     2.07   0.039     .0151024    .5993221
-  _Imsa_3600 |   .1010723   .1530838     0.66   0.510    -.2005818    .4027263
-  _Imsa_3610 |   .0590532   .1846771     0.32   0.749    -.3048559    .4229624
-  _Imsa_3620 |    .178086   .1760833     1.01   0.313     -.168889    .5250611
-  _Imsa_3660 |    .255777    .170787     1.50   0.136    -.0807616    .5923156
-  _Imsa_3680 |   .0930097    .175846     0.53   0.597    -.2534978    .4395172
-  _Imsa_3710 |   .3030594   .1463688     2.07   0.040     .0146372    .5914815
-  _Imsa_3720 |    .167037   .1476218     1.13   0.259    -.1238542    .4579282
-  _Imsa_3760 |   .1162385   .1527653     0.76   0.448     -.184788     .417265
-  _Imsa_3810 |   .2827982   .1492675     1.89   0.059    -.0113359    .5769323
-  _Imsa_3840 |   .1429933   .1782043     0.80   0.423    -.2081612    .4941477
-  _Imsa_3870 |   .2573069   .1950268     1.32   0.188    -.1269965    .6416103
-  _Imsa_3880 |   .0125053   .3078153     0.04   0.968    -.5940497    .6190604
-  _Imsa_3920 |   .2034285   .1725735     1.18   0.240    -.1366304    .5434874
-  _Imsa_3960 |    .165428   .1575328     1.05   0.295     -.144993     .475849
-  _Imsa_3980 |    .141461   .1494754     0.95   0.345    -.1530827    .4360047
-  _Imsa_4000 |   .2489519   .1809726     1.38   0.170    -.1076575    .6055613
-  _Imsa_4040 |   .1792614   .1509907     1.19   0.236    -.1182682     .476791
-  _Imsa_4080 |   .4608916   .2848473     1.62   0.107    -.1004046    1.022188
-  _Imsa_4100 |   .2979342   .1660091     1.79   0.074    -.0291895    .6250578
-  _Imsa_4120 |   .5453943   .1543683     3.53   0.000     .2412091    .8495794
-  _Imsa_4150 |    .334991   .1467258     2.28   0.023     .0458654    .6241165
-  _Imsa_4200 |   .1137911   .1509295     0.75   0.452     -.183618    .4112002
-  _Imsa_4280 |   .0388908   .1492223     0.26   0.795    -.2551543    .3329358
-  _Imsa_4320 |   .0929301   .2415137     0.38   0.701    -.3829766    .5688367
-  _Imsa_4360 |   .2598427   .1796452     1.45   0.149     -.094151    .6138364
-  _Imsa_4400 |    .189313    .213759     0.89   0.377    -.2319025    .6105285
-  _Imsa_4420 |   .1757629   .2384872     0.74   0.462      -.29418    .6457058
-  _Imsa_4472 |   .1439409   .1505737     0.96   0.340    -.1527671    .4406489
-  _Imsa_4520 |   .1563477   .1509148     1.04   0.301    -.1410323    .4537277
-  _Imsa_4600 |   .2219703   .5018461     0.44   0.659    -.7669257    1.210866
-  _Imsa_4680 |   .1027892   .1579982     0.65   0.516    -.2085488    .4141272
-  _Imsa_4720 |   .2895882   .1620104     1.79   0.075     -.029656    .6088324
-  _Imsa_4800 |   .0132979   .1644365     0.08   0.936    -.3107268    .3373226
-  _Imsa_4890 |   .2060139   .1469446     1.40   0.162    -.0835428    .4955705
-  _Imsa_4900 |   .4350698   .1551411     2.80   0.005     .1293618    .7407779
-  _Imsa_4920 |    .145576   .1571378     0.93   0.355    -.1640665    .4552186
-  _Imsa_4940 |   .3210949    .146638     2.19   0.030     .0321423    .6100474
-  _Imsa_4992 |  -.0615609   .3675351    -0.17   0.867    -.7857948     .662673
-  _Imsa_5082 |   .1480401   .1779708     0.83   0.406    -.2026543    .4987345
-  _Imsa_5120 |   .2442749   .1484183     1.65   0.101    -.0481858    .5367356
-  _Imsa_5140 |   .2287629   .1480664     1.55   0.124    -.0630043    .5205301
-  _Imsa_5160 |   .1735366   .1467376     1.18   0.238    -.1156122    .4626855
-  _Imsa_5170 |   .0997927    .255134     0.39   0.696    -.4029529    .6025384
-  _Imsa_5200 |   .2155615   .2227877     0.97   0.334    -.2234452    .6545682
-  _Imsa_5240 |   .2301331   .1944254     1.18   0.238    -.1529853    .6132515
-  _Imsa_5280 |    .377619   .1923279     1.96   0.051    -.0013662    .7566041
-  _Imsa_5360 |   .2211312   .1471089     1.50   0.134    -.0687492    .5110116
-  _Imsa_5483 |   .0793093   .2067991     0.38   0.702    -.3281917    .4868102
-  _Imsa_5560 |   .1535526   .1543097     1.00   0.321    -.1505172    .4576224
-  _Imsa_5602 |   .0865907   .1487837     0.58   0.561    -.2065899    .3797713
-  _Imsa_5720 |   .0584637   .1505005     0.39   0.698       -.2381    .3550274
-  _Imsa_5790 |   .0380449   .1971521     0.19   0.847    -.3504464    .4265363
-  _Imsa_5800 |  -.0786104   .4434708    -0.18   0.859    -.9524768    .7952561
-  _Imsa_5880 |   .0877929   .1551821     0.57   0.572    -.2179959    .3935817
-  _Imsa_5920 |    .177409    .148884     1.19   0.235    -.1159694    .4707875
-  _Imsa_5960 |   .0538612   .1502221     0.36   0.720    -.2421539    .3498762
-  _Imsa_6020 |   .1852403   .1677384     1.10   0.271    -.1452909    .5157715
-  _Imsa_6080 |   .2628162   .1550909     1.69   0.092    -.0427929    .5684252
-  _Imsa_6120 |   .0817483   .1573038     0.52   0.604    -.2282214     .391718
-  _Imsa_6162 |   .1368096   .1606536     0.85   0.395     -.179761    .4533802
-  _Imsa_6200 |   .4445368    .181948     2.44   0.015     .0860053    .8030684
-  _Imsa_6280 |   .1337889   .1500772     0.89   0.374    -.1619407    .4295185
-  _Imsa_6323 |   .2120916   .1662662     1.28   0.203    -.1155387     .539722
-  _Imsa_6340 |   .2052871   .1568575     1.31   0.192    -.1038032    .5143775
-  _Imsa_6403 |   .2411309   .1541475     1.56   0.119    -.0626192     .544881
-  _Imsa_6442 |   .2069038   .1631717     1.27   0.206    -.1146287    .5284364
-  _Imsa_6483 |   .2671594   .1564451     1.71   0.089    -.0411183    .5754371
-  _Imsa_6520 |   .4182553   .1908992     2.19   0.029     .0420853    .7944254
-  _Imsa_6560 |    .165787   .1496895     1.11   0.269    -.1291787    .4607526
-  _Imsa_6580 |   .4950086   .1960587     2.52   0.012     .1086717    .8813455
-  _Imsa_6640 |   .2703059   .1644936     1.64   0.102    -.0538313    .5944432
-  _Imsa_6660 |   .1062422   .1465782     0.72   0.469    -.1825925    .3950769
-  _Imsa_6680 |   .1323672   .1882064     0.70   0.483    -.2384965    .5032309
-  _Imsa_6690 |   .2417009    .215502     1.12   0.263    -.1829493    .6663512
-  _Imsa_6720 |   .2588045   .1660087     1.56   0.120    -.0683183    .5859273
-  _Imsa_6740 |   .3335845   .1654879     2.02   0.045     .0074879    .6596812
-  _Imsa_6760 |   .2875451   .1677483     1.71   0.088    -.0430057    .6180958
-  _Imsa_6800 |   .2746696   .1527468     1.80   0.073    -.0263205    .5756597
-  _Imsa_6820 |   .1573566   .2509901     0.63   0.531    -.3372234    .6519366
-  _Imsa_6840 |   .1896117   .1483336     1.28   0.202    -.1026821    .4819055
-  _Imsa_6880 |   .1155809    .280894     0.41   0.681    -.4379252     .669087
-  _Imsa_6895 |   .2350191   .1804586     1.30   0.194    -.1205775    .5906157
-  _Imsa_6922 |   .2222851   .1481103     1.50   0.135    -.0695687    .5141389
-  _Imsa_6960 |   .1417013   .1519501     0.93   0.352    -.1577188    .4411213
-  _Imsa_6980 |   .3854713   .1913041     2.01   0.045     .0085035    .7624392
-  _Imsa_7000 |   .1525128   .1684051     0.91   0.366    -.1793323    .4843578
-  _Imsa_7040 |   .1090772   .1556054     0.70   0.484    -.1975458    .4157001
-  _Imsa_7160 |   .2222548   .1476766     1.51   0.134    -.0687443    .5132539
-  _Imsa_7240 |    .126587   .1930784     0.66   0.513    -.2538771    .5070511
-  _Imsa_7320 |   .2165033   .1504679     1.44   0.152    -.0799961    .5130026
-  _Imsa_7362 |    .074427   .1475255     0.50   0.614    -.2162744    .3651285
-  _Imsa_7490 |   .3273584   .1519854     2.15   0.032     .0278686    .6268481
-  _Imsa_7510 |   .5402904   .1507841     3.58   0.000     .2431679    .8374128
-  _Imsa_7520 |   .2522831   .1470209     1.72   0.088    -.0374239    .5419902
-  _Imsa_7560 |   .1596343    .150242     1.06   0.289      -.13642    .4556885
-  _Imsa_7602 |   .0843121   .1661133     0.51   0.612    -.2430167     .411641
-  _Imsa_7610 |   .1782912    .225802     0.79   0.431    -.2666553    .6232376
-  _Imsa_7620 |   .5094351   .3134759     1.63   0.106    -.1082742    1.127144
-  _Imsa_7680 |   .1512578   .2722644     0.56   0.579    -.3852436    .6877593
-  _Imsa_7720 |   .2959807   .1648459     1.80   0.074    -.0288509    .6208123
-  _Imsa_7760 |   .2579237   .1708743     1.51   0.133    -.0787869    .5946342
-  _Imsa_7800 |   .3933978   .3401101     1.16   0.249    -.2767946     1.06359
-  _Imsa_7840 |   .2035361   .1468462     1.39   0.167    -.0858267     .492899
-  _Imsa_7880 |   .1731262   .1926078     0.90   0.370    -.2064105    .5526629
-  _Imsa_7920 |    .303054   .1492369     2.03   0.043     .0089804    .5971277
-  _Imsa_8003 |   .1199312    .172124     0.70   0.487    -.2192419    .4591043
-  _Imsa_8050 |   .1875028   .2459107     0.76   0.447    -.2970682    .6720738
-  _Imsa_8120 |   .3748224   .1580339     2.37   0.019      .063414    .6862308
-  _Imsa_8140 |   .3689396   .1683524     2.19   0.029     .0371985    .7006808
-  _Imsa_8160 |   .2247498   .1687389     1.33   0.184    -.1077531    .5572526
-  _Imsa_8240 |   .2904488   .1475677     1.97   0.050    -.0003358    .5812335
-  _Imsa_8280 |   .1118579   .1767882     0.63   0.528    -.2365061     .460222
-  _Imsa_8320 |   .2161757   .1578935     1.37   0.172    -.0949561    .5273075
-  _Imsa_8360 |    .136849   .1466621     0.93   0.352     -.152151     .425849
-  _Imsa_8400 |   .0960631   .1776038     0.54   0.589     -.253908    .4460343
-  _Imsa_8440 |   .1661079   .1876073     0.89   0.377    -.2035753    .5357911
-  _Imsa_8520 |   .3467913   .1781871     1.95   0.053    -.0043293    .6979119
-  _Imsa_8560 |   .0211176   .1752716     0.12   0.904    -.3242579     .366493
-  _Imsa_8600 |   .3081307   .1507091     2.04   0.042     .0111559    .6051055
-  _Imsa_8640 |    .159774   .1728754     0.92   0.356    -.1808798    .5004279
-  _Imsa_8680 |   .2342122   .1513973     1.55   0.123    -.0641186    .5325429
-  _Imsa_8800 |   .2037149   .1540989     1.32   0.188    -.0999396    .5073694
-  _Imsa_8872 |   .1504217    .146806     1.02   0.307    -.1388619    .4397054
-  _Imsa_8920 |   .6399474   .4865285     1.32   0.190    -.3187649     1.59866
-  _Imsa_8960 |   .1941112   .1484307     1.31   0.192    -.0983739    .4865964
-  _Imsa_9000 |   .0205218   .1628398     0.13   0.900    -.3003566    .3414001
-  _Imsa_9040 |   .2254437   .1468466     1.54   0.126    -.0639198    .5148073
-  _Imsa_9140 |    .293363   .2062834     1.42   0.156    -.1131218    .6998479
-  _Imsa_9260 |   .2769656   .1681355     1.65   0.101     -.054348    .6082793
-  _Imsa_9280 |   .1857542   .1552018     1.20   0.233    -.1200735    .4915818
-  _Imsa_9320 |  -.0169708   .1782884    -0.10   0.924     -.368291    .3343494
-  _Imsa_9360 |   .1347096   .1605473     0.84   0.402    -.1816516    .4510707
-       _cons |   .2040992   .1468561     1.39   0.166    -.0852832    .4934816
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         xi: reg  Dl_vmt Dl_ln Dl_pop `demographics' i.msa i.year `cond',  robust ;
-i.msa             _Imsa_40-9360       (naturally coded; _Imsa_40 omitted)
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-note: _Imsa_3285 omitted because of collinearity.
-note: _Imsa_5483 omitted because of collinearity.
-
-Linear regression                               Number of obs     =        456
-                                                F(233, 222)       =     542.15
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.9402
-                                                Root MSE          =     .16488
-
---------------------------------------------------------------------------------
-               |               Robust
-        Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
----------------+----------------------------------------------------------------
-         Dl_ln |   1.026577   .0498332    20.60   0.000     .9283702    1.124783
-        Dl_pop |   .5147185    .200267     2.57   0.011      .120051    .9093861
- S_somecollege |  -3.840496   1.266724    -3.03   0.003    -6.336839   -1.344154
- l_mean_income |   .0039913   .3953733     0.01   0.992    -.7751738    .7831565
-seg1980_ghetto |   .1879469   .1708202     1.10   0.272    -.1486897    .5245836
-        S_poor |   .2101343   .6628723     0.32   0.752    -1.096193    1.516462
-       S_manuf |   .3396153   .4721706     0.72   0.473    -.5908948    1.270125
-     _Imsa_160 |    .282876   .1534733     1.84   0.067     -.019575    .5853269
-     _Imsa_200 |   .4346777   .1911837     2.27   0.024     .0579105    .8114449
-     _Imsa_240 |  -.1337291   .2358742    -0.57   0.571    -.5985682      .33111
-     _Imsa_320 |   .0015155   .1228364     0.01   0.990    -.2405591    .2435901
-     _Imsa_450 |  -.1104889   .2304255    -0.48   0.632    -.5645903    .3436124
-     _Imsa_480 |   -.173205   .0967919    -1.79   0.075    -.3639536    .0175436
-     _Imsa_520 |  -.0449531   .1791556    -0.25   0.802    -.3980163    .3081102
-     _Imsa_580 |    .256864   .2430892     1.06   0.292    -.2221937    .7359216
-     _Imsa_600 |  -.0089326   .1972171    -0.05   0.964    -.3975898    .3797245
-     _Imsa_640 |   .1109944   .1588589     0.70   0.485    -.2020701    .4240588
-     _Imsa_680 |    .025148   .1929611     0.13   0.896    -.3551219    .4054178
-     _Imsa_733 |   .0772907   .1895126     0.41   0.684    -.2961831    .4507646
-     _Imsa_760 |  -.0698355   .1445423    -0.48   0.629    -.3546861    .2150151
-     _Imsa_840 |  -.4413062   .1838748    -2.40   0.017    -.8036698   -.0789427
-     _Imsa_860 |   .3004868   .1769938     1.70   0.091    -.0483161    .6492898
-     _Imsa_870 |  -.1872874   .1201175    -1.56   0.120    -.4240039    .0494291
-     _Imsa_880 |   .3810959   .1648247     2.31   0.022     .0562746    .7059173
-     _Imsa_920 |   .0499315   .1882754     0.27   0.791    -.3211043    .4209672
-     _Imsa_960 |   .0203243   .2129359     0.10   0.924    -.3993101    .4399588
-    _Imsa_1000 |  -.1307072   .1162581    -1.12   0.262    -.3598179    .0984036
-    _Imsa_1010 |   .3803943   .1723066     2.21   0.028     .0408283    .7199603
-    _Imsa_1040 |   .4954428   .1714361     2.89   0.004     .1575923    .8332933
-    _Imsa_1080 |   .5070692   .2418483     2.10   0.037     .0304569    .9836814
-    _Imsa_1123 |   .0275217   .1043731     0.26   0.792    -.1781672    .2332105
-    _Imsa_1280 |  -.1489289   .1207397    -1.23   0.219    -.3868714    .0890137
-    _Imsa_1303 |   .3841256   .1833197     2.10   0.037     .0228562     .745395
-    _Imsa_1320 |  -.6080466   .1965671    -3.09   0.002    -.9954228   -.2206703
-    _Imsa_1350 |   .3986782   .1889068     2.11   0.036     .0263981    .7709584
-    _Imsa_1360 |    .309299   .1762568     1.75   0.081    -.0380516    .6566497
-    _Imsa_1400 |   .6908766   .2321485     2.98   0.003     .2333798    1.148373
-    _Imsa_1440 |   .1491629   .1705482     0.87   0.383    -.1869377    .4852635
-    _Imsa_1480 |   .0387376   .2606359     0.15   0.882    -.4748996    .5523748
-    _Imsa_1520 |   .0350752   .1731867     0.20   0.840    -.3062251    .3763755
-    _Imsa_1540 |   .5786486   .4447315     1.30   0.195    -.2977871    1.455084
-    _Imsa_1560 |  -.3769003   .1405186    -2.68   0.008    -.6538214   -.0999792
-    _Imsa_1580 |    .524869   .2011209     2.61   0.010     .1285186    .9212194
-    _Imsa_1602 |  -.0528648     .14641    -0.36   0.718     -.341396    .2356664
-    _Imsa_1642 |  -.3094245   .1333696    -2.32   0.021     -.572257    -.046592
-    _Imsa_1660 |   .0634216   .2134731     0.30   0.767    -.3572714    .4841146
-    _Imsa_1692 |  -.3484505   .1359146    -2.56   0.011    -.6162985   -.0806026
-    _Imsa_1720 |   .6110974    .203839     3.00   0.003     .2093903    1.012805
-    _Imsa_1740 |   .7400608   .2650504     2.79   0.006      .217724    1.262398
-    _Imsa_1760 |   .4746039   .1701447     2.79   0.006     .1392985    .8099093
-    _Imsa_1800 |  -.0938522   .1898839    -0.49   0.622    -.4680578    .2803533
-    _Imsa_1840 |  -.0789385    .138671    -0.57   0.570    -.3522185    .1943414
-    _Imsa_1880 |    .121282   .1601023     0.76   0.450    -.1942328    .4367969
-    _Imsa_1922 |   .0770434   .1349859     0.57   0.569    -.1889743     .343061
-    _Imsa_1960 |   .0306847     .20161     0.15   0.879    -.3666295     .427999
-    _Imsa_2000 |  -.3200034   .1644475    -1.95   0.053    -.6440812    .0040744
-    _Imsa_2020 |   -.129455   .1290325    -1.00   0.317    -.3837403    .1248302
-    _Imsa_2030 |  -.2557303   .2664648    -0.96   0.338    -.7808545     .269394
-    _Imsa_2040 |  -.0408981   .2112269    -0.19   0.847    -.4571645    .3753682
-    _Imsa_2082 |   .3531859   .1646303     2.15   0.033     .0287477     .677624
-    _Imsa_2120 |   .3348763   .1619615     2.07   0.040     .0156977     .654055
-    _Imsa_2162 |   -.178123   .1513877    -1.18   0.241    -.4764639    .1202178
-    _Imsa_2240 |   .2252264   .2355722     0.96   0.340    -.2390175    .6894702
-    _Imsa_2290 |    .165935   .2310591     0.72   0.473    -.2894149    .6212848
-    _Imsa_2320 |   -.101157   .1784317    -0.57   0.571    -.4527937    .2504797
-    _Imsa_2330 |  -.3197181   .3282947    -0.97   0.331    -.9666909    .3272547
-    _Imsa_2360 |   -.217517   .2045672    -1.06   0.289    -.6206591    .1856251
-    _Imsa_2400 |   .4070176   .1904611     2.14   0.034     .0316745    .7823607
-    _Imsa_2440 |  -.1646366   .1759361    -0.94   0.350    -.5113552     .182082
-    _Imsa_2520 |   .6454735   .1868167     3.46   0.001     .2773124    1.013635
-    _Imsa_2560 |   .2329084   .1921272     1.21   0.227     -.145718    .6115348
-    _Imsa_2620 |   .5663183   .1992189     2.84   0.005     .1737161    .9589204
-    _Imsa_2655 |   -.068444   .2435789    -0.28   0.779    -.5484669    .4115788
-    _Imsa_2670 |   .7795607   .2676194     2.91   0.004     .2521613     1.30696
-    _Imsa_2700 |   .1879953   .2092657     0.90   0.370    -.2244061    .6003967
-    _Imsa_2710 |   .1291528   .2671875     0.48   0.629    -.3973955    .6557012
-    _Imsa_2720 |  -.2471313   .2433811    -1.02   0.311    -.7267642    .2325016
-    _Imsa_2750 |   .3649046   .1773253     2.06   0.041     .0154483     .714361
-    _Imsa_2760 |  -.0695011   .2490975    -0.28   0.780    -.5603993    .4213972
-    _Imsa_2840 |   .1375888   .1565632     0.88   0.380    -.1709515    .4461291
-    _Imsa_2880 |  -.4029753    .195221    -2.06   0.040    -.7876988   -.0182519
-    _Imsa_2900 |   .5007429   .2987916     1.68   0.095     -.088088    1.089574
-    _Imsa_2975 |  -.1129998   .2598656    -0.43   0.664    -.6251187    .3991192
-    _Imsa_2985 |   .5195364   .1627695     3.19   0.002     .1987653    .8403075
-    _Imsa_2995 |   .3129043   .2173567     1.44   0.151    -.1154422    .7412508
-    _Imsa_3000 |  -.0766272   .2054185    -0.37   0.709    -.4814469    .3281925
-    _Imsa_3040 |   .2086785   .1583702     1.32   0.189    -.1034229      .52078
-    _Imsa_3080 |   .1496163   .2334828     0.64   0.522      -.31051    .6097426
-    _Imsa_3120 |   -.411637   .1139839    -3.61   0.000    -.6362659    -.187008
-    _Imsa_3160 |  -.1445744   .2302538    -0.63   0.531    -.5983373    .3091884
-    _Imsa_3240 |  -.2437029   .1897831    -1.28   0.200      -.61771    .1303041
-    _Imsa_3283 |   .2988064   .3004638     0.99   0.321    -.2933199    .8909326
-    _Imsa_3285 |          0  (omitted)
-    _Imsa_3290 |  -.3654618   .3128798    -1.17   0.244    -.9820563    .2511327
-    _Imsa_3362 |  -.1159709   .1885278    -0.62   0.539    -.4875041    .2555623
-    _Imsa_3400 |  -.2982184   .2160845    -1.38   0.169    -.7240578     .127621
-    _Imsa_3440 |    .475346   .2580665     1.84   0.067    -.0332276    .9839197
-    _Imsa_3480 |  -.1403578   .2021245    -0.69   0.488    -.5386861    .2579704
-    _Imsa_3500 |   .9103616   .2877589     3.16   0.002     .3432731     1.47745
-    _Imsa_3520 |  -.1381064   .1664231    -0.83   0.408    -.4660777    .1898648
-    _Imsa_3560 |   .2151448   .0960956     2.24   0.026     .0257684    .4045212
-    _Imsa_3580 |  -.3139264   .1189557    -2.64   0.009    -.5483532   -.0794995
-    _Imsa_3600 |  -.2289744   .1466657    -1.56   0.120    -.5180096    .0600608
-    _Imsa_3610 |   -.269139   .2417855    -1.11   0.267    -.7456276    .2073496
-    _Imsa_3620 |  -.2100859   .2321197    -0.91   0.366    -.6675259     .247354
-    _Imsa_3660 |  -.2958036   .2642844    -1.12   0.264    -.8166309    .2250237
-    _Imsa_3680 |  -.5987937   .2846764    -2.10   0.037    -1.159808   -.0377797
-    _Imsa_3710 |  -.1505606   .2128208    -0.71   0.480    -.5699681    .2688468
-    _Imsa_3720 |  -.0571342   .0824186    -0.69   0.489    -.2195571    .1052886
-    _Imsa_3760 |  -.0200093   .1274249    -0.16   0.875    -.2711265    .2311079
-    _Imsa_3810 |   .1994789    .180914     1.10   0.271    -.1570497    .5560075
-    _Imsa_3840 |  -.3010621   .1289479    -2.33   0.020    -.5551808   -.0469435
-    _Imsa_3870 |   .2018114    .177029     1.14   0.256    -.1470609    .5506837
-    _Imsa_3880 |  -.4063747   .2783416    -1.46   0.146    -.9549045    .1421552
-    _Imsa_3920 |   .1176395   .2172432     0.54   0.589    -.3104833    .5457622
-    _Imsa_3960 |    -.35593   .1614698    -2.20   0.029    -.6741397   -.0377203
-    _Imsa_3980 |  -.5111168   .1476915    -3.46   0.001    -.8021736   -.2200601
-    _Imsa_4000 |  -.3227978   .2609813    -1.24   0.217    -.8371157      .19152
-    _Imsa_4040 |   .4056378    .189389     2.14   0.033     .0324075     .778868
-    _Imsa_4080 |  -.2064647   .3944921    -0.52   0.601    -.9838933    .5709639
-    _Imsa_4100 |   .1448764   .2019173     0.72   0.474    -.2530435    .5427964
-    _Imsa_4120 |   .0575641   .2479414     0.23   0.817    -.4310559     .546184
-    _Imsa_4150 |   .9041904   .3090958     2.93   0.004     .2950531    1.513328
-    _Imsa_4200 |   .1359557   .1614536     0.84   0.401    -.1822221    .4541334
-    _Imsa_4280 |   .0272722   .1626584     0.17   0.867      -.29328    .3478244
-    _Imsa_4320 |  -.6317924   .2717418    -2.32   0.021    -1.167316   -.0962687
-    _Imsa_4360 |   .6215763   .2174339     2.86   0.005     .1930778    1.050075
-    _Imsa_4400 |  -.0882169    .163611    -0.54   0.590    -.4106462    .2342125
-    _Imsa_4420 |   -.041535   .2281643    -0.18   0.856      -.49118      .40811
-    _Imsa_4472 |   .0660368   .1283636     0.51   0.607    -.1869304    .3190039
-    _Imsa_4520 |  -.2743501   .1351819    -2.03   0.044     -.540754   -.0079462
-    _Imsa_4600 |   .1493641     .44591     0.33   0.738    -.7293942    1.028122
-    _Imsa_4680 |   -.257381   .1873867    -1.37   0.171    -.6266653    .1119032
-    _Imsa_4720 |   .8672926   .2477199     3.50   0.001     .3791092    1.355476
-    _Imsa_4800 |  -.7713799   .2474801    -3.12   0.002    -1.259091   -.2836691
-    _Imsa_4890 |    .177997   .1565237     1.14   0.257    -.1304653    .4864594
-    _Imsa_4900 |   .2500475   .1038252     2.41   0.017     .0454385    .4546566
-    _Imsa_4920 |  -.2205136   .0974518    -2.26   0.025    -.4125626   -.0284646
-    _Imsa_4940 |  -.0538343   .1975767    -0.27   0.786    -.4432002    .3355315
-    _Imsa_4992 |  -.3703564   .3244767    -1.14   0.255    -1.009805    .2690922
-    _Imsa_5082 |  -.0795934   .1461089    -0.54   0.586    -.3675312    .2083444
-    _Imsa_5120 |   .4940902   .1738202     2.84   0.005     .1515414     .836639
-    _Imsa_5140 |   .6233134   .2134922     2.92   0.004     .2025826    1.044044
-    _Imsa_5160 |  -.3286617   .1119267    -2.94   0.004    -.5492365   -.1080869
-    _Imsa_5170 |  -.2208725   .2920254    -0.76   0.450    -.7963691    .3546241
-    _Imsa_5200 |  -.1396893   .1814059    -0.77   0.442    -.4971872    .2178086
-    _Imsa_5240 |  -.0720009   .1529935    -0.47   0.638    -.3735063    .2295045
-    _Imsa_5280 |  -.1365404   .1832409    -0.75   0.457    -.4976546    .2245737
-    _Imsa_5360 |  -.1577446   .1053571    -1.50   0.136    -.3653726    .0498833
-    _Imsa_5483 |          0  (omitted)
-    _Imsa_5560 |  -.1412208   .1231575    -1.15   0.253    -.3839281    .1014866
-    _Imsa_5602 |  -.1445442   .1246289    -1.16   0.247    -.3901512    .1010629
-    _Imsa_5720 |   .0543892   .1616536     0.34   0.737    -.2641828    .3729612
-    _Imsa_5790 |  -.7498491   .1908488    -3.93   0.000    -1.125956    -.373742
-    _Imsa_5800 |  -.2560133   .4163026    -0.61   0.539    -1.076424    .5643974
-    _Imsa_5880 |    .012095   .1059937     0.11   0.909    -.1967875    .2209775
-    _Imsa_5920 |   .1571777   .1212016     1.30   0.196    -.0816752    .3960306
-    _Imsa_5960 |  -.2615057   .1462867    -1.79   0.075     -.549794    .0267827
-    _Imsa_6020 |  -.2103061   .2254741    -0.93   0.352    -.6546496    .2340373
-    _Imsa_6080 |    .122043   .1546936     0.79   0.431    -.1828129    .4268989
-    _Imsa_6120 |  -.2233971   .1497005    -1.49   0.137    -.5184129    .0716187
-    _Imsa_6162 |  -.2291426   .1602416    -1.43   0.154    -.5449318    .0866467
-    _Imsa_6200 |   .4882397   .2047728     2.38   0.018     .0846925    .8917869
-    _Imsa_6280 |  -.3169726   .1781103    -1.78   0.077     -.667976    .0340307
-    _Imsa_6323 |   .1045919   .2031973     0.51   0.607    -.2958505    .5050344
-    _Imsa_6340 |   .5334694   .1944955     2.74   0.007     .1501757    .9167631
-    _Imsa_6403 |   .3805778   .2026741     1.88   0.062    -.0188335    .7799891
-    _Imsa_6442 |   .4167281   .1894728     2.20   0.029     .0433325    .7901236
-    _Imsa_6483 |  -.0143403   .1797205    -0.08   0.936    -.3685168    .3398362
-    _Imsa_6520 |   .9514102   .3251709     2.93   0.004     .3105936    1.592227
-    _Imsa_6560 |   .0153458   .1667778     0.09   0.927    -.3133245     .344016
-    _Imsa_6580 |   .1214844   .2171293     0.56   0.576    -.3064138    .5493827
-    _Imsa_6640 |   .4139063   .1857255     2.23   0.027     .0478956    .7799169
-    _Imsa_6660 |   .3683278   .1773698     2.08   0.039     .0187839    .7178717
-    _Imsa_6680 |   -.491528   .2736862    -1.80   0.074    -1.030883    .0478274
-    _Imsa_6690 |   .2568164    .194473     1.32   0.188     -.126433    .6400659
-    _Imsa_6720 |   .4686437   .1819097     2.58   0.011      .110153    .8271344
-    _Imsa_6740 |   .5262552   .1631228     3.23   0.001     .2047879    .8477226
-    _Imsa_6760 |    .170591   .1615582     1.06   0.292     -.147793     .488975
-    _Imsa_6800 |   .0472195   .1605414     0.29   0.769    -.2691606    .3635996
-    _Imsa_6820 |   .5588653   .3051658     1.83   0.068    -.0425272    1.160258
-    _Imsa_6840 |   .0075709   .0978265     0.08   0.938    -.1852166    .2003584
-    _Imsa_6880 |  -.4034722   .2699043    -1.49   0.136    -.9353746    .1284302
-    _Imsa_6895 |  -.4405809   .2765452    -1.59   0.113    -.9855706    .1044087
-    _Imsa_6922 |   .5073072   .1828527     2.77   0.006     .1469581    .8676563
-    _Imsa_6960 |  -.3184643   .1420528    -2.24   0.026    -.5984088   -.0385197
-    _Imsa_6980 |    .159985   .1770794     0.90   0.367    -.1889867    .5089568
-    _Imsa_7000 |  -.2652378   .2182738    -1.22   0.226    -.6953916     .164916
-    _Imsa_7040 |  -.2203883   .1197332    -1.84   0.067    -.4563473    .0155707
-    _Imsa_7160 |   .5459009   .1884817     2.90   0.004     .1744586    .9173431
-    _Imsa_7240 |   .0317887    .198243     0.16   0.873    -.3588903    .4224677
-    _Imsa_7320 |   .5453838   .1875782     2.91   0.004      .175722    .9150456
-    _Imsa_7362 |    .383868   .1743805     2.20   0.029     .0402151     .727521
-    _Imsa_7490 |   .8766643   .2362533     3.71   0.000     .4110781    1.342251
-    _Imsa_7510 |   .2551841   .1184593     2.15   0.032     .0217356    .4886327
-    _Imsa_7520 |  -.2145151   .1063723    -2.02   0.045    -.4241436   -.0048865
-    _Imsa_7560 |  -.3709255   .2366417    -1.57   0.118    -.8372771    .0954261
-    _Imsa_7602 |   .4160154   .1908078     2.18   0.030     .0399891    .7920416
-    _Imsa_7610 |  -.5227955   .2389729    -2.19   0.030    -.9937411   -.0518499
-    _Imsa_7620 |   .0512064   .3749891     0.14   0.892    -.6877874    .7902001
-    _Imsa_7680 |  -.2329992   .2207079    -1.06   0.292    -.6679499    .2019514
-    _Imsa_7720 |  -.1056988   .2518595    -0.42   0.675    -.6020402    .3906426
-    _Imsa_7760 |   .2923266   .1829882     1.60   0.112    -.0682896    .6529428
-    _Imsa_7800 |  -.0388643   .3154286    -0.12   0.902    -.6604818    .5827532
-    _Imsa_7840 |   .4522275   .1719427     2.63   0.009     .1133787    .7910762
-    _Imsa_7880 |   .0408269   .1693879     0.24   0.810    -.2929871    .3746409
-    _Imsa_7920 |   .0855309   .1639965     0.52   0.603    -.2376583    .4087201
-    _Imsa_8003 |  -.1878164   .1428763    -1.31   0.190    -.4693839     .093751
-    _Imsa_8050 |   .2550788   .2652251     0.96   0.337    -.2676023    .7777599
-    _Imsa_8120 |   .0940897   .1809414     0.52   0.604    -.2624929    .4506724
-    _Imsa_8140 |  -.0786503   .2284204    -0.34   0.731    -.5288001    .3714994
-    _Imsa_8160 |  -.0208757    .103162    -0.20   0.840    -.2241777    .1824264
-    _Imsa_8240 |   .6012947   .2077844     2.89   0.004     .1918125    1.010777
-    _Imsa_8280 |  -.2779438   .1895957    -1.47   0.144    -.6515814    .0956937
-    _Imsa_8320 |  -.1148015   .2146775    -0.53   0.593     -.537868     .308265
-    _Imsa_8360 |  -.2711636   .1841188    -1.47   0.142    -.6340079    .0916807
-    _Imsa_8400 |  -.2640602   .1689326    -1.56   0.119    -.5969768    .0688565
-    _Imsa_8440 |   .2728771   .1792321     1.52   0.129     -.080337    .6260912
-    _Imsa_8520 |   .5422563   .1967811     2.76   0.006     .1544584    .9300542
-    _Imsa_8560 |  -.1626443   .1318582    -1.23   0.219    -.4224982    .0972097
-    _Imsa_8600 |    .057965   .1679272     0.35   0.730    -.2729705    .3889004
-    _Imsa_8640 |   .1730868   .1862033     0.93   0.354    -.1938653     .540039
-    _Imsa_8680 |  -.0389456   .2016404    -0.19   0.847    -.4363198    .3584286
-    _Imsa_8800 |  -.0415033    .169662    -0.24   0.807    -.3758575    .2928509
-    _Imsa_8872 |   .2541416   .1497739     1.70   0.091    -.0410189    .5493022
-    _Imsa_8920 |   .3708091    .481938     0.77   0.442    -.5789497    1.320568
-    _Imsa_8960 |  -.0510745   .1462159    -0.35   0.727    -.3392232    .2370743
-    _Imsa_9000 |  -.4686961   .2606445    -1.80   0.074    -.9823501    .0449578
-    _Imsa_9040 |   .0863097   .0958395     0.90   0.369    -.1025619    .2751813
-    _Imsa_9140 |  -.2334545    .265861    -0.88   0.381    -.7573887    .2904797
-    _Imsa_9260 |   -.071209   .2406778    -0.30   0.768    -.5455145    .4030964
-    _Imsa_9280 |  -.4243094     .25473    -1.67   0.097    -.9263076    .0776889
-    _Imsa_9320 |  -.6846851   .2095953    -3.27   0.001    -1.097736   -.2716341
-    _Imsa_9360 |  -.4066297   .2356927    -1.73   0.086     -.871111    .0578515
-      _Iyear_2 |   .2531986   .1207753     2.10   0.037     .0151858    .4912114
-         _cons |   1.329195   3.911053     0.34   0.734    -6.378345    9.036735
---------------------------------------------------------------------------------
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
-revision/table4a.tex
-revision/table4a.xls
-dir : seeout
-.         local V "4b";
-.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))";
-.         xi: ivreg2 Dl_vmt Dl_ln i.year `cond', cl(msa) robust ;
-i.year            _Iyear_1-2          (_Iyear_1 for year==_1993 omitted)
-
-OLS estimation
---------------
-
-Estimates efficient for homoskedasticity only
-Statistics robust to heteroskedasticity and clustering on msa
-
-Number of clusters (msa) =         228                Number of obs =      456
-                                                      F(  2,   227) =   266.89
-                                                      Prob > F      =   0.0000
-Total (centered) SS     =  100.9176138                Centered R2   =   0.8651
-Total (uncentered) SS   =  181.8108232                Uncentered R2 =   0.9251
-Residual SS             =  13.61130122                Root MSE      =    .1728
-
-------------------------------------------------------------------------------
-             |               Robust
-      Dl_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
--------------+----------------------------------------------------------------
-       Dl_ln |    1.04491   .0458016    22.81   0.000     .9551403    1.134679
-    _Iyear_2 |  -.1439591   .0154653    -9.31   0.000    -.1742706   -.1136477
-       _cons |   .4227528   .0132075    32.01   0.000     .3968666    .4486391
-------------------------------------------------------------------------------
-Included instruments: Dl_ln _Iyear_2
-------------------------------------------------------------------------------
-.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace;
-check eret list for the existence of e(jp)
-check eret list for the existence of e(widstat)
-invalid syntax
+        long to wide: reshape wide a b, i(i) j(j)    (j existing variable)
+        wide to long: reshape long a b, i(i) j(j)    (j new variable)
 r(198);
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond',  cl(msa) robust ;
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt i.year `cond',  cl(msa) robust ;
-.         outreg2    Dl_ln Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust ;
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust ;
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond2',  cl(msa) robust ;
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust 
-> ;
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust 
-> ;
-.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append ;
-.         xi: ivreg2 Dl_vmt Dl_ln i.year i.msa `cond', robust ;
-.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append;
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) `demographics' i.msa i.year `cond',  robust ;
-.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
-.         log close;
-.         };
+.                    Dl_vmt_IH Dl_vmt_IHU Dl_vmt_MRU Dl_vmt_IHNU
+.                    l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU 
+.                    sprawl S_somecollege l_mean_income S_poor S_manuf 
+.                          Dl_pop l_pop g_exp, i(msa ) j(year _1993 _2003)
+. 
+.         local i=0
+. 
+.         *Threshold for road growth
+.         local k=0.05
+.         local m=-0.05
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         *instructions for outreg
+. 
+.         iis msa
+. 
+.         local R "IH"
+.         local cond " "
+.         local cond2 "if (Dl_ln_IH >`k')"
+.         local cond3 "if (Dl_ln_IH <`m')"
+.                 
+.         capture drop Dl_vmt Dl_ln l_vmt
+.         gen Dl_vmt = Dl_vmt_`R' 
+.         gen Dl_ln  = Dl_ln_`R' 
+.         gen l_vmt = l_vmt_`R' 
+. 
+.         local V "4a"
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         xi: reg    Dl_vmt Dl_ln i.year `cond', cl(msa) robust  
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt i.year `cond',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond2',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg   Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg  Dl_vmt Dl_ln i.year i.msa `cond', robust  
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append
+. 
+.         xi: reg  Dl_vmt Dl_ln Dl_pop `demographics' i.msa i.year `cond',  robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
+. 
+.         local V "4b"
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+. 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln i.year `cond', cl(msa) robust  
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt i.year `cond',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond2',  cl(msa) robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust  
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln i.year i.msa `cond', robust  
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
+. 
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) `demographics' i.msa i.year `cond',  robust  
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
+. 
+.         log close
+.         }
 r(198);
 
 end of do-file
 
 r(198);
 
-. ssc install ivreg2
-checking ivreg2 consistency and verifying not already installed...
-all files already exist and are up to date.
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD10a08_000000.tmp"
 
-. ssc install outreg2
-checking outreg2 consistency and verifying not already installed...
-all files already exist and are up to date.
+. 
+. 
+. if 1==1{
+.         quietly log using revision/table6, text replace
+log file already open
+r(604);
+.         use $data,clear
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+. 
+.         rename sprawl_1992 sprawl_1993
+.         rename sprawl_1976 sprawl_1983
+.         gen sprawl_2003 = sprawl_1993
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+.         replace ruggedness_msa = ruggedness_msa/1000
+.         replace heating_dd = heating_dd/100
+.         replace cooling_dd = cooling_dd/100
+. 
+.       rename S_somecollege_80 S_somecollege_1983
+.       rename S_somecollege_00 S_somecollege_2003
+.       rename S_somecollege_90 S_somecollege_1993
+.       rename S_poor_80 S_poor_1983
+.       rename S_poor_90 S_poor_1993
+.       rename S_poor_00 S_poor_2003
+.       rename l_mean_income_80 l_mean_income_1983
+.       rename l_mean_income_90 l_mean_income_1993
+.       rename l_mean_income_00 l_mean_income_2003
+.       rename S_manuf83 S_manuf_1983
+.       rename S_manuf93 S_manuf_1993
+.       rename S_manuf03 S_manuf_2003
+.       rename S_truck83 S_truck_1983
+.       rename S_truck93 S_truck_1993
+.       rename S_truck03 S_truck_2003
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+. 
+.       rename l_ln_km_IH_83 l_ln_km_IH_1983
+.       rename l_ln_km_IH_93 l_ln_km_IH_1993
+.       rename l_ln_km_IH_03 l_ln_km_IH_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1983
+.       rename l_vmt_IH_93 l_vmt_IH_1993
+.       rename l_vmt_IH_03 l_vmt_IH_2003
+. 
+.       rename l_max_84bus l_bus_1983 
+.       rename l_max_94bus l_bus_1993 
+.       rename l_max_04bus l_bus_2003 
+.       rename l_transit84 l_transit_1983
+.       rename l_transit94 l_transit_1993 
+.       rename l_transit04 l_transit_2003
+. 
+.         reshape long l_ln_km_IH  l_vmt_IH  l_bus l_transit sprawl S_somecollege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _
+> 1993 _2003)
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+. 
+.         iis msa
+. 
+.         local R "IH"
+.         local Inst "l_rail1898 l_hwy1947 demvote_sh72"
+.         local cond " "
+. 
+.         capture drop l_vmt l_ln
+.         gen l_vmt = l_vmt_`R' 
+.         gen l_ln  = l_ln_km_`R' 
+. 
+.         xi: reg    l_vmt l_ln l_bus i.year `cond', cl(msa) robust  
+.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(OLS `R')  `instruct' replace
+. 
+.         xi: reg    l_vmt l_ln l_bus l_pop i.year `cond',  cl(msa) robust  
+.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    l_vmt l_ln l_bus l_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
+.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: reg    l_vmt l_ln l_bus l_pop  `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
+. 
+.         xi: xtreg  l_vmt l_ln l_bus i.year `cond', fe robust  
+.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(FE `R')  `instruct' append
+. 
+.         xi: xtreg  l_vmt l_ln l_bus l_pop i.year `cond',  fe robust  
+.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(FE `R')  `instruct' append 
+. 
+.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') i.year `cond',  liml cl(msa) robust  
+.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(IV `R')  `instruct2' append
+. 
+.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop i.year `cond', liml cl(msa) robust  
+.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
+. 
+.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop  `geography' `census_div' i.year `cond', liml cl(msa)  robust  
+.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
+. 
+.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop  `geography' `census_div' `population' `demographics' i.year `cond', liml cl(msa)  robust  
+.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
+. 
+. 
+.         log close
+.         }
+r(604);
 
-. exit, clear
+end of do-file
+
+r(604);
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Tur
+> ner-M.-A.-2011-\Deliverable_1\data\revision/table4.log
+  log type:  text
+ closed on:  18 Feb 2022, 11:10:49
+----------------------------------------------------------------------------------------------------------------------------------------------------

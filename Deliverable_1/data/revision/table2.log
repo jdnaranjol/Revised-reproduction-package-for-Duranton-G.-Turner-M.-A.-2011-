@@ -1,123 +1,136 @@
-.         use $data,clear;
-.         * Generate non urbanised area variables;
-.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83);
+.         use $data,clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
 (50 missing values generated)
-.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83);
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
 (50 missing values generated)
-.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83);
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
 (50 missing values generated)
-.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93);
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
 (39 missing values generated)
-.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93);
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
 (39 missing values generated)
-.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93);
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
 (39 missing values generated)
-.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03);
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
 (38 missing values generated)
-.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03);
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
 (38 missing values generated)
-.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03);
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
 (38 missing values generated)
-.         * Selection of observations;
-.         drop if l_ln_km_IH_83==0;
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
 (47 observations deleted)
-.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_
-> 93);
-.         rename sprawl_1992 sprawl93;
-.         rename sprawl_1976 sprawl83;
-.         gen sprawl03 = sprawl93;
-.         *rescale so display is better;
-.         replace elevat_range_msa = elevat_range_msa/1000;
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         rename sprawl_1992 sprawl93
+.         rename sprawl_1976 sprawl83
+.         gen sprawl03 = sprawl93
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
 variable elevat_range_msa was int now float
 (228 real changes made)
-.         replace ruggedness_msa = ruggedness_msa/1000;
+.         replace ruggedness_msa = ruggedness_msa/1000
 (228 real changes made)
-.         replace heating_dd = heating_dd/100;
+.         replace heating_dd = heating_dd/100
 (228 real changes made)
-.         replace cooling_dd = cooling_dd/100;
+.         replace cooling_dd = cooling_dd/100
 (228 real changes made)
-.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
-.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl";
-.         local demographics "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  ;
-.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
-.         local k=1;
-.         while `k'<=5{;
-  2.                 if `k'==1{;
-  3.                         local V "2_a";
-  4.                         local R "IH";
-  5.                         local cond " ";
-  6.                         };
-  7.                 if `k'==2{;
-  8.                         local V "2_b";
-  9.                         local R "IHU";
- 10.                         local cond "if zero>0";
- 11.                         };
- 12.                 if `k'==3{;
- 13.                         local V "2_c";
- 14.                         local R "MRU";
- 15.                         local cond "if zero>0";
- 16.                         };
- 17.                 if `k'==4{;
- 18.                         local V "2_d";
- 19.                         local R "IHNU";
- 20.                         local cond "if zero>0";
- 21.                         };
- 22.         local i=0;
- 23.         local j=1;
- 24.         while `j'<=3{;
- 25.                 if `j'==1{;
- 26.                         local year "1983";
- 27.                         local yrMM "83";
- 28.                         local yrXX "80";
- 29.                         local yrbus "84";
- 30.                         local population "l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
- 31.                         };
- 32.                 if `j'==2{;
- 33.                         local year "1993";
- 34.                         local yrMM "93";
- 35.                         local yrXX "90";
- 36.                         local yrbus "94";
- 37.                         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
- 38.                         };
- 39.                 if `j'==3{;
- 40.                         local year "2003";
- 41.                         local yrMM "03";
- 42.                         local yrXX "00";
- 43.                         local yrbus "04";
- 44.                         local population "l_pop90 l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
- 45.                         };
- 46.                 capture drop l_pop l_vmt l_ln l_max_bus sprawl l_transit l_mean_income S_somecollege S_poor S_manuf;
- 47.                 gen l_pop       = l_pop`yrXX' ;
- 48.                 gen sprawl      = sprawl`yrMM' ;
- 49.                 gen l_mean_income = l_mean_income_`yrXX' ;
- 50.                 gen S_somecollege = S_somecollege_`yrXX' ;
- 51.                 gen S_poor      = S_poor_`yrXX' ;
- 52.                 gen S_manuf     = S_manuf`yrMM' ;
- 53.                 gen l_vmt = l_vmt_`R'_`yrMM' ;
- 54.                 gen l_ln  = l_ln_km_`R'_`yrMM' ;
- 55.                 gen l_max_bus   = l_max_`yrbus'bus;
- 56.                 gen l_transit   = l_transit`yrbus';
- 57.                                 local i= `i'+1;
- 58.                 reg   l_vmt l_ln `cond',robust ;
- 59.                 if `i'==1{;
- 60.                 outreg2 l_ln using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' replace;
- 61.                 };
- 62.                 if `i'>1{;
- 63.                 outreg2 l_ln using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append;
- 64.                 };
- 65.                 local i= `i'+1;
- 66.                 reg   l_vmt l_ln l_pop `cond', robust ;
- 67.                 outreg2 l_ln l_pop using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append ;
- 68.                 local i= `i'+1;
- 69.                 reg    l_vmt l_ln l_pop  `geography' `census_div' `cond', robust ;
- 70.                 outreg2 l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append ;
- 71.                                 local i= `i'+1;
- 72.                 reg   l_vmt l_ln l_pop `geography' `demographics' `population' `census_div' `cond', robust ;
- 73.                 outreg2  l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append ;
- 74.               local j=`j'+1;
- 75.               };
- 76.         local k=`k'+1;
- 77.         };
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         local k=1
+.         while `k'<=5{
+  2.                 if `k'==1{
+  3.                         local V "2_a"
+  4.                         local R "IH"
+  5.                         local cond " "
+  6.                         }
+  7.                 if `k'==2{
+  8.                         local V "2_b"
+  9.                         local R "IHU"
+ 10.                         local cond "if zero>0"
+ 11.                         }
+ 12.                 if `k'==3{
+ 13.                         local V "2_c"
+ 14.                         local R "MRU"
+ 15.                         local cond "if zero>0"
+ 16.                         }
+ 17.                 if `k'==4{
+ 18.                         local V "2_d"
+ 19.                         local R "IHNU"
+ 20.                         local cond "if zero>0"
+ 21.                         }
+ 22. 
+.         local i=0
+ 23.         local j=1
+ 24.         while `j'<=3{
+ 25.                 if `j'==1{
+ 26.                         local year "1983"
+ 27.                         local yrMM "83"
+ 28.                         local yrXX "80"
+ 29.                         local yrbus "84"
+ 30.                         local population "l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 31.                         }
+ 32.                 if `j'==2{
+ 33.                         local year "1993"
+ 34.                         local yrMM "93"
+ 35.                         local yrXX "90"
+ 36.                         local yrbus "94"
+ 37.                         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 38.                         }
+ 39.                 if `j'==3{
+ 40.                         local year "2003"
+ 41.                         local yrMM "03"
+ 42.                         local yrXX "00"
+ 43.                         local yrbus "04"
+ 44.                         local population "l_pop90 l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 45.                         }
+ 46.                 capture drop l_pop l_vmt l_ln l_max_bus sprawl l_transit l_mean_income S_somecollege S_poor S_manuf
+ 47.                 gen l_pop       = l_pop`yrXX' 
+ 48.                 gen sprawl      = sprawl`yrMM' 
+ 49.                 gen l_mean_income = l_mean_income_`yrXX' 
+ 50.                 gen S_somecollege = S_somecollege_`yrXX' 
+ 51.                 gen S_poor      = S_poor_`yrXX' 
+ 52.                 gen S_manuf     = S_manuf`yrMM' 
+ 53.                 gen l_vmt = l_vmt_`R'_`yrMM' 
+ 54.                 gen l_ln  = l_ln_km_`R'_`yrMM' 
+ 55.                 gen l_max_bus   = l_max_`yrbus'bus
+ 56.                 gen l_transit   = l_transit`yrbus'
+ 57.                 
+.                 local i= `i'+1
+ 58.                 reg   l_vmt l_ln `cond',robust  
+ 59.                 if `i'==1{
+ 60.                 outreg2 l_ln using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' replace
+ 61.                 }
+ 62.                 if `i'>1{
+ 63.                 outreg2 l_ln using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append
+ 64.                 }
+ 65. 
+.                 local i= `i'+1
+ 66.                 reg   l_vmt l_ln l_pop `cond', robust  
+ 67.                 outreg2 l_ln l_pop using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append 
+ 68. 
+.                 local i= `i'+1
+ 69.                 reg    l_vmt l_ln l_pop  `geography' `census_div' `cond', robust  
+ 70.                 outreg2 l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append 
+ 71.                 
+.                 local i= `i'+1
+ 72.                 reg   l_vmt l_ln l_pop `geography' `demographics' `population' `census_div' `cond', robust  
+ 73.                 outreg2  l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(`R'`yrMM')  `instruct' append 
+ 74. 
+.               local j=`j'+1
+ 75.               }
+ 76. 
+.         local k=`k'+1
+ 77.         }
 
 Linear regression                               Number of obs     =        228
                                                 F(1, 226)         =     892.28
@@ -1821,9 +1834,11 @@ elevat_range_msa |  -.0612705   .0549741    -1.11   0.267    -.1698287    .04728
 revision/table2_d.tex
 revision/table2_d.xls
 dir : seeout
-.         log close;
+. 
+.         log close
       name:  <unnamed>
-       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto 1\data\revision/table2.log
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Tur
+> ner-M.-A.-2011-\Deliverable_1\data\revision/table2.log
   log type:  text
- closed on:  16 Feb 2022, 10:22:46
-----------------------------------------------------------------------------------------------------------------------------------------------
+ closed on:  18 Feb 2022, 11:09:25
+----------------------------------------------------------------------------------------------------------------------------------------------------

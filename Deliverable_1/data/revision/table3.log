@@ -1,91 +1,99 @@
-.         use $data,clear;
-.         * Generate non urbanised area variables;
-.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83);
+.         use $data,clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
 (50 missing values generated)
-.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83);
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
 (50 missing values generated)
-.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83);
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
 (50 missing values generated)
-.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93);
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
 (39 missing values generated)
-.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93);
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
 (39 missing values generated)
-.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93);
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
 (39 missing values generated)
-.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03);
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
 (38 missing values generated)
-.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03);
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
 (38 missing values generated)
-.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03);
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
 (38 missing values generated)
-.         * Selection of observations;
-.         drop if l_ln_km_IH_83==0;
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
 (47 observations deleted)
-.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_
-> 93);
-.         *rescale so display is better;
-.         replace elevat_range_msa = elevat_range_msa/1000;
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
 variable elevat_range_msa was int now float
 (228 real changes made)
-.         replace ruggedness_msa = ruggedness_msa/1000;
+.         replace ruggedness_msa = ruggedness_msa/1000
 (228 real changes made)
-.         replace heating_dd = heating_dd/100;
+.         replace heating_dd = heating_dd/100
 (228 real changes made)
-.         replace cooling_dd = cooling_dd/100;
+.         replace cooling_dd = cooling_dd/100
 (228 real changes made)
-.         rename sprawl_1992 sprawl_1993;
-.         rename sprawl_1976 sprawl_1983;
-.         gen sprawl_2003 = sprawl_1993;
-.       rename S_somecollege_80 S_somecollege_1983;
-.       rename S_somecollege_00 S_somecollege_2003;
-.       rename S_somecollege_90 S_somecollege_1993;
-.       rename S_poor_80 S_poor_1983;
-.       rename S_poor_90 S_poor_1993;
-.       rename S_poor_00 S_poor_2003;
-.       rename l_mean_income_80 l_mean_income_1983;
-.       rename l_mean_income_90 l_mean_income_1993;
-.       rename l_mean_income_00 l_mean_income_2003;
-.       rename S_manuf83 S_manuf_1983;
-.       rename S_manuf93 S_manuf_1993;
-.       rename S_manuf03 S_manuf_2003;
-.       rename S_truck83 S_truck_1983;
-.       rename S_truck93 S_truck_1993;
-.       rename S_truck03 S_truck_2003;
-.       gen l_pop_1983 = l_pop80;
-.        gen l_pop_1993 = l_pop90;
-.        gen l_pop_2003 = l_pop00;
-.        rename l_max_84bus l_bus_1983;
-.        rename l_max_94bus l_bus_1993;
-.        rename l_max_04bus l_bus_2003;
-.        rename l_transit84 l_transit_1983;
-.       rename l_transit94 l_transit_1993;
-.        rename l_transit04 l_transit_2003;
-.       rename l_ln_km_IHNU_83 l_ln_km_IHNU_1983;
-.       rename l_ln_km_IHNU_93 l_ln_km_IHNU_1993;
-.       rename l_ln_km_IHNU_03 l_ln_km_IHNU_2003;
-.       rename l_ln_km_IHU_83 l_ln_km_IHU_1983;
-.       rename l_ln_km_IHU_93 l_ln_km_IHU_1993;
-.       rename l_ln_km_IHU_03 l_ln_km_IHU_2003;
-.       rename l_ln_km_IH_83 l_ln_km_IH_1983;
-.       rename l_ln_km_IH_93 l_ln_km_IH_1993;
-.       rename l_ln_km_IH_03 l_ln_km_IH_2003;
-.       rename l_ln_km_MRU_83 l_ln_km_MRU_1983;
-.       rename l_ln_km_MRU_93 l_ln_km_MRU_1993;
-.       rename l_ln_km_MRU_03 l_ln_km_MRU_2003;
-.         rename l_vmt_IHNU_83 l_vmt_IHNU_1983;
-.       rename l_vmt_IHNU_93 l_vmt_IHNU_1993;
-.       rename l_vmt_IHNU_03 l_vmt_IHNU_2003;
-.       rename l_vmt_IHU_83 l_vmt_IHU_1983;
-.       rename l_vmt_IHU_93 l_vmt_IHU_1993;
-.       rename l_vmt_IHU_03 l_vmt_IHU_2003;
-.       rename l_vmt_IH_83 l_vmt_IH_1983;
-.       rename l_vmt_IH_93 l_vmt_IH_1993;
-.       rename l_vmt_IH_03 l_vmt_IH_2003;
-.       rename l_vmt_MRU_83 l_vmt_MRU_1983;
-.       rename l_vmt_MRU_93 l_vmt_MRU_1993;
-.       rename l_vmt_MRU_03 l_vmt_MRU_2003;
-.         reshape long l_ln_km_IH  l_ln_km_IHU  l_ln_km_IHNU  l_ln_km_MRU l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU l_bus l_transit sprawl S_s
-> omecollege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _1993 _2003);
+. 
+.         rename sprawl_1992 sprawl_1993
+.         rename sprawl_1976 sprawl_1983
+.         gen sprawl_2003 = sprawl_1993
+. 
+.       rename S_somecollege_80 S_somecollege_1983
+.       rename S_somecollege_00 S_somecollege_2003
+.       rename S_somecollege_90 S_somecollege_1993
+.       rename S_poor_80 S_poor_1983
+.       rename S_poor_90 S_poor_1993
+.       rename S_poor_00 S_poor_2003
+.       rename l_mean_income_80 l_mean_income_1983
+.       rename l_mean_income_90 l_mean_income_1993
+.       rename l_mean_income_00 l_mean_income_2003
+.       rename S_manuf83 S_manuf_1983
+.       rename S_manuf93 S_manuf_1993
+.       rename S_manuf03 S_manuf_2003
+.       rename S_truck83 S_truck_1983
+.       rename S_truck93 S_truck_1993
+.       rename S_truck03 S_truck_2003
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+. 
+.       rename l_max_84bus l_bus_1983 
+.       rename l_max_94bus l_bus_1993 
+.       rename l_max_04bus l_bus_2003 
+.       rename l_transit84 l_transit_1983
+.       rename l_transit94 l_transit_1993 
+.       rename l_transit04 l_transit_2003
+. 
+.       rename l_ln_km_IHNU_83 l_ln_km_IHNU_1983
+.       rename l_ln_km_IHNU_93 l_ln_km_IHNU_1993
+.       rename l_ln_km_IHNU_03 l_ln_km_IHNU_2003
+.       rename l_ln_km_IHU_83 l_ln_km_IHU_1983
+.       rename l_ln_km_IHU_93 l_ln_km_IHU_1993
+.       rename l_ln_km_IHU_03 l_ln_km_IHU_2003
+.       rename l_ln_km_IH_83 l_ln_km_IH_1983
+.       rename l_ln_km_IH_93 l_ln_km_IH_1993
+.       rename l_ln_km_IH_03 l_ln_km_IH_2003
+.       rename l_ln_km_MRU_83 l_ln_km_MRU_1983
+.       rename l_ln_km_MRU_93 l_ln_km_MRU_1993
+.       rename l_ln_km_MRU_03 l_ln_km_MRU_2003
+.       
+.         rename l_vmt_IHNU_83 l_vmt_IHNU_1983
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_1993
+.       rename l_vmt_IHNU_03 l_vmt_IHNU_2003
+.       rename l_vmt_IHU_83 l_vmt_IHU_1983
+.       rename l_vmt_IHU_93 l_vmt_IHU_1993
+.       rename l_vmt_IHU_03 l_vmt_IHU_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1983
+.       rename l_vmt_IH_93 l_vmt_IH_1993
+.       rename l_vmt_IH_03 l_vmt_IH_2003
+.       rename l_vmt_MRU_83 l_vmt_MRU_1983
+.       rename l_vmt_MRU_93 l_vmt_MRU_1993
+.       rename l_vmt_MRU_03 l_vmt_MRU_2003
+. 
+.         reshape long l_ln_km_IH  l_ln_km_IHU  l_ln_km_IHNU  l_ln_km_MRU l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU l_bus l_transit sprawl S_somecol
+> lege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _1993 _2003)
 
 Data                               Wide   ->   Long
 -----------------------------------------------------------------------------
@@ -111,19 +119,26 @@ l_mean_income_1983 l_mean_income_1993 l_mean_income_2003->l_mean_income
  S_truck_1983 S_truck_1993 S_truck_2003   ->   S_truck
        l_pop_1983 l_pop_1993 l_pop_2003   ->   l_pop
 -----------------------------------------------------------------------------
-.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl";
-.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  ;
-.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
-.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
-.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
-.         iis msa;
-.         local cond "if zero>0";
-.         local R "IH";
-.         local V "3";
-.                         capture drop l_vmt l_ln;
-.         gen l_vmt = l_vmt_`R' ;
-.         gen l_ln  = l_ln_km_`R' ;
-.         xi: reg  l_vmt l_ln i.year, cl(msa) robust ;
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         iis msa
+. 
+.         local cond "if zero>0"
+.         local R "IH"
+.         local V "3"
+.                 
+.         capture drop l_vmt l_ln
+.         gen l_vmt = l_vmt_`R' 
+.         gen l_ln  = l_ln_km_`R' 
+. 
+. 
+.         xi: reg  l_vmt l_ln i.year, cl(msa) robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Linear regression                               Number of obs     =        684
@@ -142,11 +157,12 @@ Linear regression                               Number of obs     =        684
     _Iyear_3 |   .6749759   .0182068    37.07   0.000     .6390999    .7108518
        _cons |   6.757962   .1673656    40.38   0.000     6.428174    7.087751
 ------------------------------------------------------------------------------
-.         outreg2    l_ln using revision/table`V'.xls,ctitle(`R')  `instruct' replace;
+.         outreg2    l_ln using revision/table`V'.xls,ctitle(`R')  `instruct' replace
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: reg  l_vmt l_ln l_pop i.year, cl(msa)  robust ;
+. 
+.         xi: reg  l_vmt l_ln l_pop i.year, cl(msa)  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Linear regression                               Number of obs     =        684
@@ -166,11 +182,12 @@ Linear regression                               Number of obs     =        684
     _Iyear_3 |   .6272081   .0194831    32.19   0.000     .5888171     .665599
        _cons |   3.436421   .2986736    11.51   0.000     2.847894    4.024948
 ------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: reg  l_vmt l_ln l_pop `geography' `census_div' i.year, cl(msa)  robust ;
+. 
+.         xi: reg  l_vmt l_ln l_pop `geography' `census_div' i.year, cl(msa)  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 note: div1 omitted because of collinearity.
 
@@ -205,11 +222,12 @@ elevat_range_msa |  -.0314317   .0535288    -0.59   0.558    -.1369085    .07404
         _Iyear_3 |   .6281356   .0190402    32.99   0.000     .5906174    .6656537
            _cons |   4.365242   .5730483     7.62   0.000     3.236068    5.494417
 ----------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: reg  l_vmt l_ln l_pop  `geography' `census_div' `demographics' `population' i.year,  cl(msa) robust ;
+. 
+.         xi: reg  l_vmt l_ln l_pop  `geography' `census_div' `demographics' `population' i.year,  cl(msa) robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 note: div1 omitted because of collinearity.
 
@@ -255,11 +273,12 @@ elevat_range_msa |  -.0486287   .0468494    -1.04   0.300    -.1409441    .04368
         _Iyear_3 |   .4389889   .1072937     4.09   0.000       .22757    .6504078
            _cons |   10.35086   2.832408     3.65   0.000     4.769683    15.93203
 ----------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(`R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln i.year, fe robust ;
+. 
+.         xi: xtreg  l_vmt l_ln i.year, fe robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Fixed-effects (within) regression               Number of obs     =        684
@@ -287,11 +306,12 @@ corr(u_i, Xb) = 0.3544                          Prob > F          =     0.0000
      sigma_e |   .1422964
          rho |  .92597422   (fraction of variance due to u_i)
 ------------------------------------------------------------------------------
-.         outreg2    l_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append;
+.         outreg2    l_ln using revision/table`V'.xls,ctitle(FE `R')  `instruct' append
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln l_pop i.year, fe robust ;
+. 
+.         xi: xtreg  l_vmt l_ln l_pop i.year, fe robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Fixed-effects (within) regression               Number of obs     =        684
@@ -320,11 +340,12 @@ corr(u_i, Xb) = -0.2531                         Prob > F          =     0.0000
      sigma_e |  .13716529
          rho |  .87378105   (fraction of variance due to u_i)
 ------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln l_pop  `demographics' i.year, fe  robust ;
+. 
+.         xi: xtreg  l_vmt l_ln l_pop  `demographics' i.year, fe  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 note: l_mean_income omitted because of collinearity.
 
@@ -358,11 +379,12 @@ l_mean_income |          0  (omitted)
       sigma_e |  .13303774
           rho |  .90550507   (fraction of variance due to u_i)
 -------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln l_pop i.year `cond', fe  robust ;
+. 
+.         xi: xtreg  l_vmt l_ln l_pop i.year `cond', fe  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Fixed-effects (within) regression               Number of obs     =        576
@@ -391,11 +413,12 @@ corr(u_i, Xb) = 0.0348                          Prob > F          =     0.0000
      sigma_e |  .12537121
          rho |  .88567174   (fraction of variance due to u_i)
 ------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln l_pop i.year if (l_pop90 > 12.5860901), fe  robust ;
+. 
+.         xi: xtreg  l_vmt l_ln l_pop i.year if (l_pop90 > 12.5860901), fe  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Fixed-effects (within) regression               Number of obs     =        342
@@ -424,11 +447,12 @@ corr(u_i, Xb) = -0.6376                         Prob > F          =     0.0000
      sigma_e |  .12712226
          rho |  .86766859   (fraction of variance due to u_i)
 ------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         xi: xtreg  l_vmt l_ln l_pop i.year if (l_pop90 < 12.5860901), fe  robust ;
+. 
+.         xi: xtreg  l_vmt l_ln l_pop i.year if (l_pop90 < 12.5860901), fe  robust  
 i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
 
 Fixed-effects (within) regression               Number of obs     =        342
@@ -457,13 +481,14 @@ corr(u_i, Xb) = -0.3056                         Prob > F          =     0.0000
      sigma_e |   .1392335
          rho |  .91125705   (fraction of variance due to u_i)
 ------------------------------------------------------------------------------
-.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append ;
+.         outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
 revision/table3.tex
 revision/table3.xls
 dir : seeout
-.         log close;
+.         log close
       name:  <unnamed>
-       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto 1\data\revision/table3.log
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Tur
+> ner-M.-A.-2011-\Deliverable_1\data\revision/table3.log
   log type:  text
- closed on:  16 Feb 2022, 10:22:57
-----------------------------------------------------------------------------------------------------------------------------------------------
+ closed on:  18 Feb 2022, 11:09:32
+----------------------------------------------------------------------------------------------------------------------------------------------------
