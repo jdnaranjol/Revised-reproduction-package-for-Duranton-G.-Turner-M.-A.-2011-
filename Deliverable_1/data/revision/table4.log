@@ -23,7 +23,8 @@
 .         * Selection of observations
 .         drop if l_ln_km_IH_83==0
 (47 observations deleted)
-.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU
+> _93)
 . 
 .         rename sprawl_1992 sprawl_2003
 .         rename sprawl_1976 sprawl_1993
@@ -107,7 +108,7 @@ option i() required
         +---------------+
 
         long to wide: reshape wide a b, i(i) j(j)    (j existing variable)
-        wide to long: reshape long a b, i(i) j(j)    (j new variable)
+        wide to long: reshape long a b, i(i) j(j)    (j    new   variable)
 r(198);
 .                    Dl_vmt_IH Dl_vmt_IHU Dl_vmt_MRU Dl_vmt_IHNU
 .                    l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU 
@@ -188,16 +189,19 @@ r(198);
 .         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust  
 .         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
 . 
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust 
+>  
 .         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
 . 
 .         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond2',  cl(msa) robust  
 .         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
 . 
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust  
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust
+>   
 .         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
 . 
-.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust  
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust
+>   
 .         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
 . 
 .         xi: ivreg2 Dl_vmt Dl_ln i.year i.msa `cond', robust  
@@ -214,126 +218,295 @@ end of do-file
 
 r(198);
 
-. do "C:\Users\USUARIO\AppData\Local\Temp\STD10a08_000000.tmp"
+. doedit "C:\Users\chris\Desktop\Clases_2022\Urban_economics\Trabajos\Revised-reproduction-package-for-Duranton-G.-Turner-M.-A.-2011-\Deliver
+> able_1\Duranton_Turner_AER_2010.do"
 
+. do "C:\Users\chris\AppData\Local\Temp\STD775c_000000.tmp"
+
+. if 1==1{;
 . 
+.         quietly log using revision/table4, text replace;
+option ; not allowed
+r(198);
+.         use $data, clear;
 . 
-. if 1==1{
-.         quietly log using revision/table6, text replace
-log file already open
-r(604);
-.         use $data,clear
+.         * Generate non urbanised area variables;
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83);
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83);
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83);
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93);
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93);
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93);
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03);
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03);
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03);
 . 
-.         * Selection of observations
-.         drop if l_ln_km_IH_83==0
+.         * Selection of observations;
+.         drop if l_ln_km_IH_83==0;
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU
+> _93);
 . 
-.         rename sprawl_1992 sprawl_1993
-.         rename sprawl_1976 sprawl_1983
-.         gen sprawl_2003 = sprawl_1993
+.         rename sprawl_1992 sprawl_2003;
+.         rename sprawl_1976 sprawl_1993;
 . 
-.         *rescale so display is better
-.         replace elevat_range_msa = elevat_range_msa/1000 
-.         replace ruggedness_msa = ruggedness_msa/1000
-.         replace heating_dd = heating_dd/100
-.         replace cooling_dd = cooling_dd/100
+.         *rescale so display is better;
+.         replace elevat_range_msa = elevat_range_msa/1000; 
+.         replace ruggedness_msa = ruggedness_msa/1000;
+.         replace heating_dd = heating_dd/100;
+.         replace cooling_dd = cooling_dd/100;
 . 
-.       rename S_somecollege_80 S_somecollege_1983
-.       rename S_somecollege_00 S_somecollege_2003
-.       rename S_somecollege_90 S_somecollege_1993
-.       rename S_poor_80 S_poor_1983
-.       rename S_poor_90 S_poor_1993
-.       rename S_poor_00 S_poor_2003
-.       rename l_mean_income_80 l_mean_income_1983
-.       rename l_mean_income_90 l_mean_income_1993
-.       rename l_mean_income_00 l_mean_income_2003
-.       rename S_manuf83 S_manuf_1983
-.       rename S_manuf93 S_manuf_1993
-.       rename S_manuf03 S_manuf_2003
-.       rename S_truck83 S_truck_1983
-.       rename S_truck93 S_truck_1993
-.       rename S_truck03 S_truck_2003
-.       gen l_pop_1983 = l_pop80 
-.       gen l_pop_1993 = l_pop90 
-.       gen l_pop_2003 = l_pop00 
+.         *Generate first differences;
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83;
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93;
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83; 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93; 
 . 
-.       rename l_ln_km_IH_83 l_ln_km_IH_1983
-.       rename l_ln_km_IH_93 l_ln_km_IH_1993
-.       rename l_ln_km_IH_03 l_ln_km_IH_2003
-.       rename l_vmt_IH_83 l_vmt_IH_1983
-.       rename l_vmt_IH_93 l_vmt_IH_1993
-.       rename l_vmt_IH_03 l_vmt_IH_2003
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83;
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93;
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83; 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93; 
 . 
-.       rename l_max_84bus l_bus_1983 
-.       rename l_max_94bus l_bus_1993 
-.       rename l_max_04bus l_bus_2003 
-.       rename l_transit84 l_transit_1983
-.       rename l_transit94 l_transit_1993 
-.       rename l_transit04 l_transit_2003
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83;
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93;
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83; 
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93; 
 . 
-.         reshape long l_ln_km_IH  l_vmt_IH  l_bus l_transit sprawl S_somecollege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _
-> 1993 _2003)
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83;
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93;
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83; 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93; 
 . 
-.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
-.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  
-.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
-.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+.         gen Dl_pop_1993 = l_pop90 -l_pop80;
+.         gen Dl_pop_2003 = l_pop00 -l_pop90;
 . 
-.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
-.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+.       gen l_pop_1983 = l_pop80; 
+.       gen l_pop_1993 = l_pop90; 
+.       gen l_pop_2003 = l_pop00; 
+.      
+.       rename l_vmt_IHNU_83 l_vmt_IHNU_1993;
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_2003;
+.       rename l_vmt_IHU_83 l_vmt_IHU_1993;
+.       rename l_vmt_IHU_93 l_vmt_IHU_2003;
+.       rename l_vmt_IH_83 l_vmt_IH_1993;
+.       rename l_vmt_IH_93 l_vmt_IH_2003;
+.       rename l_vmt_MRU_83 l_vmt_MRU_1993;
+.       rename l_vmt_MRU_93 l_vmt_MRU_2003;
+.  
+.         rename S_somecollege_80 S_somecollege_1993; 
+.         rename l_mean_income_80 l_mean_income_1993; 
+.         rename S_poor_80 S_poor_1993; 
+.         rename S_manuf83 S_manuf_1993; 
+.  
+.         rename S_somecollege_90 S_somecollege_2003; 
+.         rename l_mean_income_90 l_mean_income_2003; 
+.         rename S_poor_90 S_poor_2003; 
+.         rename S_manuf93 S_manuf_2003; 
 . 
-.         iis msa
+.         rename g_exp00_90 g_exp_2003; 
+.         rename g_exp90_80 g_exp_1993; 
 . 
-.         local R "IH"
-.         local Inst "l_rail1898 l_hwy1947 demvote_sh72"
-.         local cond " "
+.         reshape long Dl_ln_IH Dl_ln_IHU Dl_ln_MRU Dl_ln_IHNU 
+.                    Dl_vmt_IH Dl_vmt_IHU Dl_vmt_MRU Dl_vmt_IHNU
+.                    l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU 
+.                    sprawl S_somecollege l_mean_income S_poor S_manuf 
+.                          Dl_pop l_pop g_exp, i(msa ) j(year _1993 _2003);
 . 
-.         capture drop l_vmt l_ln
-.         gen l_vmt = l_vmt_`R' 
-.         gen l_ln  = l_ln_km_`R' 
+.         local i=0;
 . 
-.         xi: reg    l_vmt l_ln l_bus i.year `cond', cl(msa) robust  
-.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(OLS `R')  `instruct' replace
+.         *Threshold for road growth;
+.         local k=0.05;
+.         local m=-0.05;
 . 
-.         xi: reg    l_vmt l_ln l_bus l_pop i.year `cond',  cl(msa) robust  
-.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl";
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  ;
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
 . 
-.         xi: reg    l_vmt l_ln l_bus l_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
-.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
+.         *instructions for outreg;
 . 
-.         xi: reg    l_vmt l_ln l_bus l_pop  `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
-.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(OLS `R')  `instruct' append 
-. 
-.         xi: xtreg  l_vmt l_ln l_bus i.year `cond', fe robust  
-.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(FE `R')  `instruct' append
-. 
-.         xi: xtreg  l_vmt l_ln l_bus l_pop i.year `cond',  fe robust  
-.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(FE `R')  `instruct' append 
-. 
-.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') i.year `cond',  liml cl(msa) robust  
-.         outreg2    l_ln l_bus using revision/table6.xls,ctitle(IV `R')  `instruct2' append
-. 
-.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop i.year `cond', liml cl(msa) robust  
-.         outreg2    l_ln l_bus l_pop using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
-. 
-.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop  `geography' `census_div' i.year `cond', liml cl(msa)  robust  
-.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
-. 
-.         xi: ivreg2 l_vmt (l_ln l_bus=`Inst') l_pop  `geography' `census_div' `population' `demographics' i.year `cond', liml cl(msa)  robust  
-.         outreg2    l_ln l_bus l_pop  `geography' using revision/table6.xls,ctitle(IV `R')  `instruct2' append 
-. 
-. 
-.         log close
-.         }
-r(604);
+.         iis msa;
+.         #delimit;
+delimiter now ;
+.         local R "IH";
+.         local cond " ";
+.         local cond2 "if (Dl_ln_IH >`k')";
+.         local cond3 "if (Dl_ln_IH <`m')";
+.                         capture drop Dl_vmt Dl_ln l_vmt;
+.         gen Dl_vmt = Dl_vmt_`R' ;
+.         gen Dl_ln  = Dl_ln_`R' ;
+.         gen l_vmt = l_vmt_`R' ;
+.         local V "4a";
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
+.         xi: reg    Dl_vmt Dl_ln i.year `cond', cl(msa) robust ;
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(OLS `R') `instruct' replace;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond',  cl(msa) robust ;
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt i.year `cond',  cl(msa) robust ;
+.         outreg2    Dl_ln Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust ;
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust ;
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop i.year `cond2',  cl(msa) robust ;
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg    Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust ;
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg   Dl_vmt Dl_ln Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust ;
+.         outreg2    Dl_ln Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R') `instruct' append ;
+.         xi: reg  Dl_vmt Dl_ln i.year i.msa `cond', robust ;
+.         outreg2    Dl_ln using revision/table`V'.xls,ctitle(FE `R') `instruct' append;
+.         xi: reg  Dl_vmt Dl_ln Dl_pop `demographics' i.msa i.year `cond',  robust ;
+.         outreg2    Dl_ln Dl_pop using revision/table`V'.xls,ctitle(FE `R') `instruct' append ;
+.         local V "4b";
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid, e(F))";
+.  *      local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))";
+.         xi: ivreg2 Dl_vmt Dl_ln i.year `cond', cl(msa) robust ;
+.         outreg2 Dl_ln using revision/table4`V'xls, ctitle(OLS `R') `instruct' replace;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond',  cl(msa) robust ;
+.         outreg2 Dl_ln Dl_pop using revision/table4`V'xls, ctitle(OLS `R') `instruct' append;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt i.year `cond',  cl(msa) robust ;
+.         outreg2 Dl_ln Dl_pop l_vmt using revision/table4`V'xls, ctitle(OLS `R') `instruct' append;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust ;
+.         outreg2 Dl_ln Dl_pop l_vmt `geography' using revision/table4`V'xls, ctitle(OLS `R') `instruct' append ;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust 
+> ;
+.         outreg2 Dl_ln Dl_pop l_vmt `geography' using revision/table4`V'xls,ctitle(OLS `R') `instruct' append ;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) i.year `cond2',  cl(msa) robust ;
+.         outreg2 Dl_ln Dl_pop using revision/table4`V'xls,ctitle(OLS `R') `instruct' append ;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond2', cl(msa)  robust
+>  ;
+.         outreg2 Dl_ln Dl_pop l_vmt `geography' using revision/table4`V'xls,ctitle(OLS `R') `instruct' append ;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) l_vmt `geography' `census_div' `population' `demographics' i.year `cond3', cl(msa)  robust
+>  ;
+.         outreg2 Dl_ln Dl_pop l_vmt `geography' using revision/table4`V'xls,ctitle(OLS `R') `instruct' append ;
+.         xi: ivreg2 Dl_vmt Dl_ln i.year i.msa `cond', robust ;
+.         outreg2 Dl_ln using revision/table4`V'xls,ctitle(FE `R') `instruct' append;
+.         xi: ivreg2 Dl_vmt Dl_ln (Dl_pop = g_exp) `demographics' i.msa i.year `cond',  robust ;
+.         outreg2 Dl_ln Dl_pop using revision/table4`V'xls,ctitle(FE `R') `instruct' append ;
+. log close;
+.         };
+r(198);
 
 end of do-file
 
-r(604);
+r(198);
 
-. log close
-      name:  <unnamed>
-       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Tur
-> ner-M.-A.-2011-\Deliverable_1\data\revision/table4.log
-  log type:  text
- closed on:  18 Feb 2022, 11:10:49
-----------------------------------------------------------------------------------------------------------------------------------------------------
+. do "C:\Users\chris\AppData\Local\Temp\STD775c_000000.tmp"
+
+. if 1==1{
+. 
+.         quietly log using revision/tableA2, text replace;
+option ; not allowed
+r(198);
+.         use $data, clear;
+. 
+.         * Generate non urbanised area variables;
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83);
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83);
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83);
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93);
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93);
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93);
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03);
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03);
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03);
+. 
+.         * Selection of observations;
+.         drop if l_ln_km_IH_83==0;
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU
+> _93);
+. 
+. 
+.         rename sprawl_1992 sprawl93;
+.         rename sprawl_1976 sprawl83;
+.         gen sprawl03 = sprawl93;
+. 
+.         *rescale so display is better;
+.         replace elevat_range_msa = elevat_range_msa/1000; 
+.         replace ruggedness_msa = ruggedness_msa/1000;
+.         replace heating_dd = heating_dd/100;
+.         replace cooling_dd = cooling_dd/100;
+. 
+.         *Generate first differences;
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83;
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93;
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83; 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93; 
+. 
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83;
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93;
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83; 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93; 
+. 
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83;
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93;
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83; 
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93; 
+. 
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83;
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93;
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83; 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93; 
+. 
+.         gen Dl_pop_1993 = l_pop90 -l_pop80;
+.         gen Dl_pop_2003 = l_pop00 -l_pop90;
+. 
+.       gen l_pop_1983 = l_pop80; 
+.       gen l_pop_1993 = l_pop90; 
+.       gen l_pop_2003 = l_pop00; 
+. 
+.         *Threshold for road growth;
+. *       local m=0.005;
+.         local m=-1;
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl";
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  ;
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
+. 
+.         *instructions for outreg;
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se "; 
+. 
+. 
+.                         local V "A2";
+.                         local R "IH";
+.                         local cond "if Dl_ln>`m'";
+. 
+.         local i=0;
+.         local j=1;
+.         while `j'<=2{;
+program error:  code follows on the same line as open brace
+r(198);
+.                 if `j'==1{;
+.                         local year "1993";
+.                         local yrMM "83";
+.                         local yrXX "80";
+.                         local yrbus "84";
+.                         local population "l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
+.                         };
+program error:  code follows on the same line as close brace
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "C:\Users\chris\AppData\Local\Temp\STD775c_000000.tmp"
+
+. clear
+
+. 
+. capture mkdir revision
+
+. 
+. set matsize 800
+set matsize ignored.
+    Matrix sizes are no longer limited by c(matsize) in modern Statas.  Matrix sizes are now limited by flavor of Stata.  See limits for
+    more details.
+
+. set memory 600m
+set memory ignored.
+    Memory no longer needs to be set in modern Statas; memory adjustments are performed on the fly automatically.
+
+. set more 1
+
+. quietly capture log close
