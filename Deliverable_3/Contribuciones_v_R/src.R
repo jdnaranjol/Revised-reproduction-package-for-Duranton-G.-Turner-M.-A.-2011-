@@ -51,3 +51,31 @@ base1 <- base %>% filter(l_ln_km_IH_83!=0)%>%
          ruggedness_msa = ruggedness_msa/1000,heating_dd = heating_dd/100,
          cooling_dd = cooling_dd/100, l_pop_1983 = l_pop80, 
          l_pop_1993 = l_pop90, l_pop_2003 = l_pop00)
+
+
+## dado que R no tiene la capacidad de reshape, se debe hacer por ada una de las variables.
+## La siguinete fucnión, coge cada variable de la lista y le hace, un reshape a traves del indicador MSA y
+## la información se separa por año
+## las variables que no use son proque no cambian a nivel de observación, son efectos fijos por año, estas las trabajo ahora
+
+fr <- function(x){
+  base2 <- base1 %>% select(msa,starts_with(x))%>%pivot_longer( cols= starts_with(x),names_to = "year", names_prefix = x , values_to = x )
+  
+  return(base2)
+}
+
+## variables a las cuales le haré el proceso
+
+names <- c("l_ln_km_IH_", "l_ln_km_IHU","l_ln_km_MRU",
+           "l_vmt_IHU_","l_vmt_IHU", "l_vmt_MRU", "l_bus", 
+           "l_transit","sprawl","S_somecollege","l_mean_income",
+           "S_poor", "S_manuf","S_truck","l_pop_")
+
+
+de <- map(names, ~fr(.x))
+
+
+ba <- do.call(cbind,de)
+
+duplicate <- duplicated(colnames(ba))
+ba <- ba %>%select(unique(colnames(.)))
