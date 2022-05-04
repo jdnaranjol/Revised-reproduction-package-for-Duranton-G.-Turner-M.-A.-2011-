@@ -79,3 +79,32 @@ ba <- do.call(cbind,de)
 
 duplicate <- duplicated(colnames(ba))
 ba <- ba %>%select(unique(colnames(.)))
+
+## Para poder construir la base, debo eliminar los años duplicados
+## ahora la base 
+
+names <- c("l_ln_km_IH", "l_ln_km_IHU","l_ln_km_MRU",
+           "l_vmt_IHU","l_vmt_IHU", "l_vmt_MRU", "l_bus", 
+           "l_transit","sprawl","S_somecollege","l_mean_income",
+           "S_poor", "S_manuf","S_truck","l_pop")
+
+gr <- c(1993,2003,1983)
+
+names <- expand.grid(names,gr)%>% mutate(id=paste0(Var1,"_",Var2))
+
+base21 <- base1 %>% select(-names$id)
+
+
+### Unir la base con la trasnformación de cada variable y las variables que son efectos fijos
+
+basef <- ba %>% full_join(base21)
+
+## El proceso original, lo que cambia son los instrumentos utilziados y al especificación
+
+
+## Estimación 1. Instrumentos: l_rail1898+ l_hwy1947+ l_pix1835
+
+model1 <- basef %>% mutate(l_vmt = l_vmt_IHU,
+                           l_ln  = l_ln_km_IHU)
+a <- dummy_cols(model1, select_columns = 'year')
+
