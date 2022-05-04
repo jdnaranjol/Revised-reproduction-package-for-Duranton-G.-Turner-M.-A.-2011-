@@ -108,3 +108,44 @@ model1 <- basef %>% mutate(l_vmt = l_vmt_IHU,
                            l_ln  = l_ln_km_IHU)
 a <- dummy_cols(model1, select_columns = 'year')
 
+
+model <- plm(formula =  l_vmt ~ -1 +l_ln + year_1983 + year_1993  
+             | year_1983 + year_1993+l_rail1898+ l_hwy1947+ l_pix1835 ,
+             data=a,model = "fd" )
+
+model1 <- plm(formula =  l_vmt ~ -1 +l_ln +l_pop_+ year_1983 + year_1993  
+              | year_1983 + year_1993+l_pop_+l_rail1898+ l_hwy1947+ l_pix1835 ,
+              data=a,model = "fd" )
+model2 <- plm(formula =  l_vmt ~ -1 +l_ln +l_pop_+ year_1983 + year_1993  
+              | year_1983 + year_1993+l_pop_+l_rail1898+ l_hwy1947+ l_pix1835 ,
+              data=a,model = "fd" )
+
+model3 <- plm(formula =  l_vmt ~ -1 +l_ln +l_pop_+ year_1983 + year_1993+
+                +div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9+
+                elevat_range_msa+ ruggedness_msa +heating_dd+cooling_dd +sprawl+
+                | year_1983 + year_1993+l_pop_+ year_1983 + year_1993+
+                +div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9+l_rail1898+ l_hwy1947+ l_pix1835 ,
+              data=a,model = "fd" )
+
+model4 <- plm(formula =  l_vmt ~ -1 +l_ln +l_pop_+ year_1983 + year_1993+
+                elevat_range_msa+ ruggedness_msa +heating_dd+cooling_dd +sprawl+
+                S_somecollege +l_mean_income +S_poor +S_manuf+div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9
+              | year_1983 + year_1993+elevat_range_msa+ ruggedness_msa +heating_dd+
+                cooling_dd +sprawl+l_pop_+div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9+S_somecollege +l_mean_income +S_poor +S_manuf+
+                l_rail1898+ l_hwy1947+ l_pix1835 ,
+              data=a,model = "fd" )
+
+model5 <- plm(formula =  l_vmt ~ -1 +l_ln +l_pop_+ year_1983 + year_1993+
+                elevat_range_msa+ ruggedness_msa +heating_dd+cooling_dd +sprawl+
+                S_somecollege +l_mean_income +S_poor +S_manuf+div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9+l_pop80+l_pop70+l_pop60+ l_pop50+ l_pop40+ l_pop30+ l_pop20
+              | year_1983 + year_1993+elevat_range_msa+ ruggedness_msa +heating_dd+
+                cooling_dd +sprawl+l_pop_+div1+ div2 +div3+ div4+ 
+                div5 +div6+ div7 +div8 +div9+S_somecollege +l_mean_income +S_poor +S_manuf+
+                l_rail1898+ l_hwy1947+ l_pix1835+div5 +div6+ div7 +div8 +div9+l_pop80+l_pop70+
+                l_pop60+ l_pop50+ l_pop40+ l_pop30+ l_pop20 ,
+              data=a,model = "fd" )
