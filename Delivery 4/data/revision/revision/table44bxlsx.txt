@@ -1,0 +1,14 @@
+	(1)
+VARIABLES	OLS IH
+	
+Dl_ln	1.04$^a$
+	(0.046)
+_Iyear_2	-0.14$^a$
+	(0.015)
+Constant	0.42$^a$
+	(0.013)
+	
+Observations	456
+R-squared	0.87
+Robust standard errors in parentheses	
+$^a$ p<0.01, $^b$ p<0.05, $^c$ p<0.1	

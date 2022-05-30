@@ -1,0 +1,163 @@
+.         ***** PERSON data *************************************************************
+> **;
+.         * specify locations of the NPTS person data sets;
+.         global data "congestion_person2.dta" ;
+.         use $data,clear;
+file congestion_person2.dta not found
+r(601);
+.         drop if ln_km_IH_83==0;
+.         gen l_disttowk=log(disttowk);
+.         *fix msa level variables so year is right;
+.         gen l_ln_km_IH          = cond(year==1995,l_ln_km_IH_95,l_ln_km_IH_01);
+.         gen l_vmt_IH            = cond(year==1995, l_vmt_IH_95, l_vmt_IH_01);
+.         rename sprawl_1992 sprawl;
+.         drop sprawl_*;
+.                 local T "Comm_Dist";
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+> ;
+.         *not used final version. Mt Feb 2010;
+.         *local demographics "S_somecollege l_mean_income S_poor S_manuf"  ;
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9";
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  ;
+.         *local inst "l_rail1898 l_hwy1947 l_pix1835";
+.         local inst "l_rail1898 l_hwy1947";
+.         local perso " i.educ r_age r_sex i.race i.hh_income";
+.         local perso_test " educ r_age r_sex race hh_income";
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(
+> Overid,e(jp),First stage F, e(widstat))";
+.                 iis msa;
+.         local R "IH";
+.         local dep "l_disttowk";
+.         local V "9";
+.         local cond " ";
+.         capture drop l_vmt l_ln l_aadt;
+.         gen l_vmt = l_vmt_`R' ;
+.         gen l_ln  = l_ln_km_`R' ;
+.         *gen l_aadt  = l_aadt_`R' ;
+.         xi: reg    `dep' l_ln `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln using revision/table`V'a.xls,ctitle(OLS `R' `T')  `instruct' re
+> place ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' i.year `cond', 
+> cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' `population' i.
+> year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln using revision/table`V'b.xls,ctitle(TSLS `R' `T')  `instruct2' 
+> replace ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' i.yea
+> r `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' `popu
+> lation' i.year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+.         ***** TRIP data ***************************************************************
+> ;
+.         * specify locations of the component data sets;
+.         global data "congestion_trip2.dta" ;
+.         use $data,clear;
+.         drop if ln_km_IH_83==0;
+.                 gen l_hh_miles=log(hh_miles);
+.                 *fix msa level variables so year is right;
+.         gen l_ln_km_IH          = cond(year==1995,l_ln_km_IH_95,l_ln_km_IH_01);
+.         gen l_vmt_IH            = cond(year==1995, l_vmt_IH_95, l_vmt_IH_01);
+.         rename sprawl_1992 sprawl;
+.         drop sprawl_*;
+.                 local T "HH_VKT";
+.         local perso "i.race i.hh_income i.hh_education";
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(
+> Overid,e(jp),First stage F, e(widstat))";
+.         iis msa;
+.         local R "IH";
+.         local dep "l_hh_miles";
+.         local V "9";
+.         local cond " ";
+.         gen l_vmt = l_vmt_`R' ;
+.         gen l_ln  = l_ln_km_`R' ;
+.         *gen l_aadt  = l_aadt_`R' ;
+.         xi: reg    `dep' l_ln `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln using revision/table`V'a.xls,ctitle(OLS `R' `T')  `instruct' ap
+> pend ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' i.year `cond', 
+> cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' `population' i.
+> year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln using revision/table`V'b.xls,ctitle(TSLS `R' `T')  `instruct2' 
+> append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' i.yea
+> r `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' `popu
+> lation' i.year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+.         ***** VEHICLE data ************************************************************
+> ***;
+.         * specify locations of the component data sets;
+.         global data "congestion_vehicle2.dta" ;
+.         use $data,clear;
+.         drop if ln_km_IH_83==0;
+.         gen l_annmiles=log(annmiles);
+.                 *fix msa level variables so year is right;
+.         gen l_ln_km_IH          = cond(year==1995,l_ln_km_IH_95,l_ln_km_IH_01);
+.         gen l_vmt_IH            = cond(year==1995, l_vmt_IH_95, l_vmt_IH_01);
+.         rename sprawl_1992 sprawl;
+.         drop sprawl_*;
+.                 local T "Tot_VKT";
+.         local perso "i.race i.hh_income i.hh_education";
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se ";
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(
+> Overid,e(jp),First stage F, e(widstat))";
+.                 iis msa;
+.         local R "IH";
+.         local dep "l_annmiles";
+.         local V "9";
+.         local cond " ";
+.         gen l_vmt = l_vmt_`R' ;
+.         gen l_ln  = l_ln_km_`R' ;
+.                 xi: reg    `dep' l_ln `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln using revision/table`V'a.xls,ctitle(OLS `R' `T')  `instruct' ap
+> pend ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' i.year `cond', 
+> cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: reg    `dep' l_ln `perso' l_pop90  `geography' `census_div' `population' i.
+> year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'a.xls,ctitle(OLS `R
+> ' `T')  `instruct' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' i.year `cond',  cl(msa) robust ;
+.         outreg2    l_ln  using revision/table`V'b.xls,ctitle(TSLS `R' `T')  `instruct2'
+>  append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' i.yea
+> r `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+.         xi: ivreg2 `dep' (l_ln =`inst') `perso' l_pop90  `geography' `census_div' `popu
+> lation' i.year `cond', cl(msa)  robust ;
+.         outreg2    l_ln l_pop90  `geography' using revision/table`V'b.xls,ctitle(TSLS `
+> R' `T')  `instruct2' append ;
+. * Reset global data to original;
+. global data                     "..\results\congestion_gd.dta" ;
+.         log close;
+.         };
+r(601);
+
+end of do-file
+
+r(601);
+
+. exit, clear

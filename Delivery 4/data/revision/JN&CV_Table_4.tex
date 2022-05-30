@@ -1,0 +1,30 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{VKT
+as
+a
+Function
+of
+Lane
+Kilometers,
+Pooled
+ols}
+\begin{tabular}{l*{10}{c}}
+\hline\hline
+MSA sample:
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}&\multicolumn{1}{c}{(9)}&\multicolumn{1}{c}{(10)}\\
+                    &\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{w.IHU}&\multicolumn{1}{c}{Big}&\multicolumn{1}{c}{Small}\\
+ \hline \multicolumn{10}{l}{ \emph{Dependent variable:} ln VKT for interstate highways, entire MSAs} \\ 
+ln (IH lane km)     &       1.242\sym{***}&       0.820\sym{***}&       0.860\sym{***}&       0.853\sym{***}&       1.053\sym{***}&       1.058\sym{***}&       1.048\sym{***}&       0.952\sym{***}&       1.050\sym{***}&       1.124\sym{***}\\
+                    &     (0.024)         &     (0.050)         &     (0.046)         &     (0.044)         &     (0.045)         &     (0.047)         &     (0.046)         &     (0.031)         &     (0.044)         &     (0.093)         \\
+[1em]
+ln (population)     &                     &       0.476\sym{***}&       0.438\sym{***}&       0.322\sym{**} &                     &       0.336\sym{***}&       0.394\sym{***}&       0.321\sym{**} &       0.444\sym{***}&       0.307\sym{*}  \\
+                    &                     &     (0.042)         &     (0.042)         &     (0.120)         &                     &     (0.099)         &     (0.098)         &     (0.106)         &     (0.130)         &     (0.138)         \\
+           Geography & & & Y & Y & &  & & & & \\            Census divisions & & & Y & Y & &  & & & & \\           Socioeconomic           \\Characteristics & & & & Y & &  & Y & & & \\            Past populations & & & & Y & &  &  & & & \\           MSA fixed effects & & & & & Y & Y & Y & Y & Y & Y \\                 
+\(R^{2}\)           &       0.877         &       0.936         &       0.950         &       0.955         &       0.938         &       0.943         &       0.946         &       0.936         &       0.959         &       0.927         \\
+\hline\hline
+\end{tabular}
+\begin{flushleft}
+\emph{Notes:} All regressions include year effects. Robust standard errors in parentheses (clustered by MSA in columns 1–4). Complete sample of 228 MSAs (684 observations) with interstate highways in columns 1–7; 192 MSAs (576 observations) with urban interstate highways in column 8; 114 MSAs (342 observations) above the median population size in 1990 in column 9; 114 MSAs (342 observations) below the median population size in 1990 in column 10. \\         **** Significant at the 1 percent level. \\         *** Significant at the 5 percent level. \\         ** Significant at the 10 percent level.
+\end{flushleft}
+\end{table}

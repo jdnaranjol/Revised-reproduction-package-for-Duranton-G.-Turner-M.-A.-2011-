@@ -1,0 +1,154 @@
+. 
+. use $data, clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_aadt_IHNU_83 = l_vmt_IHNU_83 - l_rd_km_IHNU_83 
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_aadt_IHNU_93 = l_vmt_IHNU_93 - l_rd_km_IHNU_93 
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+.         gen l_aadt_IHNU_03 = l_vmt_IHNU_03 - l_rd_km_IHNU_03 
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+. sum l_vmt_IH_83  l_vmt_IH_93  l_vmt_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ l_vmt_IH_83 |        228    14.79568     1.39982   8.872393   18.71734
+ l_vmt_IH_93 |        228    15.31035    1.297536   12.96336   19.17843
+ l_vmt_IH_03 |        228    15.63805    1.281931   13.41328   19.41792
+. sum l_ln_km_IH_83  l_ln_km_IH_93  l_ln_km_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_ln_km~H_83 |        228    6.471263    1.048425   2.230468   9.442422
+l_ln_km~H_93 |        228    6.559229    .9636789   4.721574   9.520018
+l_ln_km~H_03 |        228    6.606035    .9740406   4.780759   9.587631
+. sum l_aadt_IH_83  l_aadt_IH_93  l_aadt_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_aadt_IH_83 |        228    8.327904    .5746332   6.698045   9.740427
+l_aadt_IH_93 |        228    8.753379    .5309717   7.003744   9.825053
+l_aadt_IH_03 |        228    9.034153    .5036902   7.173646   10.05503
+. 
+. drop if zero == 0
+(36 observations deleted)
+. 
+. sum l_vmt_IH_83  l_vmt_IH_93  l_vmt_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+ l_vmt_IH_83 |        192    15.01884    1.336164   11.73542   18.71734
+ l_vmt_IH_93 |        192    15.48931    1.295886   13.18496   19.17843
+ l_vmt_IH_03 |        192    15.81106    1.283619   13.43814   19.41792
+. sum l_ln_km_IH_83  l_ln_km_IH_93  l_ln_km_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_ln_km~H_83 |        192    6.629314    .9865301   2.473376   9.442422
+l_ln_km~H_93 |        192    6.690132    .9507532   4.794695   9.520018
+l_ln_km~H_03 |        192    6.741427    .9639682   4.780759   9.587631
+. sum l_aadt_IH_83  l_aadt_IH_93  l_aadt_IH_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_aadt_IH_83 |        192    8.392135    .5796716   6.698045   9.740427
+l_aadt_IH_93 |        192     8.80117    .5404592   7.003744   9.825053
+l_aadt_IH_03 |        192    9.071512    .5166408   7.173646   10.05503
+. 
+. sum l_vmt_IHU_83  l_vmt_IHU_93  l_vmt_IHU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_vmt_IHU_83 |        192    13.97403    1.870897    9.70799   18.55029
+l_vmt_IHU_93 |        192    14.58788    1.775283   10.40111   19.01646
+l_vmt_IHU_03 |        192    15.01713    1.702038   10.50289   19.21467
+. sum l_ln_km_IHU_83  l_ln_km_IHU_93  l_ln_km_IHU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_ln_k~HU_83 |        192    5.316083    1.445159   1.705868   8.982454
+l_ln_k~HU_93 |        192    5.558651    1.411439   1.740341   9.090291
+l_ln_k~HU_03 |        192    5.740633    1.387946   1.740341   9.215272
+. sum l_aadt_IHU_83  l_aadt_IHU_93  l_aadt_IHU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_aadt~HU_83 |        192    8.671172    .5499238    7.14048   9.759422
+l_aadt~HU_93 |        192    9.039237    .4986891   7.329051   9.982105
+l_aadt~HU_03 |        192    9.284992    .4456452   7.768348   10.10005
+. 
+. sum l_vmt_MRU_83  l_vmt_MRU_93  l_vmt_MRU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_vmt_MRU_83 |        192    15.61954    1.279267   12.24904   19.67897
+l_vmt_MRU_93 |        192    16.09612    1.277127   13.64191   19.85374
+l_vmt_MRU_03 |        192    16.37405    1.308281   14.11206   20.32187
+. sum l_ln_km_MRU_83  l_ln_km_MRU_93  l_ln_km_MRU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_ln_km_M~83 |        192    7.597596    1.166166   3.822651   11.10706
+l_ln_km_M~93 |        192    7.928198    1.112914   6.025585   11.18878
+l_ln_km_M~03 |        192    8.131614    1.130274   6.215939   11.68373
+. sum l_aadt_MRU_83  l_aadt_MRU_93  l_aadt_MRU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_aadt_MR~83 |        192    8.023208    .2503913   7.360218   8.781945
+l_aadt_MR~93 |        192    8.168805     .268163   7.310665   8.750229
+l_aadt_MR~03 |        192    8.243187    .2718905    7.53963   8.894936
+. 
+. sum l_vmt_IHNU_83  l_vmt_IHNU_93  l_vmt_IHNU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_vmt_IHN~83 |        189    14.31198    1.069012    10.8309   17.00548
+l_vmt_IHN~93 |        192     14.6452    1.032294   11.55102   17.27816
+l_vmt_IHN~03 |        191    14.86566    1.077373   11.56221   17.72469
+. sum l_ln_km_IHNU_83  l_ln_km_IHNU_93  l_ln_km_IHNU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_ln_k~NU_83 |        189    6.161203    .8996718   2.565218    8.63822
+l_ln_k~NU_93 |        192    6.077442    .8895399   2.778412   8.564487
+l_ln_k~NU_03 |        191    6.019452    .9596495   2.679254   8.611542
+. sum l_aadt_IHNU_83  l_aadt_IHNU_93  l_aadt_IHNU_03
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+l_aadt~NU_83 |        189    9.567704    .5087351   8.018505   10.91694
+l_aadt~NU_93 |        192    9.991788    .5154144   8.201907   11.25792
+l_aadt~NU_03 |        191    10.28006    .5232889   8.447712   11.59566
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turn
+> er-M.-A.-2011-\Deliverable_1\Data_original\revision/table7text.log
+  log type:  text
+ closed on:  29 May 2022, 23:25:54
+-----------------------------------------------------------------------------------------------------------------------------------------------------

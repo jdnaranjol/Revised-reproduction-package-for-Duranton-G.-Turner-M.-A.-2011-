@@ -1,0 +1,350 @@
+. 
+. use $data, clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_aadt_IHNU_83 = l_vmt_IHNU_83 - l_rd_km_IHNU_83 
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_aadt_IHNU_93 = l_vmt_IHNU_93 - l_rd_km_IHNU_93 
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+.         gen l_aadt_IHNU_03 = l_vmt_IHNU_03 - l_rd_km_IHNU_03 
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         rename sprawl_1992 sprawl_2003
+.         rename sprawl_1976 sprawl_1993
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         *Generate first differences
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93 
+.         gen  Dl_aadt_IH_1993 = l_aadt_IH_93 - l_aadt_IH_83 
+.         gen  Dl_aadt_IH_2003 = l_aadt_IH_03 - l_aadt_IH_93 
+. 
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93 
+.         gen  Dl_aadt_IHU_1993 = l_aadt_IHU_93 - l_aadt_IHU_83 
+(36 missing values generated)
+.         gen  Dl_aadt_IHU_2003 = l_aadt_IHU_03 - l_aadt_IHU_93 
+(19 missing values generated)
+. 
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83
+(3 missing values generated)
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93
+(1 missing value generated)
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83 
+(3 missing values generated)
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93 
+(1 missing value generated)
+.         gen  Dl_aadt_IHNU_1993 = l_aadt_IHNU_93 - l_aadt_IHNU_83 
+(3 missing values generated)
+.         gen  Dl_aadt_IHNU_2003 = l_aadt_IHNU_03 - l_aadt_IHNU_93 
+(1 missing value generated)
+. 
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93 
+.         gen  Dl_aadt_MRU_1993 = l_aadt_MRU_93 - l_aadt_MRU_83 
+(10 missing values generated)
+.         gen  Dl_aadt_MRU_2003 = l_aadt_MRU_03 - l_aadt_MRU_93 
+(2 missing values generated)
+. 
+.         gen Dl_pop_1993 = l_pop90 -l_pop80
+.         gen Dl_pop_2003 = l_pop00 -l_pop90
+. 
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+.      
+.         gen g_exp_2003=g_exp00_90
+.         gen g_exp_1993=g_exp90_80
+. 
+.       rename l_aadt_IHNU_83 l_aadt_IHNU_1993
+.       rename l_aadt_IHNU_93 l_aadt_IHNU_2003
+.       rename l_aadt_IHU_83 l_aadt_IHU_1993
+.       rename l_aadt_IHU_93 l_aadt_IHU_2003
+.       rename l_aadt_IH_83 l_aadt_IH_1993
+.       rename l_aadt_IH_93 l_aadt_IH_2003
+.       rename l_aadt_MRU_83 l_aadt_MRU_1993
+.       rename l_aadt_MRU_93 l_aadt_MRU_2003
+.  
+.         rename S_somecollege_80 S_somecollege_1993 
+.         rename l_mean_income_80 l_mean_income_1993 
+.         rename S_poor_80 S_poor_1993 
+.         rename S_manuf83 S_manuf_1993 
+.  
+.         rename S_somecollege_90 S_somecollege_2003 
+.         rename l_mean_income_90 l_mean_income_2003 
+.         rename S_poor_90 S_poor_2003 
+.         rename S_manuf93 S_manuf_2003 
+. 
+.         reshape long Dl_ln_IH Dl_ln_IHU Dl_ln_MRU Dl_ln_IHNU 
+option i() required
+
+         long                                wide
+        +---------------+                   +------------------+
+        | i   j   a   b |                   | i   a1 a2  b1 b2 |
+        |---------------| <--- reshape ---> |------------------|
+        | 1   1   1   2 |                   | 1   1   3   2  4 |
+        | 1   2   3   4 |                   | 2   5   7   6  8 |
+        | 2   1   5   6 |                   +------------------+
+        | 2   2   7   8 |
+        +---------------+
+
+        long to wide: reshape wide a b, i(i) j(j)    (j existing variable)
+        wide to long: reshape long a b, i(i) j(j)    (j new variable)
+r(198);
+.                    Dl_aadt_IH Dl_aadt_IHU Dl_aadt_MRU Dl_aadt_IHNU
+.                     l_aadt_IH l_aadt_IHU l_aadt_MRU l_aadt_IHNU
+.                   sprawl S_somecollege l_mean_income S_poor S_manuf g_exp
+.                          Dl_pop l_pop, i(msa ) j(year _1993 _2003)
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         *instructions for outreg
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+. 
+.         iis msa
+. 
+.         local j=1
+.         while `j'<=3{
+  2.                 if `j'==1{
+  3.                         local R "IHU"
+  4.                         local V "A7b"
+  5.                         local cond "if (zero>0)"
+  6.                         }
+  7.                 if `j'==2{
+  8.                         local R "MRU"
+  9.                         local V "A7a"
+ 10.                         local cond "if (zero>0)"
+ 11.                         }
+ 12.                 if `j'==3{
+ 13.                         local R "IHNU"
+ 14.                         local V "A7c"
+ 15.                         local cond "if (zero>0)"
+ 16.                         }
+ 17.                 
+.                 capture drop Dl_aadt Dl_ln l_aadt 
+ 18.                 gen Dl_aadt = Dl_aadt_`R' 
+ 19.                 gen Dl_ln  = Dl_ln_`R' 
+ 20.                 gen l_aadt = l_aadt_`R' 
+ 21. 
+.                 xi: reg    Dl_aadt l_aadt i.year `cond', cl(msa) robust  
+ 22.                 outreg2    l_aadt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace
+ 23. 
+.                 xi: reg    Dl_aadt l_aadt Dl_pop i.year `cond', cl(msa) robust  
+ 24.                 outreg2    l_aadt  Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append
+ 25. 
+.                 xi: reg    Dl_aadt l_aadt Dl_pop  `geography' `census_div' i.year `cond', cl(msa) robust  
+ 26.                 outreg2    l_aadt  Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append
+ 27. 
+.                 xi: reg    Dl_aadt l_aadt Dl_pop  `geography' `census_div' `population' `demographics' i.year `cond', cl(msa) robust  
+ 28.                 outreg2    l_aadt  Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append
+ 29. 
+.                 xi: xtreg  Dl_aadt l_aadt i.year `cond', fe robust  
+ 30.                 outreg2    l_aadt using revision/table`V'.xls,ctitle(FE `R')  `instruct' append
+ 31. 
+.                 xi: ivreg2 Dl_aadt l_aadt  (Dl_pop =g_exp) S_manuf i.year `geography' `census_div' `cond', cl(msa) robust  
+ 32.                 outreg2    l_aadt Dl_pop using revision/table`V'.xls,ctitle(IV `R')  `instruct2' append
+ 33. 
+. 
+. 
+.               local j=`j'+1
+ 34.               }
+. 
+.         log close
+.         }
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿/**********************************************************************************************
+> Duranton_Turner_AER_2010_final.do
+> 
+> 
+> Matthew Turner and Gilles Duranton, August 2010.
+> 
+> This file produces all regeression output reported in Duranton and Turner 2010 and in the associated supplemental appendix EXCEPT for tables 9 and 
+> 11.  These two tables rely on confidential geocode verions of the NHTS and NPTS.
+> 
+> 
+> The program writes output in a subfolder 
+> 
+> This programme uses the commands outreg2 and ivreg2 which can be installed using "net install outreg2.pkg"  and "net install st0030_3.pkg".
+> 
+> ************************************************************************************************/
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿/* *********************************************************************************************
+> Duranton_Turner_AER_2010_final.do
+> 
+> 
+> Matthew Turner and Gilles Duranton, August 2010.
+> 
+> This file produces all regeression output reported in Duranton and Turner 2010 and in the associated supplemental appendix EXCEPT for tables 9 and 
+> 11.  These two tables rely on confidential geocode verions of the NHTS and NPTS.
+> 
+> 
+> The program writes output in a subfolder 
+> 
+> This programme uses the commands outreg2 and ivreg2 which can be installed using "net install outreg2.pkg"  and "net install st0030_3.pkg".
+> 
+> *********************************************************************************************** */
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿*/* *********************************************************************************************
+> Duranton_Turner_AER_2010_final.do
+> 
+> 
+> Matthew Turner and Gilles Duranton, August 2010.
+> 
+> This file produces all regeression output reported in Duranton and Turner 2010 and in the associated supplemental appendix EXCEPT for tables 9 and 
+> 11.  These two tables rely on confidential geocode verions of the NHTS and NPTS.
+> 
+> 
+> The program writes output in a subfolder 
+> 
+> This programme uses the commands outreg2 and ivreg2 which can be installed using "net install outreg2.pkg"  and "net install st0030_3.pkg".
+> 
+> *********************************************************************************************** */
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿**/**********************************************************************************************
+> Duranton_Turner_AER_2010_final.do
+> 
+> 
+> Matthew Turner and Gilles Duranton, August 2010.
+> 
+> This file produces all regeression output reported in Duranton and Turner 2010 and in the associated supplemental appendix EXCEPT for tables 9 and 
+> 11.  These two tables rely on confidential geocode verions of the NHTS and NPTS.
+> 
+> 
+> The program writes output in a subfolder 
+> 
+> This programme uses the commands outreg2 and ivreg2 which can be installed using "net install outreg2.pkg"  and "net install st0030_3.pkg".
+> 
+> ************************************************************************************************/
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. ﻿
+﻿ is not a valid command name
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. 
+. ******************************
+. * SET UP                      
+. ******************************
+. cd "C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turner-M.-A
+> .-2011-\Deliverable_1\Data_original"
+C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turner-M.-A.-2011
+> -\Deliverable_1\Data_original
+
+. 
+. *#delimit 
+. 
+. clear
+
+. 
+. capture mkdir revision
+
+. 
+. set matsize 800
+set matsize ignored.
+    Matrix sizes are no longer limited by c(matsize) in modern Statas.  Matrix sizes are now limited by edition of Stata.  See limits for more
+    details.
+
+. set memory 600m
+set memory ignored.
+    Memory no longer needs to be set in modern Statas; memory adjustments are performed on the fly automatically.
+
+. set more 1
+
+. quietly capture log close

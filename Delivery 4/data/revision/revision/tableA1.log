@@ -1,0 +1,693 @@
+.         use $data,clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         rename sprawl_1992 sprawl_1993
+.         rename sprawl_1976 sprawl_1983
+.         gen sprawl_2003 = sprawl_1993
+. 
+.       rename S_somecollege_80 S_somecollege_1983
+.       rename S_somecollege_00 S_somecollege_2003
+.       rename S_somecollege_90 S_somecollege_1993
+.       rename S_poor_80 S_poor_1983
+.       rename S_poor_90 S_poor_1993
+.       rename S_poor_00 S_poor_2003
+.       rename l_mean_income_80 l_mean_income_1983
+.       rename l_mean_income_90 l_mean_income_1993
+.       rename l_mean_income_00 l_mean_income_2003
+.       rename S_manuf83 S_manuf_1983
+.       rename S_manuf93 S_manuf_1993
+.       rename S_manuf03 S_manuf_2003
+.       rename S_truck83 S_truck_1983
+.       rename S_truck93 S_truck_1993
+.       rename S_truck03 S_truck_2003
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+. 
+.       rename l_max_84bus l_bus_1983 
+.       rename l_max_94bus l_bus_1993 
+.       rename l_max_04bus l_bus_2003 
+.       rename l_transit84 l_transit_1983
+.       rename l_transit94 l_transit_1993 
+.       rename l_transit04 l_transit_2003
+. 
+.       rename l_ln_km_IHNU_83 l_ln_km_IHNU_1983
+.       rename l_ln_km_IHNU_93 l_ln_km_IHNU_1993
+.       rename l_ln_km_IHNU_03 l_ln_km_IHNU_2003
+.       rename l_ln_km_IHU_83 l_ln_km_IHU_1983
+.       rename l_ln_km_IHU_93 l_ln_km_IHU_1993
+.       rename l_ln_km_IHU_03 l_ln_km_IHU_2003
+.       rename l_ln_km_IH_83 l_ln_km_IH_1983
+.       rename l_ln_km_IH_93 l_ln_km_IH_1993
+.       rename l_ln_km_IH_03 l_ln_km_IH_2003
+.       rename l_ln_km_MRU_83 l_ln_km_MRU_1983
+.       rename l_ln_km_MRU_93 l_ln_km_MRU_1993
+.       rename l_ln_km_MRU_03 l_ln_km_MRU_2003
+.       
+.         rename l_vmt_IHNU_83 l_vmt_IHNU_1983
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_1993
+.       rename l_vmt_IHNU_03 l_vmt_IHNU_2003
+.       rename l_vmt_IHU_83 l_vmt_IHU_1983
+.       rename l_vmt_IHU_93 l_vmt_IHU_1993
+.       rename l_vmt_IHU_03 l_vmt_IHU_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1983
+.       rename l_vmt_IH_93 l_vmt_IH_1993
+.       rename l_vmt_IH_03 l_vmt_IH_2003
+.       rename l_vmt_MRU_83 l_vmt_MRU_1983
+.       rename l_vmt_MRU_93 l_vmt_MRU_1993
+.       rename l_vmt_MRU_03 l_vmt_MRU_2003
+. 
+.         reshape long l_ln_km_IH  l_ln_km_IHU  l_ln_km_IHNU  l_ln_km_MRU l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU l_bus l_transit sprawl S_somecoll
+> ege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _1993 _2003)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations              228   ->   684         
+Number of variables                 227   ->   194         
+j variable (3 values)                     ->   year
+xij variables:
+l_ln_km_IH_1983 l_ln_km_IH_1993 l_ln_km_IH_2003->l_ln_km_IH
+l_ln_km_IHU_1983 l_ln_km_IHU_1993 l_ln_km_IHU_2003->l_ln_km_IHU
+l_ln_km_IHNU_1983 l_ln_km_IHNU_1993 l_ln_km_IHNU_2003->l_ln_km_IHNU
+l_ln_km_MRU_1983 l_ln_km_MRU_1993 l_ln_km_MRU_2003->l_ln_km_MRU
+l_vmt_IH_1983 l_vmt_IH_1993 l_vmt_IH_2003 ->   l_vmt_IH
+l_vmt_IHU_1983 l_vmt_IHU_1993 l_vmt_IHU_2003-> l_vmt_IHU
+l_vmt_IHNU_1983 l_vmt_IHNU_1993 l_vmt_IHNU_2003->l_vmt_IHNU
+l_vmt_MRU_1983 l_vmt_MRU_1993 l_vmt_MRU_2003-> l_vmt_MRU
+       l_bus_1983 l_bus_1993 l_bus_2003   ->   l_bus
+l_transit_1983 l_transit_1993 l_transit_2003-> l_transit
+    sprawl_1983 sprawl_1993 sprawl_2003   ->   sprawl
+S_somecollege_1983 S_somecollege_1993 S_somecollege_2003->S_somecollege
+l_mean_income_1983 l_mean_income_1993 l_mean_income_2003->l_mean_income
+    S_poor_1983 S_poor_1993 S_poor_2003   ->   S_poor
+ S_manuf_1983 S_manuf_1993 S_manuf_2003   ->   S_manuf
+ S_truck_1983 S_truck_1993 S_truck_2003   ->   S_truck
+       l_pop_1983 l_pop_1993 l_pop_2003   ->   l_pop
+-----------------------------------------------------------------------------
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         iis msa
+. 
+.         local j=1
+.         while `j'<=4{
+  2.                 if `j'==1{
+  3.                         local R "IH"
+  4.                         local V "A1_a"
+  5.                         local cond "if zero>0"
+  6.                         }
+  7.                 if `j'==2{
+  8.                         local R "IHU"
+  9.                         local V "A1_b"
+ 10.                         local cond "if zero>0"
+ 11.                         }
+ 12.                 if `j'==3{
+ 13.                         local R "MRU"
+ 14.                         local V "A1_c"
+ 15.                         local cond "if zero>0"
+ 16.                         }
+ 17.                 if `j'==4{
+ 18.                         local R "IHNU"
+ 19.                         local V "A1_d"
+ 20.                         local cond "if zero>0"
+ 21.                         }
+ 22.                 
+.                 capture drop l_vmt l_ln
+ 23.                 gen l_vmt = l_vmt_`R' 
+ 24.                 gen l_ln  = l_ln_km_`R' 
+ 25. 
+.                 xi: reg    l_vmt l_ln i.year `cond', cl(msa) robust  
+ 26.                 outreg2    l_ln using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace
+ 27. 
+.                 xi: reg    l_vmt l_ln l_pop i.year `cond',  cl(msa) robust  
+ 28.                 outreg2    l_ln l_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 29. 
+.                 xi: reg    l_vmt l_ln l_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
+ 30.                 outreg2    l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 31. 
+.                 xi: reg    l_vmt l_ln l_pop `geography' `census_div' `population' `demographics' i.year `cond', cl(msa) robust 
+ 32.                 outreg2    l_ln l_pop  `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 33. 
+.               local j=`j'+1
+ 34.               }
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(3, 191)         =    1315.29
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8676
+                                                Root MSE          =     .49004
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   1.251165    .028877    43.33   0.000     1.194206    1.308123
+    _Iyear_2 |    .394377   .0167314    23.57   0.000      .361375     .427379
+    _Iyear_3 |   .6519462   .0192782    33.82   0.000     .6139208    .6899716
+       _cons |   6.724481   .2065038    32.56   0.000      6.31716    7.131802
+------------------------------------------------------------------------------
+revision/tableA1_a.tex
+revision/tableA1_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(4, 191)         =    1129.15
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9389
+                                                Root MSE          =      .3332
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .7240003   .0505139    14.33   0.000     .6243636    .8236369
+       l_pop |   .5408224   .0447372    12.09   0.000     .4525799    .6290648
+    _Iyear_2 |   .3807666   .0158454    24.03   0.000     .3495121     .412021
+    _Iyear_3 |   .5992395    .018924    31.67   0.000     .5619126    .6365664
+       _cons |   3.280404   .3313012     9.90   0.000     2.626925    3.933883
+------------------------------------------------------------------------------
+revision/tableA1_a.tex
+revision/tableA1_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(17, 191)        =     457.63
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9538
+                                                Root MSE          =     .29312
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |    .762024   .0440086    17.32   0.000     .6752186    .8488293
+           l_pop |   .5045382    .041098    12.28   0.000      .423474    .5856024
+elevat_range_msa |  -.0297507   .0580575    -0.51   0.609    -.1442669    .0847656
+  ruggedness_msa |   5.636367   3.134425     1.80   0.074    -.5461658     11.8189
+      heating_dd |  -.0127694   .0034556    -3.70   0.000    -.0195854   -.0059535
+      cooling_dd |  -.0164417   .0081216    -2.02   0.044    -.0324613    -.000422
+          sprawl |    .004832   .0029495     1.64   0.103    -.0009858    .0106498
+            div1 |   .1737427   .1890235     0.92   0.359     -.199099    .5465844
+            div2 |   .0235249   .1710211     0.14   0.891    -.3138077    .3608574
+            div3 |   .2797105   .1827789     1.53   0.128    -.0808139    .6402349
+            div4 |   .2635118    .188959     1.39   0.165    -.1092027    .6362262
+            div5 |   .1365377   .1596845     0.86   0.394    -.1784338    .4515093
+            div6 |    .065971   .1694052     0.39   0.697    -.2681744    .4001164
+            div7 |   .0701787   .1676186     0.42   0.676    -.2604426       .4008
+            div8 |   .0101023   .1303005     0.08   0.938    -.2469105    .2671151
+            div9 |          0  (omitted)
+        _Iyear_2 |   .3783793   .0157414    24.04   0.000       .34733    .4094286
+        _Iyear_3 |    .599339   .0187591    31.95   0.000     .5623374    .6363406
+           _cons |   3.939683   .4903684     8.03   0.000      2.97245    4.906916
+----------------------------------------------------------------------------------
+revision/tableA1_a.tex
+revision/tableA1_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(28, 191)        =     338.64
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9594
+                                                Root MSE          =     .27753
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .7487183   .0456314    16.41   0.000     .6587121    .8387244
+           l_pop |    .455398   .1232909     3.69   0.000     .2122115    .6985845
+elevat_range_msa |  -.0252717   .0502951    -0.50   0.616    -.1244769    .0739335
+  ruggedness_msa |   4.197419   2.919792     1.44   0.152    -1.561759    9.956597
+      heating_dd |  -.0154568   .0037249    -4.15   0.000    -.0228041   -.0081096
+      cooling_dd |  -.0191221   .0100024    -1.91   0.057    -.0388514    .0006071
+          sprawl |   .0032508   .0030599     1.06   0.289    -.0027849    .0092864
+            div1 |    .158188   .1920477     0.82   0.411    -.2206189    .5369948
+            div2 |   .0842838   .1790471     0.47   0.638    -.2688799    .4374475
+            div3 |   .3189005   .1818178     1.75   0.081    -.0397283    .6775292
+            div4 |   .2051141   .1807907     1.13   0.258    -.1514886    .5617168
+            div5 |   .0901726    .151494     0.60   0.552    -.2086436    .3889887
+            div6 |   .0645159   .1600556     0.40   0.687    -.2511877    .3802194
+            div7 |   .0768519   .1565739     0.49   0.624    -.2319841    .3856878
+            div8 |  -.0704767   .1131818    -0.62   0.534    -.2937235      .15277
+            div9 |          0  (omitted)
+         l_pop80 |   .4769662    .406526     1.17   0.242    -.3248909    1.278823
+         l_pop70 |  -.2570661   .5637012    -0.46   0.649    -1.368945     .854813
+         l_pop60 |   -.177547   .4149603    -0.43   0.669    -.9960404    .6409465
+         l_pop50 |   -.384254    .313734    -1.22   0.222    -1.003082    .2345743
+         l_pop40 |   .2837708   .2779695     1.02   0.309    -.2645134    .8320551
+         l_pop30 |  -.0765373   .2264058    -0.34   0.736    -.5231142    .3700395
+         l_pop20 |   .1811958   .1177295     1.54   0.125    -.0510211    .4134126
+   S_somecollege |   1.003681   .4078762     2.46   0.015     .1991612    1.808202
+   l_mean_income |  -.1879983   .3201237    -0.59   0.558    -.8194301    .4434336
+          S_poor |  -.3417389   .5398012    -0.63   0.527    -1.406476    .7229984
+         S_manuf |   .1028647   .2690531     0.38   0.703    -.4278323    .6335616
+        _Iyear_2 |   .2632657   .0623322     4.22   0.000     .1403179    .3862135
+        _Iyear_3 |   .3687643    .123146     2.99   0.003     .1258634    .6116652
+           _cons |    5.97504   3.086388     1.94   0.054     -.112743    12.06282
+----------------------------------------------------------------------------------
+revision/tableA1_a.tex
+revision/tableA1_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(3, 191)         =    2757.22
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9555
+                                                Root MSE          =     .38754
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   1.230743   .0169326    72.68   0.000     1.197344    1.264142
+    _Iyear_2 |   .3153023    .020107    15.68   0.000     .2756419    .3549627
+    _Iyear_3 |   .5205851   .0224505    23.19   0.000     .4763024    .5648679
+       _cons |   7.431303   .1064781    69.79   0.000     7.221279    7.641327
+------------------------------------------------------------------------------
+revision/tableA1_b.tex
+revision/tableA1_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(4, 191)         =    1899.99
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9679
+                                                Root MSE          =     .32953
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .9799631     .02612    37.52   0.000     .9284425    1.031484
+       l_pop |   .3550138   .0384036     9.24   0.000     .2792642    .4307633
+    _Iyear_2 |   .3461532   .0157363    22.00   0.000     .3151139    .3771925
+    _Iyear_3 |   .5536586   .0178115    31.08   0.000     .5185261    .5887911
+       _cons |   4.209601   .3924655    10.73   0.000     3.435478    4.983724
+------------------------------------------------------------------------------
+revision/tableA1_b.tex
+revision/tableA1_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(17, 191)        =     699.89
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9731
+                                                Root MSE          =     .30495
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.001427    .023892    41.91   0.000     .9543007    1.048553
+           l_pop |   .3112709   .0358533     8.68   0.000     .2405516    .3819903
+elevat_range_msa |   .0717413   .0505793     1.42   0.158    -.0280244     .171507
+  ruggedness_msa |   3.273514   2.923394     1.12   0.264    -2.492768    9.039797
+      heating_dd |  -.0074048   .0038687    -1.91   0.057    -.0150358    .0002261
+      cooling_dd |  -.0023439   .0085178    -0.28   0.783     -.019145    .0144572
+          sprawl |   .0029035   .0033767     0.86   0.391    -.0037569    .0095638
+            div1 |   .2309418   .1767691     1.31   0.193    -.1177287    .5796122
+            div2 |   .0393572   .1654636     0.24   0.812    -.2870135     .365728
+            div3 |     .20563   .1720502     1.20   0.234    -.1337325    .5449925
+            div4 |   .1793196   .1760639     1.02   0.310    -.1679597     .526599
+            div5 |     .10241    .156051     0.66   0.512    -.2053946    .4102146
+            div6 |   .0434461   .1685552     0.26   0.797    -.2890227    .3759149
+            div7 |   .0449309   .1634645     0.27   0.784    -.2774966    .3673584
+            div8 |   -.038866   .1389168    -0.28   0.780     -.312874    .2351421
+            div9 |          0  (omitted)
+        _Iyear_2 |   .3427547    .016786    20.42   0.000      .309645    .3758644
+        _Iyear_3 |   .5517035   .0189277    29.15   0.000     .5143693    .5890377
+           _cons |   4.740412   .5307472     8.93   0.000     3.693534    5.787291
+----------------------------------------------------------------------------------
+revision/tableA1_b.tex
+revision/tableA1_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(28, 191)        =     510.85
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9760
+                                                Root MSE          =     .29098
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.013419   .0266754    37.99   0.000     .9608028    1.066035
+           l_pop |   .2698123    .122075     2.21   0.028     .0290241    .5106005
+elevat_range_msa |   .0612755   .0542447     1.13   0.260    -.0457201    .1682711
+  ruggedness_msa |   2.817438   3.085623     0.91   0.362    -3.268837    8.903712
+      heating_dd |   -.009434   .0041488    -2.27   0.024    -.0176174   -.0012506
+      cooling_dd |  -.0081429   .0107123    -0.76   0.448    -.0292724    .0129867
+          sprawl |   .0008284   .0034467     0.24   0.810      -.00597    .0076269
+            div1 |    .289817   .2108601     1.37   0.171    -.1260966    .7057305
+            div2 |   .1590488   .2028454     0.78   0.434    -.2410562    .5591537
+            div3 |   .3021663   .2069783     1.46   0.146    -.1060907    .7104232
+            div4 |   .2030225   .2068282     0.98   0.328    -.2049382    .6109832
+            div5 |   .1267915   .1786084     0.71   0.479    -.2255068    .4790897
+            div6 |   .1124221   .1863898     0.60   0.547    -.2552246    .4800689
+            div7 |   .1353654   .1822806     0.74   0.459    -.2241761    .4949069
+            div8 |  -.1103815   .1383378    -0.80   0.426    -.3832476    .1624845
+            div9 |          0  (omitted)
+         l_pop80 |   .6573795   .4011812     1.64   0.103    -.1339351    1.448694
+         l_pop70 |  -.3479351   .5699577    -0.61   0.542    -1.472155    .7762848
+         l_pop60 |  -.3003445   .4369409    -0.69   0.493    -1.162194    .5615049
+         l_pop50 |  -.0805465    .368232    -0.22   0.827    -.8068702    .6457772
+         l_pop40 |  -.0786617   .3281006    -0.24   0.811    -.7258278    .5685043
+         l_pop30 |  -.0694368   .2439465    -0.28   0.776    -.5506121    .4117384
+         l_pop20 |   .2419156   .1239985     1.95   0.053    -.0026668    .4864979
+   S_somecollege |   .4215376   .3695959     1.14   0.255    -.3074764    1.150552
+   l_mean_income |  -.2138126   .3398257    -0.63   0.530     -.884106    .4564807
+          S_poor |   -.459979   .5212769    -0.88   0.379    -1.488178    .5682199
+         S_manuf |    .022332    .257364     0.09   0.931    -.4853087    .5299727
+        _Iyear_2 |   .2679335   .0579998     4.62   0.000     .1535311    .3823358
+        _Iyear_3 |   .4027799   .1154434     3.49   0.001     .1750722    .6304876
+           _cons |   7.213542    3.18739     2.26   0.025     .9265368    13.50055
+----------------------------------------------------------------------------------
+revision/tableA1_b.tex
+revision/tableA1_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(3, 191)         =    3195.79
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9702
+                                                Root MSE          =     .22918
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   1.115357   .0120937    92.23   0.000     1.091503    1.139211
+    _Iyear_2 |   .1078425   .0159217     6.77   0.000     .0764375    .1392475
+    _Iyear_3 |   .1588894   .0157961    10.06   0.000     .1277322    .1900466
+       _cons |   7.145508   .0982004    72.76   0.000     6.951812    7.339205
+------------------------------------------------------------------------------
+revision/tableA1_c.tex
+revision/tableA1_c.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        576
+                                                F(4, 191)         =    4580.27
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9807
+                                                Root MSE          =     .18467
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .8282776   .0390187    21.23   0.000     .7513147    .9052405
+       l_pop |    .306465   .0379793     8.07   0.000     .2315522    .3813777
+    _Iyear_2 |   .1768712   .0137878    12.83   0.000     .1496752    .2040671
+    _Iyear_3 |   .2488369   .0153086    16.25   0.000     .2186412    .2790326
+       _cons |   5.394641   .2105045    25.63   0.000     4.979429    5.809853
+------------------------------------------------------------------------------
+revision/tableA1_c.tex
+revision/tableA1_c.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(17, 191)        =    1720.22
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9854
+                                                Root MSE          =     .16225
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .8369059   .0375394    22.29   0.000     .7628609    .9109509
+           l_pop |   .2815228   .0363233     7.75   0.000     .2098764    .3531692
+elevat_range_msa |   .0125271   .0282579     0.44   0.658    -.0432105    .0682648
+  ruggedness_msa |   2.485409   1.535581     1.62   0.107    -.5434665    5.514285
+      heating_dd |  -.0028661   .0016619    -1.72   0.086    -.0061442    .0004119
+      cooling_dd |   .0052524   .0036411     1.44   0.151    -.0019295    .0124343
+          sprawl |  -.0004184   .0012483    -0.34   0.738    -.0028806    .0020439
+            div1 |   .1295882   .0793471     1.63   0.104     -.026921    .2860974
+            div2 |   .1353595   .0675964     2.00   0.047     .0020283    .2686908
+            div3 |   .0969647   .0726031     1.34   0.183    -.0462422    .2401717
+            div4 |    .113237   .0874014     1.30   0.197     -.059159     .285633
+            div5 |   .0831409   .0680533     1.22   0.223    -.0510917    .2173735
+            div6 |   .0233968   .0707585     0.33   0.741    -.1161717    .1629653
+            div7 |   -.156743   .0668788    -2.34   0.020    -.2886589   -.0248272
+            div8 |   .0644673   .0497381     1.30   0.196    -.0336392    .1625738
+            div9 |          0  (omitted)
+        _Iyear_2 |   .1763967    .014135    12.48   0.000     .1485159    .2042774
+        _Iyear_3 |   .2496575   .0155211    16.09   0.000     .2190427    .2802723
+           _cons |   5.656998    .267881    21.12   0.000     5.128612    6.185383
+----------------------------------------------------------------------------------
+revision/tableA1_c.tex
+revision/tableA1_c.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        576
+                                                F(28, 191)        =    1369.46
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9876
+                                                Root MSE          =     .15113
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .8443756   .0360736    23.41   0.000     .7732219    .9155293
+           l_pop |     .35578   .0580603     6.13   0.000     .2412583    .4703018
+elevat_range_msa |  -.0064195   .0250806    -0.26   0.798      -.05589    .0430511
+  ruggedness_msa |   2.433643     1.4087     1.73   0.086    -.3449652     5.21225
+      heating_dd |  -.0048189   .0015208    -3.17   0.002    -.0078186   -.0018192
+      cooling_dd |  -.0026998   .0040274    -0.67   0.503    -.0106437    .0052442
+          sprawl |  -.0003333    .001219    -0.27   0.785    -.0027377    .0020712
+            div1 |   .2087411   .0772511     2.70   0.008     .0563663    .3611158
+            div2 |   .2751009   .0747967     3.68   0.000     .1275674    .4226345
+            div3 |   .2188761   .0788302     2.78   0.006     .0633866    .3743656
+            div4 |   .1914166   .0853644     2.24   0.026     .0230385    .3597947
+            div5 |   .1351878   .0675202     2.00   0.047     .0020069    .2683687
+            div6 |   .1222546   .0728611     1.68   0.095    -.0214612    .2659704
+            div7 |  -.0422818   .0675797    -0.63   0.532    -.1755803    .0910167
+            div8 |   .0574297   .0441119     1.30   0.195    -.0295794    .1444388
+            div9 |          0  (omitted)
+         l_pop80 |   .0890243   .1570529     0.57   0.571    -.2207565    .3988051
+         l_pop70 |   .1056484   .2195996     0.48   0.631    -.3275036    .5388003
+         l_pop60 |  -.3122374   .1892896    -1.65   0.101     -.685604    .0611293
+         l_pop50 |   .1015631   .1322392     0.77   0.443    -.1592736    .3623998
+         l_pop40 |  -.0759899   .1163478    -0.65   0.514    -.3054814    .1535017
+         l_pop30 |  -.0388009   .0913377    -0.42   0.671     -.218961    .1413593
+         l_pop20 |   .0437543   .0349641     1.25   0.212    -.0252111    .1127197
+   S_somecollege |   .4694062   .1739566     2.70   0.008     .1262833     .812529
+   l_mean_income |   -.231779   .1305251    -1.78   0.077    -.4892348    .0256768
+          S_poor |  -.1666008    .228363    -0.73   0.467    -.6170382    .2838365
+         S_manuf |  -.1580014   .1361179    -1.16   0.247    -.4264889     .110486
+        _Iyear_2 |   .0997185   .0289418     3.45   0.001     .0426319    .1568051
+        _Iyear_3 |   .0961142   .0527973     1.82   0.070    -.0080264    .2002547
+           _cons |     8.0525    1.29787     6.20   0.000     5.492501     10.6125
+----------------------------------------------------------------------------------
+revision/tableA1_c.tex
+revision/tableA1_c.xls
+dir : seeout
+(4 missing values generated)
+(4 missing values generated)
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        572
+                                                F(3, 191)         =     762.94
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8014
+                                                Root MSE          =     .48339
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   1.028773   .0311395    33.04   0.000     .9673511    1.090194
+    _Iyear_2 |   .4193856   .0165374    25.36   0.000     .3867662     .452005
+    _Iyear_3 |   .6995037   .0183017    38.22   0.000     .6634044     .735603
+       _cons |   7.973508   .1948505    40.92   0.000     7.589173    8.357844
+------------------------------------------------------------------------------
+revision/tableA1_d.tex
+revision/tableA1_d.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        572
+                                                F(4, 191)         =     604.19
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8747
+                                                Root MSE          =     .38441
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .8181478   .0347247    23.56   0.000     .7496547    .8866409
+       l_pop |   .3047866   .0323572     9.42   0.000     .2409634    .3686099
+    _Iyear_2 |   .3698313   .0176279    20.98   0.000     .3350608    .4046017
+    _Iyear_3 |   .6019017   .0219775    27.39   0.000      .558552    .6452514
+       _cons |   5.366936   .3311017    16.21   0.000      4.71385    6.020021
+------------------------------------------------------------------------------
+revision/tableA1_d.tex
+revision/tableA1_d.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        572
+                                                F(17, 191)        =     224.35
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9158
+                                                Root MSE          =     .31865
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .8425949   .0265762    31.70   0.000     .7901743    .8950156
+           l_pop |   .2728489   .0274599     9.94   0.000     .2186852    .3270126
+elevat_range_msa |  -.0117934   .0586083    -0.20   0.841    -.1273959    .1038092
+  ruggedness_msa |   .3757376   3.285865     0.11   0.909    -6.105506    6.856982
+      heating_dd |  -.0167849   .0037635    -4.46   0.000    -.0242082   -.0093615
+      cooling_dd |  -.0238571   .0097469    -2.45   0.015    -.0430825   -.0046317
+          sprawl |   .0093865    .003217     2.92   0.004      .003041    .0157319
+            div1 |          0  (omitted)
+            div2 |  -.1011141   .1212403    -0.83   0.405    -.3402561    .1380278
+            div3 |   .1303841   .1189327     1.10   0.274    -.1042063    .3649744
+            div4 |   .0399388   .1363197     0.29   0.770    -.2289466    .3088242
+            div5 |  -.0733751   .1333156    -0.55   0.583    -.3363351    .1895849
+            div6 |  -.1871532    .145481    -1.29   0.200     -.474109    .0998025
+            div7 |  -.1503416   .1518898    -0.99   0.324    -.4499385    .1492553
+            div8 |   -.251581   .1695284    -1.48   0.139    -.5859694    .0828074
+            div9 |  -.1796542   .1892658    -0.95   0.344    -.5529737    .1936654
+        _Iyear_2 |   .3689639   .0170466    21.64   0.000     .3353402    .4025877
+        _Iyear_3 |   .6068048   .0208361    29.12   0.000     .5657064    .6479033
+           _cons |   6.398771   .5832101    10.97   0.000     5.248411    7.549131
+----------------------------------------------------------------------------------
+revision/tableA1_d.tex
+revision/tableA1_d.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        572
+                                                F(28, 191)        =     185.21
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9296
+                                                Root MSE          =     .29435
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .8333406   .0227964    36.56   0.000     .7883756    .8783055
+           l_pop |   .3745189   .1368555     2.74   0.007     .1045766    .6444611
+elevat_range_msa |  -.0306262   .0516393    -0.59   0.554    -.1324827    .0712304
+  ruggedness_msa |  -1.590764   2.767033    -0.57   0.566     -7.04863    3.867103
+      heating_dd |  -.0192993   .0036601    -5.27   0.000    -.0265186   -.0120799
+      cooling_dd |  -.0290246   .0101499    -2.86   0.005    -.0490449   -.0090043
+          sprawl |   .0083115   .0033957     2.45   0.015     .0016136    .0150093
+            div1 |          0  (omitted)
+            div2 |  -.0171318   .1212181    -0.14   0.888    -.2562298    .2219663
+            div3 |   .1714058   .1251877     1.37   0.173    -.0755222    .4183339
+            div4 |   .0135547   .1325758     0.10   0.919    -.2479461    .2750554
+            div5 |  -.0867911   .1355296    -0.64   0.523    -.3541181    .1805359
+            div6 |  -.1397382   .1419484    -0.98   0.326    -.4197261    .1402497
+            div7 |  -.0737298   .1597298    -0.46   0.645    -.3887909    .2413312
+            div8 |  -.2605593   .1831807    -1.42   0.157    -.6218763    .1007577
+            div9 |  -.0874223   .1934382    -0.45   0.652    -.4689718    .2941271
+         l_pop80 |   .2590478   .4233793     0.61   0.541    -.5760517    1.094147
+         l_pop70 |   .1982892   .5676934     0.35   0.727    -.9214644    1.318043
+         l_pop60 |  -.6500648   .4261892    -1.53   0.129    -1.490707    .1905773
+         l_pop50 |  -.2806107   .3111816    -0.90   0.368    -.8944046    .3331832
+         l_pop40 |   .0609638   .3046489     0.20   0.842    -.5399445    .6618721
+         l_pop30 |   .1279706   .2512206     0.51   0.611    -.3675524    .6234936
+         l_pop20 |   .1692702   .1137535     1.49   0.138    -.0551043    .3936447
+   S_somecollege |   .7466549   .4340103     1.72   0.087    -.1094139    1.602724
+   l_mean_income |  -.1300118   .3665427    -0.35   0.723    -.8530034    .5929798
+          S_poor |  -.1341366   .5812311    -0.23   0.818    -1.280593     1.01232
+         S_manuf |   .1816896   .2651482     0.69   0.494    -.3413052    .7046844
+        _Iyear_2 |   .2872734    .068807     4.18   0.000     .1515543    .4229926
+        _Iyear_3 |   .4350028   .1345459     3.23   0.001     .1696161    .7003895
+           _cons |    7.93745   3.544064     2.24   0.026     .9469193    14.92798
+----------------------------------------------------------------------------------
+revision/tableA1_d.tex
+revision/tableA1_d.xls
+dir : seeout
+.         log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turn
+> er-M.-A.-2011-\Deliverable_1\Data_original\revision/tableA1.log
+  log type:  text
+ closed on:  29 May 2022, 23:24:15
+-----------------------------------------------------------------------------------------------------------------------------------------------------

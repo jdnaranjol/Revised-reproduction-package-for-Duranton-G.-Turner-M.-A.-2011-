@@ -1,0 +1,236 @@
+.         use $data, clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         rename sprawl_1992 sprawl_2003
+.         rename sprawl_1976 sprawl_1993
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         *Generate first differences
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93 
+. 
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93 
+. 
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83
+(3 missing values generated)
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93
+(1 missing value generated)
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83 
+(3 missing values generated)
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93 
+(1 missing value generated)
+. 
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93 
+. 
+.         gen Dl_pop_1993 = l_pop90 -l_pop80
+.         gen Dl_pop_2003 = l_pop00 -l_pop90
+. 
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+.      
+.       rename l_vmt_IHNU_83 l_vmt_IHNU_1993
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_2003
+.       rename l_vmt_IHU_83 l_vmt_IHU_1993
+.       rename l_vmt_IHU_93 l_vmt_IHU_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1993
+.       rename l_vmt_IH_93 l_vmt_IH_2003
+.       rename l_vmt_MRU_83 l_vmt_MRU_1993
+.       rename l_vmt_MRU_93 l_vmt_MRU_2003
+.  
+.         rename S_somecollege_80 S_somecollege_1993 
+.         rename l_mean_income_80 l_mean_income_1993 
+.         rename S_poor_80 S_poor_1993 
+.         rename S_manuf83 S_manuf_1993 
+.  
+.         rename S_somecollege_90 S_somecollege_2003 
+.         rename l_mean_income_90 l_mean_income_2003 
+.         rename S_poor_90 S_poor_2003 
+.         rename S_manuf93 S_manuf_2003 
+. 
+. 
+. 
+.         reshape long Dl_ln_IH Dl_ln_IHU Dl_ln_MRU Dl_ln_IHNU 
+option i() required
+
+         long                                wide
+        +---------------+                   +------------------+
+        | i   j   a   b |                   | i   a1 a2  b1 b2 |
+        |---------------| <--- reshape ---> |------------------|
+        | 1   1   1   2 |                   | 1   1   3   2  4 |
+        | 1   2   3   4 |                   | 2   5   7   6  8 |
+        | 2   1   5   6 |                   +------------------+
+        | 2   2   7   8 |
+        +---------------+
+
+        long to wide: reshape wide a b, i(i) j(j)    (j existing variable)
+        wide to long: reshape long a b, i(i) j(j)    (j new variable)
+r(198);
+.                    Dl_vmt_IH Dl_vmt_IHU Dl_vmt_MRU Dl_vmt_IHNU
+.                    l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU 
+.                    sprawl S_somecollege l_mean_income S_poor S_manuf 
+.                          Dl_pop l_pop, i(msa ) j(year _1993 _2003)
+. 
+.         local i=0
+. 
+.         *Threshold for road growth
+.         local k=-1000000000
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         *instructions for outreg
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         iis msa
+. 
+.         gen Dl_ln_0=0 
+. 
+.         local j=1
+.         while `j'<=3{
+  2.                 if `j'==1{
+  3.                         local R "IHU"
+  4.                         local S "IHNU"
+  5.                         local T "MRU"
+  6.                         local V "A12_a"
+  7.                         local cond "if (zero>0 & Dl_ln_IHU>`k'& Dl_ln_IHNU>`k' & Dl_ln_MRU>`k')"
+  8.                         }
+  9.                 if `j'==2{
+ 10.                         local R "IHNU"
+ 11.                         local S "IHU"
+ 12.                         local T "MRU"
+ 13.                         local V "A12_b"
+ 14.                         local cond "if (zero>0 & Dl_ln_IHU>`k'& Dl_ln_IHNU>`k' & Dl_ln_MRU>`k')"
+ 15.                         }
+ 16.                 if `j'==3{
+ 17.                         local R "MRU"
+ 18.                         local S "IHU"
+ 19.                         local T "IHNU"
+ 20.                         local V "A12_c"
+ 21.                         local cond "if (zero>0 & Dl_ln_IHU>`k'& Dl_ln_IHNU>`k' & Dl_ln_MRU>`k' )"
+ 22.                         }
+ 23.                 
+.                 capture drop Dl_vmt Dl_ln l_vmt Dl_ln2 Dl_ln3
+ 24.                 gen Dl_vmt = Dl_vmt_`R' 
+ 25.                 gen Dl_ln  = Dl_ln_`R' 
+ 26.                 gen Dl_ln2  = Dl_ln_`S' 
+ 27.                 gen Dl_ln3  = Dl_ln_`T' 
+ 28.                 gen l_vmt = l_vmt_`R' 
+ 29. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 i.year `cond', cl(msa) robust  
+ 30.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace
+ 31. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop i.year `cond',  cl(msa) robust  
+ 32.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 33. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt i.year `cond',  cl(msa) robust  
+ 34.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 35. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
+ 36.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop  `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 37. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt `geography' `census_div' i.year `cond', cl(msa)  robust  
+ 38.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 39. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+ 40.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 41. 
+.                 xi: reg    Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  rob
+> ust  
+ 42.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop l_vmt `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 43. 
+.                 xi: xtreg  Dl_vmt Dl_ln Dl_ln2 Dl_ln3 i.year `cond', fe robust  
+ 44.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 using revision/table`V'.xls,ctitle(FE `R')  `instruct' append
+ 45. 
+.                 xi: xtreg  Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop i.year `cond',  fe robust  
+ 46.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
+ 47. 
+.                 xi: xtreg  Dl_vmt Dl_ln Dl_ln2 Dl_ln3 Dl_pop `demographics' i.year `cond', fe  robust  
+ 48.                 outreg2    Dl_ln Dl_ln2 Dl_ln3 Dl_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append 
+ 49. 
+.               local j=`j'+1
+ 50.               }
+.         log close
+.         }
+r(198);
+
+end of do-file
+
+r(198);
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD7378_000000.tmp"
+
+. 
+. ******************************
+. * SET UP                      
+. ******************************
+. cd "C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turner-M.-A
+> .-2011-\Deliverable_1\Data_original"
+C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turner-M.-A.-2011
+> -\Deliverable_1\Data_original
+
+. 
+. *#delimit 
+. 
+. clear
+
+. 
+. capture mkdir revision
+
+. 
+. set matsize 800
+set matsize ignored.
+    Matrix sizes are no longer limited by c(matsize) in modern Statas.  Matrix sizes are now limited by edition of Stata.  See limits for more
+    details.
+
+. set memory 600m
+set memory ignored.
+    Memory no longer needs to be set in modern Statas; memory adjustments are performed on the fly automatically.
+
+. set more 1
+
+. quietly capture log close

@@ -1,0 +1,30 @@
+         \begin{table}[htbp]\centering         \def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}         \caption{Change in VKT as a Function of Change in Lane Kilometers}         \begin{tabular}{l*{10}{c}}         \hline\hline                 
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}&\multicolumn{1}{c}{(9)}&\multicolumn{1}{c}{(10)}\\
+                    &\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{Lane $\uparrow$}&\multicolumn{1}{c}{Lane $\uparrow$}&\multicolumn{1}{c}{Lane $\downarrow$}&\multicolumn{1}{c}{All}&\multicolumn{1}{c}{All}\\
+ \hline \multicolumn{10}{l}{ \emph{Dependent variable:} ln VKT for interstate highways, entire MSAs} \\ 
+$\Delta$ ln (IH lane km)&       1.045\sym{***}&       1.048\sym{***}&       1.019\sym{***}&       0.998\sym{***}&       0.929\sym{***}&       1.086\sym{***}&       0.902\sym{***}&       0.822\sym{***}&       1.027\sym{***}&       1.027\sym{***}\\
+                    &     (0.046)         &     (0.047)         &     (0.040)         &     (0.040)         &     (0.038)         &     (0.058)         &     (0.056)         &     (0.092)         &     (0.054)         &     (0.050)         \\
+[1em]
+$\Delta$ ln (population)&                     &       0.341\sym{***}&       0.396\sym{***}&       0.439\sym{***}&       0.393\sym{**} &       0.310         &       0.450\sym{*}  &       0.165         &                     &       0.515\sym{*}  \\
+                    &                     &     (0.101)         &     (0.098)         &     (0.110)         &     (0.130)         &     (0.165)         &     (0.206)         &     (0.215)         &                     &     (0.200)         \\
+[1em]
+ln (initial VKT)    &                     &                     &      -0.047\sym{***}&      -0.057\sym{***}&      -0.124\sym{***}&                     &      -0.153\sym{***}&      -0.129\sym{**} &                     &                     \\
+                    &                     &                     &     (0.006)         &     (0.007)         &     (0.019)         &                     &     (0.034)         &     (0.041)         &                     &                     \\
+           Geography & & & & Y & Y & & Y & Y & & \\            Census divisions & & & & Y & Y & & Y & Y & & \\            Socioeconomic           \\Characteristics & & & & & Y & & Y & Y & & \\            Past populations & & & & & Y & & Y & Y & & \\           MSA fixed effects & & & & & & & & & Y & Y \\                 
+\(R^{2}\)           &       0.865         &       0.873         &       0.890         &       0.897         &       0.906         &       0.912         &       0.941         &       0.689         &       0.934         &       0.940         \\
+ 
+          \hline         
+\multicolumn{10}{l}{ \emph{Panel B. Dependent variable:} $\Delta$ ln VKT for interstate highways, entire MSAs, TSLS} \\ 
+$\Delta$ ln (IH lane km)&       1.045\sym{***}&       1.046\sym{***}&       1.019\sym{***}&       0.998\sym{***}&       0.923\sym{***}&       1.074\sym{***}&       0.897\sym{***}&       0.825\sym{***}&       1.027\sym{***}&       1.027\sym{***}\\
+                    &     (0.046)         &     (0.046)         &     (0.040)         &     (0.040)         &     (0.037)         &     (0.056)         &     (0.052)         &     (0.086)         &     (0.038)         &     (0.035)         \\
+[1em]
+$\Delta$ ln (population)&                     &       0.093         &       0.342\sym{*}  &       0.454         &       1.018\sym{*}  &      -0.162         &       1.139         &       1.495         &                     &       0.617         \\
+                    &                     &     (0.180)         &     (0.160)         &     (0.321)         &     (0.445)         &     (0.288)         &     (0.719)         &     (1.452)         &                     &     (0.366)         \\
+ 
+FSS                 &           .         &      63.287         &      54.273         &      29.198         &      23.865         &      45.668         &      12.314         &       4.053         &           .         &      20.058         \\
+\hline\hline
+\end{tabular}
+\begin{flushleft}
+\emph{Notes:} All regressions include a constant and decade effects. Robust standard errors clustered by MSA in parentheses. 456 observations for each regression in columns 1–5 and 9–10, 205 in columns 6–7 which consider only increases in lane kilometers of more than 5 percent, and 115 in column 8 which considers declines in lane kilometers greater than 5 percent. Instrument for $\Delta$ ln (population) is expected population growth based on initial composition of economic activity. \\ FSS: First stage statistic \\         **** Significant at the 1 percent level. \\    *** Significant at the 5 percent level. \\         ** Significant at the 10 percent level.
+\end{flushleft}
+\end{table}

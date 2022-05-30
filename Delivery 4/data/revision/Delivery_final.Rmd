@@ -1,0 +1,399 @@
+---
+title: "The Fundamental Law of Road Congestion:Evidence from US cities"
+author: "Julian Naranjo (201921367)  y Christian André Villegas (201731959)"
+date: "`r format(Sys.Date(), '%e de %B, %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: yes
+    number_sections: yes
+    fig_caption: yes
+    highlight: tango
+  word_document: default
+  html_document:
+    df_print: paged
+subtitle: "Final Deliverable Reproduction Package"
+header-includes:
+- \usepackage[spanish,es-tabla]{babel}
+- \usepackage[utf8]{inputenc}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \setlength\headheight{50pt}
+- \usepackage{float}
+- \floatplacement{figure}{H}
+tables: yes
+
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,comment = FALSE,warning = FALSE,error = F,
+                      message = F)
+pacman::p_load(tidyverse,readxl,kableExtra,scales,sf,ggplot2,ggrepel,ggthemes,writexl,openxlsx)
+
+
+```
+
+```{r carga bases, cache=TRUE,comment=F,}
+
+
+
+```
+
+\setcounter{tocdepth}{5}
+\renewcommand\thesection{\roman{section}}
+
+# Abstract
+
+El propósito principal del paper “The Fundamental Law of Road Congestion: Evidence from US Cities”, donde la congestión fue medida como los vehículos por kilómetros recorrido (VKT por sus siglas en inglés), se puede dividir en 3 objetivos. En primer lugar, busca estimar la elasticidad de la demanda que tiene las carretas nuevas en la congestión de cada metropolitan statistical áreas (MSA), durante los años 1983, 1993, y 2003. En segundo lugar, se busca determinar si se cumple la ley de congestión de vías, en donde se encuentra que el transporte público no tiene un efecto sobre las congestión y que existe un equilibrio de "Tráfico", el cual consiste en que cada ciudad tiene un tráfico “optimo”. En este paper los autores logran determinar que en el tiempo la congestión va disminuyendo. Finalmente, los autores determinan los mecanismos por los cuales la congestión aumenta ante incrementos del tráfico, para esto estiman un modelo que está en función del variable de comercio, el crecimiento poblacional y la disponibilidad de carreteras.
+
+
+# Introducction
+
+Para la estimación, los autores tienen 4 formas funcionales en su cabeza, la primera es una regresión lineal, estimada por  ordinary least squares OLS, donde se viola el supuesto de exógeneidad, dado que pude existir un “cofunder”, el cual aumente VKT y las carreteras, como por ejemplo mayor población. Para intentar corregir esto, se crea la ecuación 2, la cual añade efectos fijos de las metropolitan statistical áreas (MSA), incluyendo dummys por cada una, estimando un pool OLS. Otra forma de resolver los problemas de contar con “cofunder”, es realizar la primera diferencia, no obstante, los efectos fijos por MSA desaparecen, para esto  se añade puntualmente condiciones climáticas y socioeconómicas de la población, estimando mediante pool OLS. 
+
+\begin{equation}
+    ln(Q_{i,t})= A_0 + \alpha ln(R_{i,t})+ A_1 X_{i,t}+ \epsilon_{i,t}
+\end{equation}
+
+\begin{equation}
+    ln(Q_{i,t})= A_0 + \alpha ln(R_{i,t})+ A_1 X_{i,t}+ \delta_i +\epsilon_{i,t}
+\end{equation}
+
+\begin{equation}
+    \triangle ln(Q_{i,t})=  \alpha \triangle ln(R_{i,t})+ A_1 \triangle X_{i,t}+ \triangle \epsilon_{i,t}
+\end{equation}
+
+
+\begin{align}
+\triangle ln(R_{i,t})=  B_0 + B_1 X_{i,t} + B_2 Z_{i,t}+ \mu_{i,t} \\
+\triangle ln(Q_{i,t})=  A_0 + \alpha ln(R_{i,t})+ A_1 X_{i,t}+ \epsilon_{i,t}
+\end{align}
+
+
+Los autores reconocen que la fuente de endógenidad proviene de la existe una relación de doble causalidad entre VKT y unidades adicionales de carreteras, dado que más congestión incentiva a construir más carretas, dando como resultado mayor tráfico, mientras que mayor carreteras generan mayor uso de estas. Para esto, se implemente una estimación de variables instrumentales. Los tres instrumentos planteados fueron: 1) las rutas utilizadas por los exploradores de américa durante 1835 y 1850; 2) el plan de autopista de 1947 para mejorar el comercio de EE.UU; 3) las antiguas rutas del tren. Consideramos que los tres instrumentos cumplen el criterio de ser “fuertes”, dado que logran explicar el VKT únicamente por medio del aumento de carreteras, las cuales todas utilizaron esta base metodología para hacerse. 
+
+Todas las anteriores estimaciones, fueron presentadas  en 8 tablas, sumadas a 2 tablas descriptivo de las variables utilizadas y 2 gráficos, que muestran cómo se relacionan las carreteras de instrumentos con las carreteras actuales en EEUU.  Por otro lado, la estimación preferida por los investigadores es la que fue estimada utilizando el método de IV, con los 3 instrumentos y controlando por variables físicas de geografía y algunas variables del censo para los MSA. Consideramos que es una buena elección, dado que se logra controlar la endogenidad por el frente de doble causalidad de las variables y características propias de los MSA, los cuales pueden actuar como cofunder. Los test de robustes, son pocos, en su mayoría es cambiar la especificación de los años evaluados y las carreteras seleccionadas para el análisis. No obstante cuentan con la ventaja de que las estimaciones de la elasticidades son muy parecidas, bajo todas las medidas. Ante esto, los autores, muestran que pude existir que choques negativos de la zona, causan mayores carreteras, el cual es un resultado que nosotros quisiéramos validar, dado que nos parece contraituitivo.
+
+Los datos utilizados, los MSA parecen estándares de EEUU, dado que los autores no determinan cómo se construyen, los toman como dados. Respecto a las carreteras, información del tamaño, ubicación de estas, vehículos por tipo que transitan por ellas, se utilizan la información de US HPMS, las cuales las ciudades deben reportante ante el Federal Highway
+Administration in the US Department of Transportation (dot ), con el cual se realizan los planes de inversión. Para la información a nivel individual, se cuenta con información de NPTS, donde se recoge información  de distancia pro persona, edad, sexo y ocupación, durante un periodo de 1995-2001.
+
+# Code improvements
+
+En general, las mejoras al código que realizamos consistieron en sacar de manera precisa todas las salidas desde Stata, sin necesidad de de hacer pasos extras.
+
+* Contribución 1: 
+Las salidas correspondientes de Table 1, son recogidas por un documento .log, el cual guarda las salidas de la consola, siendo este documento un resultado intermedio con el que se construye la tabla. En general la mayoría de las variables están indexadas en el tiempo con los dos últimos dígitos del año (YY), correspondiente al final de cada variable (e.g. ln_pc_IH83 corresponde al logaritmo de kilómetros de avenidas interestatales por cada 10.000 habitantes para el año 1983). Esta sección empieza entonces con el proceso de creación, escalamiento, o modificación de variables. 
+
+* Contribución 2:
+Se genera el código para guardar directamente en LATEX la tabla 1, la cual desde su paquete de reproducción únicamente guarda algunos de los resultados requeridos para la construcción de la tabla por medio de un .log
+
+* Contribución 3:
+Se crean algunas variables que corresponde a las áreas no urbanas, este calculo se hace mediante el computo del resultado total menos el resultado urbano dentro de un logaritmo. Variable 'Zero', corresponde al mínimo del logaritmo de los kilómetros de avenidas interestatales o avenidas principales urbanas para los componentes urbanos y no urbanos de cada MSA en todas las unidades de tiempo. 
+Adicionalmente se hace un reescalamiento de algunas variables que serán usadas como controles en algunos ejercicios econométricos (cooling_dd, heating_dd, ruggedness_msa, elevat_range_msa).  
+
+* Contribucion 4:
+
+Como lo indican los autores, en esta sección se crean los resultados de la tabla 2 y 3 de manera conjunta, en el código nuevo elaborado estas salidas salen automáticamente. Estas regresiones son compiladas en un triple loop (k, j, i), donde k={1, 2, 3, 4} indexa los paneles de las tablas 2 y 3, j indexa el año de la regresión además de algunas de las variables de carácter temporal a usar {83, 93, 03} y finalmente, i indexa la especificación. 
+
+Respecto a K: 
+1: ln VKT for interstate highways, entire MSAs
+2: ln VKT for interstate highways, urbanized areas within MSAs
+3: ln VKT for major roads, urbanized areas within MSAs
+4: ln VKT for interstate highways, outside urbanized areas within MSAs
+
+Respecto a i: 
+1: univariable
+2: controlando por población
+3: controlando por población, variables geográficas y un efecto fijo por unidad censal. 
+4: controlando por población, variables geográficas, un efecto fijo por unidad censal y variables que recogen el comportamiento poblaciónal y socioeconómico de cada MSA.
+
+Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+Variable de interés: ln kilómetros de avenidas interestatales (IH)
+
+Sobre la regresión en específico, esta es una regresión lineal por mínimos cuadrados ordinarios (MSO) y no tiene ningún detalle especial a resaltar, más allá que en las regresiones multivariable incluye la variable 'Zero', la cual garantiza que no se corra la regresión con variables iguales a cero.
+
+* Contribución 5:
+En esta sección se realiza estimaciones con modelos de regresión MCO Pooled, para lo cual es necesario homogeneizar la indexación de las variables y organizar la información disponible, i.e. pasar la información de tipo 'Wide' o tipo 'Long', a continuación, se hace un pequeño resumen al respecto del proceso:  
+
+Al igual que en el módulo anterior de salidas, se generan las variables correspondientes a las zonas no urbanizadas, y se reescalan variables geográficas de cada MSA. Adicionalmente a la modificación de las variables similar a la del módulo anterior se realiza un proceso de homogenización de variables, en la consideración que se va a surtir un proceso de transformación de la base de datos, para el caso se realiza el ajuste de año (YY) de algunas variables considerando que hay un poco rezago entre estas e.g. S_poor_80 cambia su año por 1983. así mismo, de esta misma manera se completa y se hacen expresiones regulares en la base de datos para conseguir que cada variable (panel) de interés cuente al final con el año respectivo SSYY, e.g. S_somecollege_80 se transforma a S_somecollege_1983. 
+
+Con las variables arregladas se procede a realizar la transformación de la base a su correspondiente forma 'long' (Panel), usando como variables de pivote - individuo, el código de identificación de cada MSA; y como indicador de Año, se crea la variable year que comprenderá los tres periodos correspondientes 1983 1993 y 2003. 
+
+
+* Contribución 6:
+Teniendo en cuenta los pasos anteriores, se procese a estimar los modelos panel, cada uno de estos cuentan con especificaciones ligeramente diferentes que serán comentadas a continuación uno a uno.
+
+Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+Variable de interés: ln kilómetros de avenidas interestatales (IH)
+
+Modelos estimados:
+
+M1: Modelo panel con efectos fijos de tiempo, errores robustos y clusterizados a nivel de MSA
+M2: M1 + Control por la población
+M3: M2 + Controles de geografía y división censal
+M4: M3 + Controles de características socioeconómicas y rezagos de la población
+M5: Modelo Panel con efectos fijos de tiempo y MSA y con errores robustos 
+M6: M5 + Control por la población
+M7: M6 + Controles de características socioeconómicas
+M8: M6, limitando la regresión a las zonas urbanas o susceptibles  a las avenidas interestatales, i.e. que la variable 'Zero' sea estrictamente mayor a cero. 
+M9: M6 para ciudades grandes, considerando grandes a aquellas ciudades que para los 1990 contara con más población que la mediana de las observaciones (l_pop90 > 12.586090). 
+M10: M6 para ciudades pequeñas (l_pop90 < 12.586090). 
+
+* Contribución 7:
+Esta sección al igual que las anteriores, cuenta con una sección de creación y/o modificación de las variables, las cuales ya son recogidas por las explicaciones de los modulos anteriores. 
+
+En cuanto a las regresiones, esta sección se presentan 18 modelos de regresión divididas en dos paneles, el panel A, que corresponde a regresiones panel estimado con un modelo de MCO, y un segundo panel (B) estimado a través de un modelo regresión de mínimos cuadrados en dos etapas (Two Stage Least Squares - TSLS), la especificación de cada modelo en el módulo A, se corresponde a uno en el B, menos para la primera y novena estimación del módulo A. Así la especificación de modelo A2, es equivalente a la del modelo B2, pero cambia la forma de estimación, y así sucesivamente con los demás modelos.  
+
+Variable de salida: ln del cambio de kilómetros viajados por vehículo (delta VKT)
+Variable de interés: ln del cambio de kilómetros de avenidas interestatales (delta IH)
+
+Modelos estimados:
+
+M1: Modelo de primeras diferencias
+M2: M1 + Controles por población 
+M3: M2 + Control de los VKT en el periodo inicial de la información para cada MSA. 
+M4: M3 + Controles geográficos y de división censal 
+M5: M4 + Controles socioeconómicos y de rezagos de la población. 
+M6: M2 para una muestra restringida en la que se presenta un crecimiento de al menos un 5% de las avenidas interestatales (Dl_ln_IH >0.05)
+M7: M5 para una muestra restringida en la que se presenta un crecimiento de al menos un 5% de las avenidas interestatales (Dl_ln_IH >0.05)
+M8: M5 para una muestra restringida en la que se presenta un decrecimiento de al menos un 5% de las avenidas interestatales (Dl_ln_IH <-0.05)
+M9: M1 + Efectos fijos por MSA
+M10: M9 + Controles por población 
+
+Todas las regresiones cuentan con clusterizan los errores a nivel de MSA, menos en los modelos 9 y 10, donde mediante efectos fijos se recogen los efectos no observables. Y todas las estimaciones se hacen con errores robustos. 
+
+* Contribución 8:
+
+En esta sección se presentan 40 regresiones haciendo uso de variables instrumentales. Precisamente el uso de estos instrumentos y la forma de estimación serán recogido por cada uno de los paneles a tener en cuenta (8), y diferentes especificaciones que se presentan para cada panel (5 por cada uno).
+
+A. 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Rutas de exploración en 1835 (ln km), vías de ferrocarril en 1898 (ln km) y rutas interestatales planeadas en 1947 (ln km)
+	Modelo: MCO en dos etapas (TSLS)
+
+B. 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Rutas de exploración en 1835 (ln km), vías de ferrocarril en 1898 (ln km) y rutas interestatales planeadas en 1947 (ln km)
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+C. 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Rutas interestatales planeadas en 1947 (ln km)
+	Modelo: MCO en dos etapas (TSLS)
+
+D. 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Vías de ferrocarril en 1898 (ln km)
+	Modelo: MCO en dos etapas (TSLS)
+
+E. 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Rutas de exploración en 1835 (ln km)
+	Modelo: MCO en dos etapas (TSLS)
+
+F. 
+	Restringido a la década de los 1980
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Vías de ferrocarril en 1898 (ln km) y rutas interestatales planeadas en 1947 (ln km)
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+	
+G. 
+	Restringido a la década de los 1990
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Vías de ferrocarril en 1898 (ln km) y rutas interestatales planeadas en 1947 (ln km)
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+H.
+	Restringido a la década de los 2000
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Instrumentos: Vías de ferrocarril en 1898 (ln km) y rutas interestatales planeadas en 1947 (ln km)
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+Modelos estimados:
+
+M1: Regresión IV
+M2: M1 + Control por población
+M3: M2 + Controles de geografía y Divisiones censales
+M4: M3 + Controles por características socioeconómicas
+M5: M4 +  Controles por el rezago de la población 
+
+Las regresiones de los módulos A, ..., E son realizadas con errores robustos y clusters a nivel de MSA.
+Las regresiones de los módulos F, G y H son realizadas con errores robustos.
+
+* Contribución 9:
+Al igual que las salidas anteriores, esta también cuenta con una sección de arreglo de variables que será ignorada de la explicación en consideración que ya es recogida por los numerales anteriores.En este caso nuevamente se recurren a modelos panel, en los que se presentan diferentes especificaciones y métodos de estimación, a continuación, se presentará un resumen de cada uno de estas regresiones. 
+
+M1: 
+	Variable de salida: ln de los kilómetros viajados por vehículo (VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH) y ln de la cantidad máxima de buses (pico) 
+	Modelo: MCO Panel con efectos fijos de tiempo
+
+M2: M1 + Controles por población 
+M3: M2 + Controles por geografía y unidades censales
+M4: M3 + Controles por variables socioeconómicas y rezagos de la población 
+M5: M1 + Efectos fijos por MSA
+M6: M2 + Efectos fijos por MSA
+
+M7: M1 
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+M8: M2 
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+M9: M3 
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+M10: M4
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+Todas las regresiones cuentan con errores robustos y con errores clusterizados a nivel de MSA en los casos en los que no se cuentan con efectos fijos a nivel de MSA (5 y 6)
+
+* Contribución 10:
+
+Respecto a la preparación y reforma de la base de datos, las seccione iniciales recogen este proceso.
+En esta sección se presentan 6 modelos de regresión para comprobar la convergencia en promedio de anual de tráfico diario (Annual average daily traffic AADT). A continuación, se presentan las especificaciones de cada una de las regresiones.   
+
+
+M1: 
+	Variable de salida: Cambio AADT (delta AADT)
+	Variable de interés: Nivel inicial de AADT en avenidas interestatales
+	Modelo: Mínimos cuadrados ordinarios. 
+
+M2: M1 + Controles por población 
+
+M3: M2 + Controles por geografía y unidades censales
+
+M4: M3 + Controles por variables socioeconómicas, participación inicial de actividades de manufacturas y rezagos de la población 
+
+M5: M1 + Efectos fijos por MSA
+
+M6: M3 + Control por participación inicial de actividades de manufacturas
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+Todas las regresiones cuentan con errores robustos y con errores clusterizados a nivel de MSA en los casos en los que no se cuentan con efectos fijos a nivel de MSA (5).
+
+
+* Contribución 11:
+Respecto a la preparación y reforma de la base de datos, las seccione iniciales recogen este proceso. En esta sección se presentan 10 modelos de regresión que recogen el comportamiento respecto a transporte de carga (Trucks). A continuación, se presenta cada una de las especificaciones presentadas. 
+
+M1: 
+	Variable de salida: ln VKT para transporte  de carga (ln truck VKT)
+	Variable de interés: ln kilómetros de avenidas interestatales (IH)
+	Modelo: Mínimos cuadrados ordinarios. 
+
+M2: M1 + Controles por población 
+
+M3: M2 + Controles por geografía y unidades censales
+
+M4: M3 + Controles por variables socioeconómicas
+
+M5: M4 + controles por rezagos de la población
+ 
+M6: M1 + Efectos fijos a nivel de MSA
+
+M7: M2 + Efectos fijos a nivel de MSA
+
+M8: M7 + Controles por variables socioeconómicas
+
+M9: M2 
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+M10: M3
+	Modelo: Máxima verosimilutud con restricciones de información (Limited information maximum likelihood - LIML)
+
+Todas las regresiones cuentan con errores robustos y con errores clusterizados a nivel de MSA en los casos en los que no se cuentan con efectos fijos a nivel de MSA (6, 7 y 8).
+
+
+* Contribución 12: 
+
+Al igual que las salidas anteriores esta cuenta con una parte de arreglo de variables y modificación de la base de datos en forma (wide to long). En esta tabla se presentan 15 modelos de regresión, divididos en 3 paneles con 5 especificaciones. A continuación, se hace un resumen de estas: 
+
+Modelo, estimados mediante Mínimos cuadrados ordinarios en datos panel
+
+Panel A: 
+	Variable de salida: ln VKT para las avenidas interestatales (IH) únicamente para zonas urbanizadas
+	Variable de interés: ln kilómetros de avenidas interestatales urbanas (IHU), ln kilómetros de avenidas interestatales no urbanas (IHNU) y ln kilómetros caminos principales urbanos (IHU).
+
+Panel B: 
+	Variable de salida: ln VKT para las avenidas interestatales (IH) para zonas NO urbanizadas
+	Variable de interés: ln kilómetros de avenidas interestatales urbanas (IHU), ln kilómetros de avenidas interestatales no urbanas (IHNU) y ln kilómetros caminos principales urbanos (IHU).
+
+Panel C: 
+	Variable de salida: ln VKT para los caminos principales (MRU) únicamente para zonas urbanizadas
+	Variable de interés: ln kilómetros de avenidas interestatales urbanas (IHU), ln kilómetros de avenidas interestatales no urbanas (IHNU) y ln kilómetros caminos principales urbanos (IHU).
+
+M1: Tiene en cuenta todas las variables de interés
+	 
+M2: M1 + Controles por población 
+
+M3: M2 + Controles por geografía y unidades censales
+
+M4: M3 + Controles por variables socioeconómicas
+
+M5: M4 + controles por rezagos de la población
+ 
+Todas las regresiones cuentan con errores robustos y con errores clusterizados a nivel de MSA.
+
+
+# Results
+
+
+En la tabla 1 describe los datos en general. Se observa que el promedio de número carros que pasan por las autopistas de las MSA aumentaron de 4832 en 1983 a 9361 en 2003. También se muestra como aumentaron las autopista en un 6% durante 1983 y 1993 a 1993 y 2003.
+
+\input{JN&CV_table_1.tex}
+
+La tabla 2 reporta la elasticidad del trafico medido en VKT en los MSA respecto al aumento de kilómetros de carreteras. Se destaca qeu dependiendo de la década, la elasticidad pasa de 1.23 a 1.25. Sin embargo, a medida que se analizan las carreteras menos urbanas, la elasticidad cae.
+
+\input{JN&CV_table_2.tex}
+
+La tabla 3. Esta regresión que también es de elasticidad del trafico respecto a vias, dado que la población y las variables socioeconómicas estas correlacionas con variables no observables que aumentan el tráfico, se incluyeron como controles. En esta especificación cae la elasticidad a 0.71 y 0.94, dependeinte de la especificación usada  y la decada.
+
+\input{JN&CV_table_3.tex}
+
+La tabla 4, usa la especificación de la tabla 2 y de la tabla 3, pero estimando un modelo panel con todos los años y para cada tipo de vias. 
+
+\input{JN&CV_table_4.tex}
+
+La tabla 5, en lugar de estimar todos los años, estima la primera diferencia para los valores de cada año. Entre los resultados relevantes, se destaca que la importancia del cambio de la población se incrementa.
+
+\input{JN&CV_table_5.tex}
+
+La tabla 6 es la más importante del paper, pues estima la elasticidad del trafico respecto a vias instrumentando por diferentes controles. Esta estimación se estima mediante IV. Se destaca que cuando se utilizando todos los controles, la elastiidad es cercana a 1.
+
+\input{JN&CV_table_6.tex}
+
+La tabla 7 incluye la cantidad de buses, para intentar probar la hióteiss de que el transporte público ayuda a disminuir el tráfico. Esta tabla muestra que la elasticidad es menor a 1, mostrando que no tiene efecto.
+
+\input{JN&CV_table_7.tex}
+
+La tabla 8, fue hecha intentando probar si el tráfico convergía  un punto. Para esto, se evidencia que durante 1980 y 200, la varianza del total de carros en circulación disminuye.
+
+\input{JN&CV_table_8.tex}
+
+
+\input{JN&CV_table_9.tex}
+
+
+\input{JN&CV_table_11.tex}
+
+
+
+
+
+
+
+
+
+
+
+

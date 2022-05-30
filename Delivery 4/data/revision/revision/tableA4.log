@@ -1,0 +1,495 @@
+.         use $data, clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+. 
+.         rename sprawl_1992 sprawl93
+.         rename sprawl_1976 sprawl83
+.         gen sprawl03 = sprawl93
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         *Generate first differences
+.         gen  Dl_ln_IH_1993 = l_ln_km_IH_93 - l_ln_km_IH_83
+.         gen  Dl_ln_IH_2003 = l_ln_km_IH_03 - l_ln_km_IH_93
+.         gen  Dl_vmt_IH_1993 = l_vmt_IH_93 - l_vmt_IH_83 
+.         gen  Dl_vmt_IH_2003 = l_vmt_IH_03 - l_vmt_IH_93 
+. 
+.         gen  Dl_ln_IHU_1993 = l_ln_km_IHU_93 - l_ln_km_IHU_83
+.         gen  Dl_ln_IHU_2003 = l_ln_km_IHU_03 - l_ln_km_IHU_93
+.         gen  Dl_vmt_IHU_1993 = l_vmt_IHU_93 - l_vmt_IHU_83 
+.         gen  Dl_vmt_IHU_2003 = l_vmt_IHU_03 - l_vmt_IHU_93 
+. 
+.         gen  Dl_ln_IHNU_1993 = l_ln_km_IHNU_93 - l_ln_km_IHNU_83
+(3 missing values generated)
+.         gen  Dl_ln_IHNU_2003 = l_ln_km_IHNU_03 - l_ln_km_IHNU_93
+(1 missing value generated)
+.         gen  Dl_vmt_IHNU_1993 = l_vmt_IHNU_93 - l_vmt_IHNU_83 
+(3 missing values generated)
+.         gen  Dl_vmt_IHNU_2003 = l_vmt_IHNU_03 - l_vmt_IHNU_93 
+(1 missing value generated)
+. 
+.         gen  Dl_ln_MRU_1993 = l_ln_km_MRU_93 - l_ln_km_MRU_83
+.         gen  Dl_ln_MRU_2003 = l_ln_km_MRU_03 - l_ln_km_MRU_93
+.         gen  Dl_vmt_MRU_1993 = l_vmt_MRU_93 - l_vmt_MRU_83 
+.         gen  Dl_vmt_MRU_2003 = l_vmt_MRU_03 - l_vmt_MRU_93 
+. 
+.         gen Dl_pop_1993 = l_pop90 -l_pop80
+.         gen Dl_pop_2003 = l_pop00 -l_pop90
+. 
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+. 
+.         *Threshold for road growth
+. *       local m=0.005
+.         local m=-1
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics  "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         *instructions for outreg
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+. 
+.         local cond "if Dl_ln>`m'"
+. 
+.         local year "1993"
+.         local yrMM "93"
+.         local yrXX "90"
+.         local yrbus "94"
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+. 
+.         local lag "2003"
+. 
+.         gen l_pop       = l_pop`yrXX' 
+.         gen sprawl      = sprawl`yrMM' 
+.         gen l_mean_income = l_mean_income_`yrXX' 
+.         gen S_somecollege = S_somecollege_`yrXX' 
+.         gen S_poor      = S_poor_`yrXX' 
+.         gen S_manuf     = S_manuf`yrMM' 
+.         gen l_vmt = l_vmt_IH_`yrMM' 
+.         gen l_ln  = l_ln_km_IH_`yrMM' 
+.         gen l_max_bus   = l_max_`yrbus'bus
+.         gen l_transit   = l_transit`yrbus'
+.         gen Dl_pop      = Dl_pop_`year' 
+.         gen Dl_ln       = Dl_ln_IH_`year' 
+.         gen Dl_vmt      = Dl_vmt_IH_`year' 
+.         gen Dl_ln2      = Dl_ln_IH_`lag' 
+. 
+. 
+.         reg   Dl_vmt Dl_ln2 `cond',robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(1, 226)         =       1.11
+                                                Prob > F          =     0.2930
+                                                R-squared         =     0.0056
+                                                Root MSE          =     .62138
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      Dl_ln2 |   .2427135   .2302691     1.05   0.293    -.2110355    .6964624
+       _cons |   .5033088   .0372624    13.51   0.000     .4298827    .5767349
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln2 using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' replace
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln2 Dl_pop `cond', robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(2, 225)         =       1.76
+                                                Prob > F          =     0.1746
+                                                R-squared         =     0.0093
+                                                Root MSE          =     .62161
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      Dl_ln2 |   .2564746   .2304523     1.11   0.267    -.1976462    .7105953
+      Dl_pop |   .2695419    .256499     1.05   0.294    -.2359055    .7749894
+       _cons |   .4767203   .0517736     9.21   0.000     .3746971    .5787435
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln2 Dl_pop using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln2 Dl_pop l_vmt `cond', robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(3, 224)         =       1.41
+                                                Prob > F          =     0.2406
+                                                R-squared         =     0.0127
+                                                Root MSE          =     .62192
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      Dl_ln2 |   .2475889    .231246     1.07   0.285    -.2081069    .7032848
+      Dl_pop |   .2351731   .2590678     0.91   0.365    -.2753487    .7456949
+       l_vmt |   .0282533   .0404054     0.70   0.485    -.0513701    .1078767
+       _cons |   .0478765   .6038143     0.08   0.937    -1.142007     1.23776
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln2 Dl_pop l_vmt using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg    Dl_vmt Dl_ln2 Dl_pop  `geography' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(15, 212)        =       4.10
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.1963
+                                                Root MSE          =     .57679
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+          Dl_ln2 |    .299047   .2750531     1.09   0.278    -.2431423    .8412363
+          Dl_pop |   .0633171   .4091342     0.15   0.877    -.7431752    .8698093
+elevat_range_msa |   .0033001   .0672948     0.05   0.961    -.1293526    .1359529
+  ruggedness_msa |  -.6867904   4.600552    -0.15   0.881    -9.755477    8.381896
+      heating_dd |   -.001026   .0066097    -0.16   0.877    -.0140552    .0120032
+      cooling_dd |   .0004194    .013831     0.03   0.976    -.0268444    .0276832
+          sprawl |  -.0093584   .0051461    -1.82   0.070    -.0195024    .0007857
+            div1 |          0  (omitted)
+            div2 |  -1.331655   .7285354    -1.83   0.069    -2.767757    .1044462
+            div3 |  -1.120143   .7241345    -1.55   0.123    -2.547569    .3072836
+            div4 |  -1.109155   .7184131    -1.54   0.124    -2.525304    .3069928
+            div5 |  -1.027535    .786175    -1.31   0.193    -2.577257    .5221863
+            div6 |  -.9780358   .7758141    -1.26   0.209    -2.507334    .5512621
+            div7 |  -1.528941   .8064947    -1.90   0.059    -3.118717    .0608354
+            div8 |  -1.163843   .7334026    -1.59   0.114    -2.609539    .2818525
+            div9 |  -1.116077   .8450041    -1.32   0.188    -2.781763    .5496098
+           _cons |   2.087544   1.285001     1.62   0.106    -.4454717     4.62056
+----------------------------------------------------------------------------------
+.         outreg2 Dl_ln2 Dl_pop  `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg    Dl_vmt Dl_ln2 Dl_pop l_vmt `geography' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(16, 211)        =       3.89
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.1970
+                                                Root MSE          =     .57791
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+          Dl_ln2 |   .2994373   .2752421     1.09   0.278    -.2431394     .842014
+          Dl_pop |   .0756235   .3942398     0.19   0.848    -.7015298    .8527767
+           l_vmt |  -.0151961   .0330347    -0.46   0.646    -.0803165    .0499243
+elevat_range_msa |   .0168743   .0787971     0.21   0.831    -.1384562    .1722048
+  ruggedness_msa |  -.9450826   4.753784    -0.20   0.843    -10.31608    8.425912
+      heating_dd |  -.0019403   .0062926    -0.31   0.758    -.0143446     .010464
+      cooling_dd |  -.0014196   .0124559    -0.11   0.909    -.0259735    .0231343
+          sprawl |  -.0101961   .0054774    -1.86   0.064    -.0209936    .0006013
+            div1 |          0  (omitted)
+            div2 |  -1.341482   .7280852    -1.84   0.067    -2.776735    .0937707
+            div3 |  -1.125488   .7252038    -1.55   0.122    -2.555061     .304085
+            div4 |  -1.123812   .7122404    -1.58   0.116    -2.527831    .2802064
+            div5 |  -1.040772   .7848683    -1.33   0.186     -2.58796    .5064155
+            div6 |  -.9922886   .7740817    -1.28   0.201    -2.518213    .5336359
+            div7 |  -1.551663   .8042109    -1.93   0.055     -3.13698    .0336545
+            div8 |  -1.203411   .7245264    -1.66   0.098    -2.631649    .2248266
+            div9 |  -1.162619   .8331294    -1.40   0.164    -2.804943    .4797046
+           _cons |   2.435708   1.339903     1.82   0.071    -.2056041     5.07702
+----------------------------------------------------------------------------------
+.         outreg2 Dl_ln2 Dl_pop l_vmt `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln2 Dl_pop l_vmt `geography' `demographics' `population' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(28, 199)        =       2.10
+                                                Prob > F          =     0.0018
+                                                R-squared         =     0.2915
+                                                Root MSE          =     .55897
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+          Dl_ln2 |   .3378827   .2748069     1.23   0.220    -.2040246      .87979
+          Dl_pop |  -.0727659   .4057799    -0.18   0.858    -.8729463    .7274145
+           l_vmt |   .0776406   .0920281     0.84   0.400    -.1038348    .2591161
+elevat_range_msa |   .0654997   .0710626     0.92   0.358    -.0746326     .205632
+  ruggedness_msa |  -1.190529   4.631119    -0.26   0.797    -10.32289    7.941837
+      heating_dd |   .0017275   .0067122     0.26   0.797    -.0115086    .0149636
+      cooling_dd |   .0065223   .0139241     0.47   0.640    -.0209354      .03398
+          sprawl |  -.0126377   .0063798    -1.98   0.049    -.0252184   -.0000571
+   S_somecollege |  -1.364245   .7142887    -1.91   0.058    -2.772791    .0443014
+   l_mean_income |   2.610369   1.137351     2.30   0.023     .3675622    4.853175
+  seg1980_ghetto |   .0709624   .1216978     0.58   0.560    -.1690203    .3109452
+          S_poor |   2.602834   1.468106     1.77   0.078    -.2922084    5.497876
+         S_manuf |   .9317006   .5048737     1.85   0.066    -.0638883     1.92729
+         l_pop80 |   .0071428   .5578377     0.01   0.990    -1.092889    1.107174
+         l_pop70 |   .4032949   .8409807     0.48   0.632    -1.255082    2.061672
+         l_pop60 |  -.6821109   .6168359    -1.11   0.270    -1.898485    .5342627
+         l_pop50 |   .3603682   .4576973     0.79   0.432     -.542191    1.262927
+         l_pop40 |  -.4316582   .4736756    -0.91   0.363    -1.365726    .5024094
+         l_pop30 |  -.0363372   .4085627    -0.09   0.929    -.8420052    .7693308
+         l_pop20 |   .1719956   .1862621     0.92   0.357     -.195305    .5392963
+            div1 |          0  (omitted)
+            div2 |  -1.356673   .6757638    -2.01   0.046     -2.68925   -.0240963
+            div3 |  -1.413001   .7338968    -1.93   0.056    -2.860214    .0342112
+            div4 |  -1.252651   .6917834    -1.81   0.072    -2.616818    .1115156
+            div5 |  -1.026876   .7070559    -1.45   0.148    -2.421159     .367408
+            div6 |  -1.040356    .707582    -1.47   0.143    -2.435677    .3549655
+            div7 |  -1.696472   .7761144    -2.19   0.030    -3.226935   -.1660078
+            div8 |  -1.459916   .7172859    -2.04   0.043    -2.874373   -.0454598
+            div9 |  -1.332504    .776825    -1.72   0.088    -2.864369    .1993611
+           _cons |  -22.55733   9.965702    -2.26   0.025    -42.20926   -2.905394
+----------------------------------------------------------------------------------
+.         outreg2  Dl_ln2 Dl_pop l_vmt `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln Dl_ln2 `cond',robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(2, 225)         =     253.32
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8862
+                                                Root MSE          =     .21064
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       Dl_ln |    1.06713   .0477305    22.36   0.000     .9730736    1.161186
+      Dl_ln2 |    .140847   .0764515     1.84   0.067    -.0098056    .2914995
+       _cons |   .4142057   .0142244    29.12   0.000     .3861756    .4422359
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln Dl_ln2 using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln Dl_ln2 Dl_pop `cond', robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(3, 224)         =     174.21
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8935
+                                                Root MSE          =     .20426
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       Dl_ln |   1.069674   .0487739    21.93   0.000     .9735597    1.165789
+      Dl_ln2 |   .1599745   .0754731     2.12   0.035     .0112464    .3087025
+      Dl_pop |   .3794128   .1210164     3.14   0.002     .1409367     .617889
+       _cons |   .3765668   .0169763    22.18   0.000      .343113    .4100205
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln Dl_ln2 Dl_pop using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln Dl_ln2 Dl_pop l_vmt `cond', robust  
+
+Linear regression                               Number of obs     =        228
+                                                F(4, 223)         =     145.59
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8993
+                                                Root MSE          =     .19903
+
+------------------------------------------------------------------------------
+             |               Robust
+      Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       Dl_ln |    1.08218   .0468256    23.11   0.000     .9899022    1.174457
+      Dl_ln2 |   .1705821   .0763373     2.23   0.026     .0201473     .321017
+      Dl_pop |   .4260907   .1181282     3.61   0.000     .1933003     .658881
+       l_vmt |  -.0373161   .0112011    -3.33   0.001    -.0593896   -.0152427
+       _cons |   .9417999   .1751986     5.38   0.000     .5965432    1.287057
+------------------------------------------------------------------------------
+.         outreg2 Dl_ln Dl_ln2 Dl_pop l_vmt using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg    Dl_vmt Dl_ln Dl_ln2 Dl_pop  `geography' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(16, 211)        =      47.56
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9082
+                                                Root MSE          =     .19539
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+           Dl_ln |   1.056254   .0521714    20.25   0.000       .95341    1.159098
+          Dl_ln2 |    .170195   .0816225     2.09   0.038      .009295    .3310949
+          Dl_pop |   .4552288   .1823907     2.50   0.013     .0956875    .8147702
+elevat_range_msa |  -.0020006   .0236389    -0.08   0.933    -.0485992    .0445981
+  ruggedness_msa |  -.0066793   1.376854    -0.00   0.996    -2.720832    2.707473
+      heating_dd |   .0027528   .0023618     1.17   0.245     -.001903    .0074085
+      cooling_dd |   .0041133   .0076532     0.54   0.592    -.0109733    .0191999
+          sprawl |   .0010963   .0014456     0.76   0.449    -.0017533    .0039459
+            div1 |          0  (omitted)
+            div2 |  -.0724438   .0720566    -1.01   0.316     -.214487    .0695993
+            div3 |   .0186032    .075442     0.25   0.805    -.1301135    .1673199
+            div4 |  -.0112569   .0950028    -0.12   0.906    -.1985332    .1760193
+            div5 |   .0375114   .0880901     0.43   0.671    -.1361379    .2111608
+            div6 |   .0955441   .0896346     1.07   0.288    -.0811499    .2722381
+            div7 |  -.1588007   .1052977    -1.51   0.133     -.366371    .0487696
+            div8 |  -.0220518   .0853166    -0.26   0.796    -.1902339    .1461302
+            div9 |   .0257264   .0953074     0.27   0.787    -.1621503    .2136031
+           _cons |   .1462379   .2117032     0.69   0.490    -.2710864    .5635621
+----------------------------------------------------------------------------------
+.         outreg2 Dl_ln Dl_ln2 Dl_pop  `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg    Dl_vmt Dl_ln Dl_ln2 Dl_pop l_vmt `geography' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(17, 210)        =      45.94
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9147
+                                                Root MSE          =     .18879
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+           Dl_ln |   1.062753   .0495875    21.43   0.000     .9649998    1.160506
+          Dl_ln2 |    .170601    .078884     2.16   0.032      .015095     .326107
+          Dl_pop |   .4954425   .1773278     2.79   0.006     .1458719    .8450131
+           l_vmt |  -.0466789   .0124215    -3.76   0.000    -.0711657    -.022192
+elevat_range_msa |   .0396637    .026401     1.50   0.135    -.0123814    .0917087
+  ruggedness_msa |  -.7959091   1.492043    -0.53   0.594    -3.737211    2.145393
+      heating_dd |  -.0000325   .0022791    -0.01   0.989    -.0045255    .0044604
+      cooling_dd |   -.001513   .0074382    -0.20   0.839    -.0161762    .0131501
+          sprawl |  -.0014129   .0015642    -0.90   0.367    -.0044965    .0016708
+            div1 |          0  (omitted)
+            div2 |  -.0948825   .0738565    -1.28   0.200    -.2404776    .0507126
+            div3 |   .0091907   .0747887     0.12   0.902    -.1382422    .1566235
+            div4 |   -.049524   .0895517    -0.55   0.581    -.2260596    .1270115
+            div5 |   .0034031   .0862353     0.04   0.969    -.1665947    .1734009
+            div6 |   .0583685   .0849604     0.69   0.493    -.1091161    .2258531
+            div7 |  -.2201682   .1030476    -2.14   0.034    -.4233084   -.0170279
+            div8 |    -.13657   .0854699    -1.60   0.112     -.305059     .031919
+            div9 |  -.1102157   .0914339    -1.21   0.229    -.2904617    .0700303
+           _cons |   1.203773   .3250181     3.70   0.000     .5630569    1.844489
+----------------------------------------------------------------------------------
+.         outreg2 Dl_ln Dl_ln2 Dl_pop l_vmt `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         reg   Dl_vmt Dl_ln Dl_ln2 Dl_pop l_vmt `geography' `demographics' `population' `census_div' `cond', robust  
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(29, 198)        =      30.76
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9228
+                                                Root MSE          =     .18502
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          Dl_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+           Dl_ln |    1.07484   .0501778    21.42   0.000     .9758884    1.173792
+          Dl_ln2 |   .1388649   .0785956     1.77   0.079    -.0161269    .2938568
+          Dl_pop |    .302506   .2414846     1.25   0.212    -.1737059    .7787179
+           l_vmt |  -.0132036   .0333692    -0.40   0.693    -.0790082     .052601
+elevat_range_msa |   .0326584    .024562     1.33   0.185    -.0157782     .081095
+  ruggedness_msa |  -1.795331     1.8183    -0.99   0.325     -5.38105    1.790387
+      heating_dd |   .0009122   .0025188     0.36   0.718     -.004055    .0058794
+      cooling_dd |   .0008884   .0076124     0.12   0.907    -.0141233    .0159001
+          sprawl |  -.0027582   .0017367    -1.59   0.114     -.006183    .0006666
+   S_somecollege |  -.2275891   .2901442    -0.78   0.434    -.7997586    .3445803
+   l_mean_income |  -.2720065   .2186859    -1.24   0.215    -.7032589     .159246
+  seg1980_ghetto |  -.0088169   .0393302    -0.22   0.823    -.0863766    .0687429
+          S_poor |  -.0913002   .5002737    -0.18   0.855    -1.077849    .8952483
+         S_manuf |   .2246491   .2071502     1.08   0.279    -.1838547    .6331528
+         l_pop80 |  -.0481901   .2265064    -0.21   0.832    -.4948647    .3984846
+         l_pop70 |   .4494714   .3265892     1.38   0.170    -.1945681    1.093511
+         l_pop60 |  -.5600185   .2507282    -2.23   0.027    -1.054459   -.0655782
+         l_pop50 |   .0633346   .1630597     0.39   0.698    -.2582221    .3848912
+         l_pop40 |   .1105384   .1864567     0.59   0.554    -.2571575    .4782342
+         l_pop30 |  -.0952778   .1984407    -0.48   0.632    -.4866063    .2960507
+         l_pop20 |   .0528773   .0980109     0.54   0.590    -.1404019    .2461565
+            div1 |          0  (omitted)
+            div2 |  -.0934432   .0722616    -1.29   0.197    -.2359443     .049058
+            div3 |  -.0086947   .0745859    -0.12   0.907    -.1557793      .13839
+            div4 |  -.0499229     .08729    -0.57   0.568    -.2220604    .1222146
+            div5 |   .0020752   .0878618     0.02   0.981    -.1711898    .1753402
+            div6 |   .0347581   .0874155     0.40   0.691    -.1376267    .2071429
+            div7 |  -.1874276   .0983925    -1.90   0.058    -.3814593     .006604
+            div8 |  -.0598651    .098326    -0.61   0.543    -.2537658    .1340356
+            div9 |  -.0050177   .0995431    -0.05   0.960    -.2013184     .191283
+           _cons |   3.808394   2.048469     1.86   0.064    -.2312224     7.84801
+----------------------------------------------------------------------------------
+.         outreg2  Dl_ln Dl_ln2 Dl_pop l_vmt `geography' using revision/tableA4.xls,ctitle(`R'`year'-`yrMM')  `instruct' append 
+revision/tableA4.tex
+revision/tableA4.xls
+dir : seeout
+. 
+.         log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turn
+> er-M.-A.-2011-\Deliverable_1\Data_original\revision/tableA4.log
+  log type:  text
+ closed on:  29 May 2022, 23:24:50
+-----------------------------------------------------------------------------------------------------------------------------------------------------

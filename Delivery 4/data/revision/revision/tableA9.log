@@ -1,0 +1,712 @@
+.         use $data,clear
+. 
+.         * Generate non urbanised area variables
+.         gen l_ln_km_IHNU_83  = ln(ln_km_IH_83 - ln_km_IHU_83)
+(50 missing values generated)
+.         gen l_rd_km_IHNU_83  = ln(rd_km_IH_83 - rd_km_IHU_83)
+(50 missing values generated)
+.         gen l_vmt_IHNU_83 = ln(vmt_IH_83 - vmt_IHU_83)
+(50 missing values generated)
+.         gen l_ln_km_IHNU_93  = ln(ln_km_IH_93 - ln_km_IHU_93)
+(39 missing values generated)
+.         gen l_rd_km_IHNU_93  = ln(rd_km_IH_93 - rd_km_IHU_93)
+(39 missing values generated)
+.         gen l_vmt_IHNU_93 = ln(vmt_IH_93 - vmt_IHU_93)
+(39 missing values generated)
+.         gen l_ln_km_IHNU_03  = ln(ln_km_IH_03 - ln_km_IHU_03)
+(38 missing values generated)
+.         gen l_rd_km_IHNU_03  = ln(rd_km_IH_03 - rd_km_IHU_03)
+(38 missing values generated)
+.         gen l_vmt_IHNU_03 = ln(vmt_IH_03 - vmt_IHU_03)
+(38 missing values generated)
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93,l_ln_km_MRU_83,l_ln_km_MRU_93,l_ln_km_IHNU_83,l_ln_km_IHNU_93)
+. 
+.         rename sprawl_1992 sprawl_1993
+.         rename sprawl_1976 sprawl_1983
+.         gen sprawl_2003 = sprawl_1993
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         gen l_emp_truck_1983 = ln(S_truck83*emp83) 
+.         gen l_emp_truck_1993 = ln(S_truck93*emp93)
+.         gen l_emp_truck_2003 = ln(S_truck03*emp03)
+. 
+.         gen l_emp_wholet_1983 = ln(S_wholet83*emp83) 
+.         gen l_emp_wholet_1993 = ln(S_wholet93*emp93)
+.         gen l_emp_wholet_2003 = ln(S_wholet03*emp03)
+. 
+.       rename S_somecollege_80 S_somecollege_1983
+.       rename S_somecollege_00 S_somecollege_2003
+.       rename S_somecollege_90 S_somecollege_1993
+.       rename S_poor_80 S_poor_1983
+.       rename S_poor_90 S_poor_1993
+.       rename S_poor_00 S_poor_2003
+.       rename l_mean_income_80 l_mean_income_1983
+.       rename l_mean_income_90 l_mean_income_1993
+.       rename l_mean_income_00 l_mean_income_2003
+.       rename S_manuf83 S_manuf_1983
+.       rename S_manuf93 S_manuf_1993
+.       rename S_manuf03 S_manuf_2003
+.       rename S_truck83 S_truck_1983
+.       rename S_truck93 S_truck_1993
+.       rename S_truck03 S_truck_2003
+.       gen l_pop_1983 = l_pop80 
+.       gen l_pop_1993 = l_pop90 
+.       gen l_pop_2003 = l_pop00 
+. 
+. 
+.       rename l_max_84bus l_bus_1983 
+.       rename l_max_94bus l_bus_1993 
+.       rename l_max_04bus l_bus_2003 
+.       rename l_transit84 l_transit_1983
+.       rename l_transit94 l_transit_1993 
+.       rename l_transit04 l_transit_2003
+. 
+.       rename l_ln_km_IHNU_83 l_ln_km_IHNU_1983
+.       rename l_ln_km_IHNU_93 l_ln_km_IHNU_1993
+.       rename l_ln_km_IHNU_03 l_ln_km_IHNU_2003
+.       rename l_ln_km_IHU_83 l_ln_km_IHU_1983
+.       rename l_ln_km_IHU_93 l_ln_km_IHU_1993
+.       rename l_ln_km_IHU_03 l_ln_km_IHU_2003
+.       rename l_ln_km_IH_83 l_ln_km_IH_1983
+.       rename l_ln_km_IH_93 l_ln_km_IH_1993
+.       rename l_ln_km_IH_03 l_ln_km_IH_2003
+.       rename l_ln_km_MRU_83 l_ln_km_MRU_1983
+.       rename l_ln_km_MRU_93 l_ln_km_MRU_1993
+.       rename l_ln_km_MRU_03 l_ln_km_MRU_2003
+.       
+.         rename l_vmt_IHNU_83 l_vmt_IHNU_1983
+.       rename l_vmt_IHNU_93 l_vmt_IHNU_1993
+.       rename l_vmt_IHNU_03 l_vmt_IHNU_2003
+.       rename l_vmt_IHU_83 l_vmt_IHU_1983
+.       rename l_vmt_IHU_93 l_vmt_IHU_1993
+.       rename l_vmt_IHU_03 l_vmt_IHU_2003
+.       rename l_vmt_IH_83 l_vmt_IH_1983
+.       rename l_vmt_IH_93 l_vmt_IH_1993
+.       rename l_vmt_IH_03 l_vmt_IH_2003
+.       rename l_vmt_MRU_83 l_vmt_MRU_1983
+.       rename l_vmt_MRU_93 l_vmt_MRU_1993
+.       rename l_vmt_MRU_03 l_vmt_MRU_2003
+. 
+.         reshape long l_emp_truck l_emp_wholet l_ln_km_IH  l_ln_km_IHU  l_ln_km_IHNU  l_ln_km_MRU l_vmt_IH l_vmt_IHU  l_vmt_IHNU  l_vmt_MRU l_bus l_
+> transit sprawl S_somecollege l_mean_income S_poor S_manuf S_truck l_pop, i(msa ) j(year _1983 _1993 _2003)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations              228   ->   684         
+Number of variables                 233   ->   196         
+j variable (3 values)                     ->   year
+xij variables:
+l_emp_truck_1983 l_emp_truck_1993 l_emp_truck_2003->l_emp_truck
+l_emp_wholet_1983 l_emp_wholet_1993 l_emp_wholet_2003->l_emp_wholet
+l_ln_km_IH_1983 l_ln_km_IH_1993 l_ln_km_IH_2003->l_ln_km_IH
+l_ln_km_IHU_1983 l_ln_km_IHU_1993 l_ln_km_IHU_2003->l_ln_km_IHU
+l_ln_km_IHNU_1983 l_ln_km_IHNU_1993 l_ln_km_IHNU_2003->l_ln_km_IHNU
+l_ln_km_MRU_1983 l_ln_km_MRU_1993 l_ln_km_MRU_2003->l_ln_km_MRU
+l_vmt_IH_1983 l_vmt_IH_1993 l_vmt_IH_2003 ->   l_vmt_IH
+l_vmt_IHU_1983 l_vmt_IHU_1993 l_vmt_IHU_2003-> l_vmt_IHU
+l_vmt_IHNU_1983 l_vmt_IHNU_1993 l_vmt_IHNU_2003->l_vmt_IHNU
+l_vmt_MRU_1983 l_vmt_MRU_1993 l_vmt_MRU_2003-> l_vmt_MRU
+       l_bus_1983 l_bus_1993 l_bus_2003   ->   l_bus
+l_transit_1983 l_transit_1993 l_transit_2003-> l_transit
+    sprawl_1983 sprawl_1993 sprawl_2003   ->   sprawl
+S_somecollege_1983 S_somecollege_1993 S_somecollege_2003->S_somecollege
+l_mean_income_1983 l_mean_income_1993 l_mean_income_2003->l_mean_income
+    S_poor_1983 S_poor_1993 S_poor_2003   ->   S_poor
+ S_manuf_1983 S_manuf_1993 S_manuf_2003   ->   S_manuf
+ S_truck_1983 S_truck_1993 S_truck_2003   ->   S_truck
+       l_pop_1983 l_pop_1993 l_pop_2003   ->   l_pop
+-----------------------------------------------------------------------------
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+.         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+. 
+.         iis msa
+. 
+.         local j=1
+.         while `j'<=2{
+  2.                 if `j'==1{
+  3.                         local R "IH"
+  4.                         local R2 "MRU"
+  5.                         local exp "l_ln"
+  6.                         local Inst "l_rail1898 l_hwy1947 l_pix1835"
+  7.                         local V "A9_a"
+  8.                         local cond " "
+  9.                         }
+ 10.                 if `j'==2{
+ 11.                         local R "IHU"
+ 12.                         local R2 "IHNU"
+ 13.                         local exp "l_ln l_ln2"
+ 14.                         local Inst "l_rail1898 l_hwy1947 l_pix1835"
+ 15.                         local V "A9_b"
+ 16.                         local cond "if zero>0"
+ 17.                         }
+ 18. 
+.                 capture drop l_vmt l_ln l_ln2
+ 19.                 gen l_vmt = l_vmt_`R' 
+ 20.                 gen l_ln  = l_ln_km_`R' 
+ 21.                 gen l_ln2  = l_ln_km_`R2' 
+ 22. 
+. 
+.                 xi: reg    l_emp_truck `exp' l_pop i.year `cond', cl(msa) robust  
+ 23.                 outreg2    `exp' l_pop using revision/table`V'.xls,ctitle(OLS `R')  `instruct' replace
+ 24. 
+.                 xi: reg    l_emp_truck `exp' l_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
+ 25.                 outreg2    `exp' l_pop  `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 26. 
+.                 xi: reg    l_emp_truck `exp' l_pop  `geography' `census_div' `population' `demographics' i.year `cond', cl(msa)  robust  
+ 27.                 outreg2    `exp' l_pop  `geography' using revision/table`V'.xls,ctitle(OLS `R')  `instruct' append 
+ 28. 
+.                 xi: xtreg  l_emp_truck `exp' l_pop i.year `cond', fe robust  
+ 29.                 outreg2    `exp' l_pop using revision/table`V'.xls,ctitle(FE `R')  `instruct' append
+ 30. 
+.                 xi: ivreg2 l_emp_truck (`exp' =`Inst') l_pop i.year `cond', cl(msa) robust  
+ 31.                 outreg2    `exp' l_pop using revision/table`V'.xls,ctitle(IV `R')  `instruct2' append 
+ 32. 
+.                 xi: ivreg2 l_emp_truck (`exp' =`Inst') l_pop  `geography' `census_div' i.year `cond', cl(msa)  robust  
+ 33.                 outreg2    `exp' l_pop  `geography' using revision/table`V'.xls,ctitle(IV `R')  `instruct2' append 
+ 34. 
+.               local j=`j'+1
+ 35.               }
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        684
+                                                F(4, 227)         =     682.64
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8413
+                                                Root MSE          =        .54
+
+                                  (Std. err. adjusted for 228 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .1652674   .0457672     3.61   0.000     .0750844    .2554503
+       l_pop |   .9230334   .0386587    23.88   0.000     .8468575    .9992093
+    _Iyear_2 |   .2613205   .0278425     9.39   0.000     .2064577    .3161834
+    _Iyear_3 |   .7621033   .0323505    23.56   0.000     .6983576    .8258491
+       _cons |  -5.461346    .320048   -17.06   0.000    -6.091991   -4.830701
+------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        684
+                                                F(17, 227)        =     179.97
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8619
+                                                Root MSE          =     .50864
+
+                                      (Std. err. adjusted for 228 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .1562356   .0477432     3.27   0.001      .062159    .2503122
+           l_pop |   .9416708   .0512272    18.38   0.000     .8407291    1.042613
+elevat_range_msa |  -.0672567   .0719487    -0.93   0.351    -.2090295     .074516
+  ruggedness_msa |   2.065455   4.498805     0.46   0.647    -6.799304    10.93021
+      heating_dd |  -.0012935   .0063536    -0.20   0.839    -.0138132    .0112262
+      cooling_dd |  -.0219921   .0133476    -1.65   0.101    -.0482932    .0043089
+          sprawl |  -.0064511   .0039756    -1.62   0.106    -.0142849    .0013826
+            div1 |          0  (omitted)
+            div2 |   .1203172   .1534771     0.78   0.434    -.1821048    .4227392
+            div3 |   .2397417   .1425064     1.68   0.094    -.0410628    .5205461
+            div4 |   .4886791   .1863613     2.62   0.009     .1214598    .8558984
+            div5 |    .267648   .1906238     1.40   0.162    -.1079704    .6432664
+            div6 |   .4942465   .1914867     2.58   0.010     .1169278    .8715651
+            div7 |   .4890637    .190966     2.56   0.011      .112771    .8653563
+            div8 |   .1277121   .2261714     0.56   0.573    -.3179517    .5733758
+            div9 |   .2444901   .2455677     1.00   0.320    -.2393935    .7283737
+        _Iyear_2 |    .264313   .0288094     9.17   0.000      .207545    .3210811
+        _Iyear_3 |   .7632207   .0333044    22.92   0.000     .6975954    .8288459
+           _cons |  -5.271278   .8812209    -5.98   0.000    -7.007697   -3.534859
+----------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        684
+                                                F(28, 227)        =     141.48
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8858
+                                                Root MSE          =     .46627
+
+                                      (Std. err. adjusted for 228 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .1312029   .0483697     2.71   0.007     .0358918     .226514
+           l_pop |   1.056699   .1492049     7.08   0.000     .7626948    1.350702
+elevat_range_msa |   .0241341   .0644967     0.37   0.709    -.1029547    .1512229
+  ruggedness_msa |  -.9795215   4.334195    -0.23   0.821     -9.51992    7.560877
+      heating_dd |  -.0035069   .0059555    -0.59   0.557    -.0152421    .0082283
+      cooling_dd |  -.0185958   .0143483    -1.30   0.196    -.0468686    .0096771
+          sprawl |  -.0126042   .0039674    -3.18   0.002    -.0204218   -.0047865
+            div1 |          0  (omitted)
+            div2 |   .0095719   .1704563     0.06   0.955    -.3263071    .3454508
+            div3 |   .1787102    .161981     1.10   0.271    -.1404684    .4978889
+            div4 |   .4646303   .1913226     2.43   0.016     .0876349    .8416257
+            div5 |   .3110889    .193531     1.61   0.109    -.0702579    .6924358
+            div6 |   .4657811   .2009674     2.32   0.021      .069781    .8617811
+            div7 |   .3572927   .1981044     1.80   0.073    -.0330659    .7476513
+            div8 |   .1516272   .2320552     0.65   0.514    -.3056305     .608885
+            div9 |   .1512486    .250045     0.60   0.546    -.3414574    .6439546
+         l_pop80 |   .3056559   .3940961     0.78   0.439    -.4708984     1.08221
+         l_pop70 |  -.8881789   .5445178    -1.63   0.104    -1.961135    .1847768
+         l_pop60 |  -.3348815    .472288    -0.71   0.479    -1.265511    .5957477
+         l_pop50 |     .16342   .4895608     0.33   0.739    -.8012446    1.128085
+         l_pop40 |   1.359231    .412688     3.29   0.001     .5460423    2.172421
+         l_pop30 |  -.7456902   .2878191    -2.59   0.010    -1.312829   -.1785515
+         l_pop20 |   .0135449   .1179043     0.11   0.909     -.218782    .2458718
+   S_somecollege |  -1.322247   .5322597    -2.48   0.014    -2.371049   -.2734456
+   l_mean_income |   .4886242   .4295241     1.14   0.256      -.35774    1.334988
+          S_poor |  -1.429146   .7008356    -2.04   0.043    -2.810121   -.0481707
+         S_manuf |  -.3468768   .5346283    -0.65   0.517    -1.400346    .7065919
+        _Iyear_2 |   .2571246   .0883043     2.91   0.004     .0831237    .4311255
+        _Iyear_3 |   .7450221   .1686149     4.42   0.000     .4127716    1.077273
+           _cons |  -8.295476    4.27916    -1.94   0.054    -16.72743    .1364781
+----------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Fixed-effects (within) regression               Number of obs     =        684
+Group variable: msa                             Number of groups  =        228
+
+R-squared:                                      Obs per group:
+     Within  = 0.7338                                         min =          3
+     Between = 0.8518                                         avg =        3.0
+     Overall = 0.8261                                         max =          3
+
+                                                F(4,227)          =     258.86
+corr(u_i, Xb) = 0.4917                          Prob > F          =     0.0000
+
+                                  (Std. err. adjusted for 228 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .0085415   .0403873     0.21   0.833    -.0710404    .0881235
+       l_pop |   .7505297     .14106     5.32   0.000     .4725753    1.028484
+    _Iyear_2 |   .2917112   .0310725     9.39   0.000     .2304837    .3529387
+    _Iyear_3 |   .8210986   .0468116    17.54   0.000     .7288578    .9133394
+       _cons |  -2.256388   1.827829    -1.23   0.218     -5.85807    1.345294
+-------------+----------------------------------------------------------------
+     sigma_u |  .58137036
+     sigma_e |  .30636044
+         rho |  .78266271   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         228                Number of obs =      684
+                                                      F(  4,   227) =   673.24
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  1247.299669                Centered R2   =   0.8384
+Total (uncentered) SS   =  42658.92157                Uncentered R2 =   0.9953
+Residual SS             =  201.5699964                Root MSE      =    .5429
+
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .2822279   .1396307     2.02   0.043     .0085567     .555899
+       l_pop |    .841938   .0984749     8.55   0.000     .6489307    1.034945
+    _Iyear_2 |   .2588377   .0289928     8.93   0.000      .202013    .3156625
+    _Iyear_3 |   .7641447   .0334404    22.85   0.000     .6986026    .8296868
+       _cons |  -5.188342   .4327377   -11.99   0.000    -6.036492   -4.340191
+------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             36.038
+                                                   Chi-sq(3) P-val =    0.0000
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):               56.790
+                         (Kleibergen-Paap rk Wald F statistic):         16.484
+Stock-Yogo weak ID test critical values:  5% maximal IV relative bias    13.91
+                                         10% maximal IV relative bias     9.08
+                                         20% maximal IV relative bias     6.46
+                                         30% maximal IV relative bias     5.39
+                                         10% maximal IV size             22.30
+                                         15% maximal IV size             12.83
+                                         20% maximal IV size              9.54
+                                         25% maximal IV size              7.80
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         7.366
+                                                   Chi-sq(2) P-val =    0.0251
+------------------------------------------------------------------------------
+Instrumented:         l_ln
+Included instruments: l_pop _Iyear_2 _Iyear_3
+Excluded instruments: l_rail1898 l_hwy1947 l_pix1835
+------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+Warning - collinearities detected
+Vars dropped:       div9
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         228                Number of obs =      684
+                                                      F( 17,   227) =   178.23
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  1247.299669                Centered R2   =   0.8603
+Total (uncentered) SS   =  42658.92157                Uncentered R2 =   0.9959
+Residual SS             =  174.2743055                Root MSE      =    .5048
+
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .2496969   .1361425     1.83   0.067    -.0171374    .5165312
+           l_pop |   .8666363   .1142342     7.59   0.000     .6427413    1.090531
+elevat_range_msa |  -.0642871    .071678    -0.90   0.370    -.2047734    .0761992
+  ruggedness_msa |   2.340411    4.37605     0.53   0.593     -6.23649    10.91731
+      heating_dd |  -.0024002   .0062919    -0.38   0.703     -.014732    .0099317
+      cooling_dd |   -.023737   .0129835    -1.83   0.068    -.0491841    .0017101
+          sprawl |  -.0076833   .0043108    -1.78   0.075    -.0161323    .0007658
+            div1 |  -.1819419   .2624784    -0.69   0.488    -.6963902    .3325064
+            div2 |  -.0791998   .2501648    -0.32   0.752    -.5695139    .4111142
+            div3 |   .0178231   .2282165     0.08   0.938     -.429473    .4651192
+            div4 |   .2496127   .2734618     0.91   0.361    -.2863627    .7855881
+            div5 |   .0420548   .2115409     0.20   0.842    -.3725578    .4566674
+            div6 |   .2536806   .2031651     1.25   0.212    -.1445156    .6518768
+            div7 |   .2503192   .1981779     1.26   0.207    -.1381023    .6387408
+            div8 |   -.159371    .182978    -0.87   0.384    -.5180013    .1992592
+            div9 |          0  (omitted)
+        _Iyear_2 |   .2640764   .0291398     9.06   0.000     .2069633    .3211895
+        _Iyear_3 |   .7678609    .034341    22.36   0.000     .7005537     .835168
+           _cons |  -4.564194    .928423    -4.92   0.000     -6.38387   -2.744518
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             34.528
+                                                   Chi-sq(3) P-val =    0.0000
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):               41.183
+                         (Kleibergen-Paap rk Wald F statistic):         11.829
+Stock-Yogo weak ID test critical values:  5% maximal IV relative bias    13.91
+                                         10% maximal IV relative bias     9.08
+                                         20% maximal IV relative bias     6.46
+                                         30% maximal IV relative bias     5.39
+                                         10% maximal IV size             22.30
+                                         15% maximal IV size             12.83
+                                         20% maximal IV size              9.54
+                                         25% maximal IV size              7.80
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         2.146
+                                                   Chi-sq(2) P-val =    0.3420
+------------------------------------------------------------------------------
+Instrumented:         l_ln
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+                      _Iyear_2 _Iyear_3
+Excluded instruments: l_rail1898 l_hwy1947 l_pix1835
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA9_a.tex
+revision/tableA9_a.xls
+dir : seeout
+(4 missing values generated)
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Linear regression                               Number of obs     =        572
+                                                F(5, 191)         =     535.92
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8489
+                                                Root MSE          =     .52099
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .1525063   .0439625     3.47   0.001     .0657921    .2392206
+       l_ln2 |   .0917684   .0391002     2.35   0.020     .0146448     .168892
+       l_pop |   .8001576   .0530075    15.10   0.000     .6956023     .904713
+    _Iyear_2 |   .2787397   .0327822     8.50   0.000      .214078    .3434013
+    _Iyear_3 |   .7495591   .0377267    19.87   0.000     .6751445    .8239737
+       _cons |   -4.13122   .4945315    -8.35   0.000    -5.106665   -3.155775
+------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        572
+                                                F(18, 191)        =     168.48
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8648
+                                                Root MSE          =     .49867
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .0839991    .038491     2.18   0.030      .008077    .1599212
+           l_ln2 |   .1200319   .0411388     2.92   0.004     .0388872    .2011766
+           l_pop |   .8613136   .0564344    15.26   0.000      .749999    .9726282
+elevat_range_msa |  -.0331782   .0768267    -0.43   0.666     -.184716    .1183595
+  ruggedness_msa |   2.330719   4.785084     0.49   0.627    -7.107676    11.76911
+      heating_dd |  -.0037908   .0063647    -0.60   0.552    -.0163449    .0087634
+      cooling_dd |  -.0271581   .0144249    -1.88   0.061    -.0556107    .0012944
+          sprawl |  -.0105544   .0043238    -2.44   0.016     -.019083   -.0020258
+            div1 |          0  (omitted)
+            div2 |   .0535609   .1896926     0.28   0.778    -.3206005    .4277224
+            div3 |   .1737614   .1640069     1.06   0.291    -.1497361    .4972588
+            div4 |   .4158174   .2067813     2.01   0.046     .0079492    .8236857
+            div5 |   .2972429   .2161482     1.38   0.171    -.1291013    .7235871
+            div6 |   .4770342   .2128671     2.24   0.026     .0571618    .8969065
+            div7 |   .3813858   .2212851     1.72   0.086    -.0550906    .8178622
+            div8 |  -.0136202    .238898    -0.06   0.955    -.4848373     .457597
+            div9 |  -.0062512   .2734185    -0.02   0.982    -.5455588    .5330564
+        _Iyear_2 |    .300742   .0331615     9.07   0.000     .2353323    .3661518
+        _Iyear_3 |   .7769357   .0393562    19.74   0.000      .699307    .8545644
+           _cons |  -3.961076   .9124325    -4.34   0.000    -5.760815   -2.161338
+----------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        572
+                                                F(29, 191)        =     138.03
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8884
+                                                Root MSE          =     .45757
+
+                                      (Std. err. adjusted for 192 clusters in msa)
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .0942258    .042913     2.20   0.029     .0095816      .17887
+           l_ln2 |   .0990623   .0385389     2.57   0.011     .0230458    .1750788
+           l_pop |   1.155167   .1843535     6.27   0.000     .7915366    1.518797
+elevat_range_msa |   .0410277   .0769505     0.53   0.595    -.1107543    .1928097
+  ruggedness_msa |  -1.018367   4.884625    -0.21   0.835     -10.6531    8.616371
+      heating_dd |  -.0051929   .0061973    -0.84   0.403    -.0174169    .0070311
+      cooling_dd |  -.0247174   .0162498    -1.52   0.130    -.0567694    .0073346
+          sprawl |   -.016458   .0042266    -3.89   0.000    -.0247947   -.0081212
+            div1 |          0  (omitted)
+            div2 |  -.0206609   .1993393    -0.10   0.918      -.41385    .3725283
+            div3 |   .1340527   .1844287     0.73   0.468    -.2297259    .4978313
+            div4 |   .3562505   .2100675     1.70   0.092    -.0580997    .7706007
+            div5 |   .2675584   .2146704     1.25   0.214    -.1558708    .6909877
+            div6 |   .4006845   .2188585     1.83   0.069    -.0310056    .8323745
+            div7 |   .2519149   .2257795     1.12   0.266    -.1934264    .6972563
+            div8 |  -.0878287   .2551803    -0.34   0.731    -.5911622    .4155047
+            div9 |    -.09532   .2741845    -0.35   0.728    -.6361385    .4454986
+         l_pop80 |   .4858725   .4938574     0.98   0.326    -.4882424    1.459987
+         l_pop70 |  -1.166476   .6649565    -1.75   0.081    -2.478077    .1451258
+         l_pop60 |  -.5438215    .514006    -1.06   0.291    -1.557679    .4700358
+         l_pop50 |   .4605221   .3500203     1.32   0.190    -.2298796    1.150924
+         l_pop40 |   1.276301   .3577214     3.57   0.000     .5707091    1.981893
+         l_pop30 |  -.8533669   .3052247    -2.80   0.006    -1.455411   -.2513227
+         l_pop20 |   .0274432    .130373     0.21   0.834    -.2297126     .284599
+   S_somecollege |  -1.477624   .7017712    -2.11   0.037    -2.861841   -.0934074
+   l_mean_income |   .2493488    .471009     0.53   0.597    -.6796985    1.178396
+          S_poor |  -2.211196    .805949    -2.74   0.007      -3.8009   -.6214926
+         S_manuf |  -.4550377   .6171744    -0.74   0.462    -1.672391    .7623153
+        _Iyear_2 |   .2225516   .1059268     2.10   0.037     .0136151    .4314881
+        _Iyear_3 |   .6158751   .2001869     3.08   0.002     .2210139    1.010736
+           _cons |  -4.405261   4.522995    -0.97   0.331     -13.3267    4.516174
+----------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+Fixed-effects (within) regression               Number of obs     =        572
+Group variable: msa                             Number of groups  =        192
+
+R-squared:                                      Obs per group:
+     Within  = 0.7246                                         min =          1
+     Between = 0.8624                                         avg =        3.0
+     Overall = 0.8426                                         max =          3
+
+                                                F(5,191)          =     168.88
+corr(u_i, Xb) = 0.3376                          Prob > F          =     0.0000
+
+                                  (Std. err. adjusted for 192 clusters in msa)
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .0310342    .056846     0.55   0.586    -.0810924    .1431608
+       l_ln2 |    .065252   .0584456     1.12   0.266    -.0500298    .1805339
+       l_pop |   .7870402   .1599043     4.92   0.000      .471635    1.102445
+    _Iyear_2 |    .310185   .0374074     8.29   0.000     .2364003    .3839696
+    _Iyear_3 |   .8002642    .056803    14.09   0.000     .6882225     .912306
+       _cons |  -3.155136   2.058572    -1.53   0.127    -7.215592    .9053189
+-------------+----------------------------------------------------------------
+     sigma_u |  .49691875
+     sigma_e |  .30620175
+         rho |  .72479343   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         192                Number of obs =      572
+                                                      F(  5,   191) =    42.01
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  1017.032603                Centered R2   =  -0.8665
+Total (uncentered) SS   =  37197.37065                Uncentered R2 =   0.9490
+Residual SS             =  1898.256779                Root MSE      =    1.822
+
+------------------------------------------------------------------------------
+             |               Robust
+ l_emp_truck | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |  -1.884835   3.818352    -0.49   0.622    -9.368667    5.598997
+       l_ln2 |   1.725496   3.050893     0.57   0.572    -4.254145    7.705138
+       l_pop |   2.270909   2.759559     0.82   0.411    -3.137727    7.679545
+    _Iyear_2 |   .7542965   .8976197     0.84   0.401    -1.005006    2.513599
+    _Iyear_3 |     1.5094   1.431199     1.05   0.292    -1.295699    4.314499
+       _cons |  -22.20491   33.43734    -0.66   0.507    -87.74089    43.33108
+------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):              0.354
+                                                   Chi-sq(2) P-val =    0.8377
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                0.384
+                         (Kleibergen-Paap rk Wald F statistic):          0.113
+Stock-Yogo weak ID test critical values: 10% maximal IV size             13.43
+                                         15% maximal IV size              8.18
+                                         20% maximal IV size              6.40
+                                         25% maximal IV size              5.45
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.034
+                                                   Chi-sq(1) P-val =    0.8530
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_ln2
+Included instruments: l_pop _Iyear_2 _Iyear_3
+Excluded instruments: l_rail1898 l_hwy1947 l_pix1835
+------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+i.year            _Iyear_1-3          (_Iyear_1 for year==_1983 omitted)
+Warning - collinearities detected
+Vars dropped:       div9
+
+IV (2SLS) estimation
+--------------------
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         192                Number of obs =      572
+                                                      F( 18,   191) =    70.53
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  1017.032603                Centered R2   =   0.6745
+Total (uncentered) SS   =  37197.37065                Uncentered R2 =   0.9911
+Residual SS             =  331.0160092                Root MSE      =    .7607
+
+----------------------------------------------------------------------------------
+                 |               Robust
+     l_emp_truck | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |  -.6787163    1.06779    -0.64   0.525    -2.771547    1.414114
+           l_ln2 |   .6876809   .8245728     0.83   0.404     -.928452    2.303814
+           l_pop |   1.421791   .7935576     1.79   0.073    -.1335532    2.977135
+elevat_range_msa |  -.2252531   .3000236    -0.75   0.453    -.8132885    .3627823
+  ruggedness_msa |   22.67328   29.14686     0.78   0.437    -34.45351    79.80007
+      heating_dd |  -.0168279   .0212833    -0.79   0.429    -.0585424    .0248865
+      cooling_dd |  -.0735497    .069651    -1.06   0.291    -.2100631    .0629638
+          sprawl |  -.0273748   .0240143    -1.14   0.254     -.074442    .0196923
+            div1 |   .8559185    1.25289     0.68   0.495    -1.599701    3.311538
+            div2 |   .4542861   .6856084     0.66   0.508    -.8894817    1.798054
+            div3 |   .5609201   .6531101     0.86   0.390    -.7191522    1.840992
+            div4 |   1.136175   1.100383     1.03   0.302    -1.020536    3.292886
+            div5 |   .9454117   .9604469     0.98   0.325    -.9370296    2.827853
+            div6 |   1.268826   1.159381     1.09   0.274    -1.003518    3.541171
+            div7 |   1.056982     .99793     1.06   0.290    -.8989249    3.012889
+            div8 |   .3782006   .6218311     0.61   0.543    -.8405659    1.596967
+            div9 |          0  (omitted)
+        _Iyear_2 |   .4834978   .2645493     1.83   0.068    -.0350094    1.002005
+        _Iyear_3 |   1.061347   .4116617     2.58   0.010     .2545048    1.868189
+           _cons |  -9.219462   7.425987    -1.24   0.214    -23.77413    5.335205
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):              0.997
+                                                   Chi-sq(2) P-val =    0.6074
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                0.842
+                         (Kleibergen-Paap rk Wald F statistic):          0.309
+Stock-Yogo weak ID test critical values: 10% maximal IV size             13.43
+                                         15% maximal IV size              8.18
+                                         20% maximal IV size              6.40
+                                         25% maximal IV size              5.45
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.493
+                                                   Chi-sq(1) P-val =    0.4827
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_ln2
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+                      _Iyear_2 _Iyear_3
+Excluded instruments: l_rail1898 l_hwy1947 l_pix1835
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA9_b.tex
+revision/tableA9_b.xls
+dir : seeout
+.         log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turn
+> er-M.-A.-2011-\Deliverable_1\Data_original\revision/tableA9.log
+  log type:  text
+ closed on:  29 May 2022, 23:26:25
+-----------------------------------------------------------------------------------------------------------------------------------------------------

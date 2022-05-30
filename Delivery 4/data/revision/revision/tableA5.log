@@ -1,0 +1,1096 @@
+.         use $data,clear
+. 
+.         * Selection of observations
+.         drop if l_ln_km_IH_83==0
+(47 observations deleted)
+.         gen zero = min(l_ln_km_IH_83,l_ln_km_IH_93,l_ln_km_IHU_83,l_ln_km_IHU_93)
+. 
+.         rename sprawl_1992 sprawl93
+.         rename sprawl_1976 sprawl83
+.         gen sprawl03 = sprawl93
+. 
+.         *rescale so display is better
+.         replace elevat_range_msa = elevat_range_msa/1000 
+variable elevat_range_msa was int now float
+(228 real changes made)
+.         replace ruggedness_msa = ruggedness_msa/1000
+(228 real changes made)
+.         replace heating_dd = heating_dd/100
+(228 real changes made)
+.         replace cooling_dd = cooling_dd/100
+(228 real changes made)
+. 
+.         local instruct "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se " 
+.         local instruct2 "tex tdec(2) rdec(2) auto(2) symbol($^a$,$^b$,$^c$) se addstat(Overid,e(jp),First stage F, e(widstat))" 
+. 
+. *       local Inst "l_rail1898 l_hwy1947 l_pix1835 demvote_sh72"
+.         local Inst "l_rail1898 l_hwy1947 demvote_sh72"
+. 
+.         local geography  "elevat_range_msa ruggedness_msa heating_dd cooling_dd sprawl"
+.         local demographics "S_somecollege l_mean_income seg1980_ghetto S_poor S_manuf"  
+.         local census_div "div1 div2 div3 div4 div5 div6 div7 div8 div9"
+. 
+.         local k=1
+.         while `k'<=2{
+  2.                 if `k'==1{
+  3.                         local V "a"
+  4.                         local R "IH"
+  5.                         local cond " "
+  6.                         }
+  7.                 if `k'==2{
+  8.                         local V "b"
+  9.                         local R "IHU"
+ 10.                         local cond "if zero>0"
+ 11.                         }
+ 12. 
+.         local i=0
+ 13.         local j=1
+ 14.         while `j'<=3{
+ 15.                 if `j'==1{
+ 16.                         local year "1983"
+ 17.                         local yrMM "83"
+ 18.                         local yrXX "80"
+ 19.                         local yrbus "84"
+ 20.                         local population "l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 21.                         }
+ 22.                 if `j'==2{
+ 23.                         local year "1993"
+ 24.                         local yrMM "93"
+ 25.                         local yrXX "90"
+ 26.                         local yrbus "94"
+ 27.                         local population "l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 28.                         }
+ 29.                 if `j'==3{
+ 30.                         local year "2003"
+ 31.                         local yrMM "03"
+ 32.                         local yrXX "00"
+ 33.                         local yrbus "04"
+ 34.                         local population "l_pop90 l_pop80 l_pop70 l_pop60 l_pop50 l_pop40 l_pop30 l_pop20"  
+ 35.                         }
+ 36.                 capture drop l_pop l_vmt l_ln l_max_bus sprawl l_transit l_mean_income S_somecollege S_poor S_manuf
+ 37.                 gen l_pop       = l_pop`yrXX' 
+ 38.                 gen sprawl      = sprawl`yrMM' 
+ 39.                 gen l_mean_income = l_mean_income_`yrXX' 
+ 40.                 gen S_somecollege = S_somecollege_`yrXX' 
+ 41.                 gen S_poor      = S_poor_`yrXX' 
+ 42.                 gen S_manuf     = S_manuf`yrMM' 
+ 43.                 gen l_vmt = l_vmt_`R'_`yrMM' 
+ 44.                 gen l_ln  = l_ln_km_`R'_`yrMM' 
+ 45.                 gen l_max_bus   = l_max_`yrbus'bus
+ 46.                 gen l_transit   = l_transit`yrbus'
+ 47.                 
+.                 local i= `i'+1
+ 48.                 reg   l_vmt l_ln l_max_bus l_pop `cond',robust  
+ 49.                 if `i'==1{
+ 50.                 outreg2 l_ln l_max_bus l_pop using revision/tableA5`V'.xls,ctitle(`R'`yrMM')  `instruct' replace
+ 51.                 }
+ 52.                 if `i'>1{
+ 53.                 outreg2 l_ln l_max_bus l_pop using revision/tableA5`V'.xls,ctitle(`R'`yrMM')  `instruct' append
+ 54.                 }
+ 55. 
+.                 reg    l_vmt l_ln l_max_bus l_pop  `geography' `census_div' `cond', robust  
+ 56.                 outreg2 l_ln l_max_bus l_pop  `geography' using revision/tableA5`V'.xls,ctitle(`R'`yrMM')  `instruct' append 
+ 57.                 
+.                 reg   l_vmt l_ln l_max_bus l_pop `geography' `demographics' `population' `census_div' `cond', robust  
+ 58.                 outreg2  l_ln l_max_bus l_pop  `geography' using revision/tableA5`V'.xls,ctitle(`R'`yrMM')  `instruct' append 
+ 59. 
+.                 xi: ivreg2 l_vmt (l_ln l_max_bus =`Inst') l_pop  `geography' `census_div' `cond', liml cl(msa)  robust  
+ 60.                 outreg2    l_ln l_max_bus l_pop  `geography' using revision/tableA5`V'.xls,ctitle(`R'`yrMM')  `instruct2' append 
+ 61. 
+.               local j=`j'+1
+ 62.               }
+ 63. 
+.         local k=`k'+1
+ 64.         }
+
+Linear regression                               Number of obs     =        228
+                                                F(3, 224)         =     776.07
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9268
+                                                Root MSE          =     .38123
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .9188027   .0578732    15.88   0.000     .8047571    1.032848
+   l_max_bus |  -.0251595   .0234816    -1.07   0.285    -.0714326    .0211135
+       l_pop |   .4767621   .0596198     8.00   0.000     .3592747    .5942494
+       _cons |   2.875348   .5552905     5.18   0.000     1.781086     3.96961
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(16, 211)        =     265.58
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9440
+                                                Root MSE          =     .34349
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9473129   .0562127    16.85   0.000     .8365025    1.058123
+       l_max_bus |   .0443848   .0251966     1.76   0.080    -.0052846    .0940542
+           l_pop |   .3444729     .06827     5.05   0.000     .2098943    .4790516
+elevat_range_msa |  -.0458828   .0605119    -0.76   0.449    -.1651681    .0734026
+  ruggedness_msa |   5.650447   3.810925     1.48   0.140    -1.861918    13.16281
+      heating_dd |  -.0152129   .0045456    -3.35   0.001    -.0241735   -.0062523
+      cooling_dd |  -.0213647   .0103073    -2.07   0.039    -.0416832   -.0010462
+          sprawl |   .0072241   .0031508     2.29   0.023      .001013    .0134353
+            div1 |          0  (omitted)
+            div2 |  -.0502974    .120739    -0.42   0.677    -.2883066    .1877117
+            div3 |   .1673421    .126978     1.32   0.189     -.082966    .4176501
+            div4 |   .1266261   .1618542     0.78   0.435    -.1924323    .4456845
+            div5 |   .0184316   .1567909     0.12   0.907    -.2906458     .327509
+            div6 |  -.0994028    .161033    -0.62   0.538    -.4168423    .2180368
+            div7 |   .1466414   .1642996     0.89   0.373    -.1772377    .4705204
+            div8 |  -.0872315   .1812393    -0.48   0.631    -.4445033    .2700402
+            div9 |  -.1197556   .2133998    -0.56   0.575    -.5404244    .3009131
+           _cons |   4.770482   .8616805     5.54   0.000     3.071876    6.469087
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(27, 200)        =     176.24
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9480
+                                                Root MSE          =     .34012
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9295021   .0544949    17.06   0.000     .8220438     1.03696
+       l_max_bus |   .0490877   .0258182     1.90   0.059    -.0018231    .0999985
+           l_pop |   1.010067   .3645621     2.77   0.006     .2911881    1.728945
+elevat_range_msa |  -.0720743   .0547245    -1.32   0.189    -.1799852    .0358367
+  ruggedness_msa |   4.151424   3.472184     1.20   0.233    -2.695363    10.99821
+      heating_dd |  -.0167265   .0050762    -3.30   0.001    -.0267363   -.0067167
+      cooling_dd |  -.0303319   .0118714    -2.56   0.011     -.053741   -.0069228
+          sprawl |   .0072838   .0036794     1.98   0.049     .0000284    .0145392
+   S_somecollege |   .8275994   .6077438     1.36   0.175    -.3708083    2.026007
+   l_mean_income |  -.6311504   .3949769    -1.60   0.112    -1.410004    .1477031
+  seg1980_ghetto |   .0435679   .0729104     0.60   0.551    -.1002039    .1873396
+          S_poor |   .1106908   .6370608     0.17   0.862    -1.145527    1.366909
+         S_manuf |     .06949   .3162935     0.22   0.826     -.554208     .693188
+         l_pop70 |  -.7068702   .6124763    -1.15   0.250     -1.91461    .5008695
+         l_pop60 |   .2177595     .47603     0.46   0.648    -.7209223    1.156441
+         l_pop50 |  -.4107035   .3466972    -1.18   0.238    -1.094354    .2729473
+         l_pop40 |   .1531932   .3911859     0.39   0.696    -.6181848    .9245711
+         l_pop30 |   .0825293   .3141342     0.26   0.793    -.5369108    .7019694
+         l_pop20 |   .0367161   .1538984     0.24   0.812    -.2667556    .3401877
+            div1 |          0  (omitted)
+            div2 |   .0137256   .1300276     0.11   0.916    -.2426753    .2701266
+            div3 |   .2601437   .1363154     1.91   0.058    -.0086561    .5289435
+            div4 |   .1613531   .1633871     0.99   0.325    -.1608293    .4835356
+            div5 |  -.0004396   .1606628    -0.00   0.998      -.31725    .3163709
+            div6 |  -.1025804   .1672403    -0.61   0.540    -.4323609    .2272002
+            div7 |   .2080121   .1843502     1.13   0.261    -.1555074    .5715316
+            div8 |  -.0831831   .2120459    -0.39   0.695    -.5013157    .3349495
+            div9 |  -.0442854   .2271458    -0.19   0.846    -.4921934    .4036225
+           _cons |   10.45689   3.781241     2.77   0.006     3.000679    17.91311
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.01279
+lambda          =1.01279
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         228                Number of obs =      228
+                                                      F( 16,   227) =   192.27
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  444.8058534                Centered R2   =   0.9281
+Total (uncentered) SS   =  50356.74933                Uncentered R2 =   0.9994
+Residual SS             =  31.99237639                Root MSE      =    .3746
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.204193   .1359814     8.86   0.000     .9376747    1.470712
+       l_max_bus |    .054559   .1312891     0.42   0.678    -.2027629    .3118808
+           l_pop |   .1283255    .281689     0.46   0.649    -.4237749    .6804258
+elevat_range_msa |  -.0545705   .0744952    -0.73   0.464    -.2005784    .0914375
+  ruggedness_msa |   6.513891   5.142862     1.27   0.205    -3.565934    16.59372
+      heating_dd |  -.0191714   .0077176    -2.48   0.013    -.0342976   -.0040452
+      cooling_dd |  -.0306678   .0142578    -2.15   0.031    -.0586127    -.002723
+          sprawl |   .0025723   .0049529     0.52   0.604    -.0071353    .0122799
+            div1 |    .464834   .3320353     1.40   0.162    -.1859433    1.115611
+            div2 |   .1918741   .2257949     0.85   0.395    -.2506759    .6344241
+            div3 |   .3658906   .2286269     1.60   0.110    -.0822099    .8139912
+            div4 |   .2839676   .2394906     1.19   0.236    -.1854253    .7533606
+            div5 |   .2400142   .1818888     1.32   0.187    -.1164812    .5965096
+            div6 |   .0862829   .1977933     0.44   0.663    -.3013849    .4739506
+            div7 |   .3067042   .1980574     1.55   0.121    -.0814811    .6948896
+            div8 |  -.0711929   .1714576    -0.42   0.678    -.4072436    .2648577
+            div9 |          0  (omitted)
+           _cons |   6.154503   2.732964     2.25   0.024     .7979921    11.51101
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             15.703
+                                                   Chi-sq(2) P-val =    0.0004
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                6.241
+                         (Kleibergen-Paap rk Wald F statistic):          7.166
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         1.464
+                                                   Chi-sq(1) P-val =    0.2263
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+
+Linear regression                               Number of obs     =        228
+                                                F(3, 224)         =    1163.27
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9371
+                                                Root MSE          =     .32753
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .7287782   .0448374    16.25   0.000     .6404212    .8171353
+   l_max_bus |  -.0117774   .0169491    -0.69   0.488    -.0451775    .0216228
+       l_pop |   .5616619   .0508592    11.04   0.000     .4614381    .6618856
+       _cons |   3.378862   .4486101     7.53   0.000     2.494826    4.262898
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(16, 211)        =     401.02
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9537
+                                                Root MSE          =     .28947
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .7621903   .0400166    19.05   0.000     .6833067    .8410739
+       l_max_bus |   .0314445    .018371     1.71   0.088    -.0047697    .0676588
+           l_pop |   .4649737   .0518567     8.97   0.000     .3627502    .5671972
+elevat_range_msa |  -.0267848   .0562714    -0.48   0.635     -.137711    .0841414
+  ruggedness_msa |   5.413961   3.128509     1.73   0.085    -.7531775     11.5811
+      heating_dd |  -.0130909   .0035155    -3.72   0.000     -.020021   -.0061609
+      cooling_dd |  -.0193406   .0072133    -2.68   0.008    -.0335598   -.0051213
+          sprawl |   .0043457   .0027495     1.58   0.115    -.0010743    .0097656
+            div1 |          0  (omitted)
+            div2 |  -.3154793   .1002501    -3.15   0.002    -.5130993   -.1178592
+            div3 |   .0477093   .1002721     0.48   0.635    -.1499542    .2453728
+            div4 |  -.0163205   .1115075    -0.15   0.884     -.236132    .2034909
+            div5 |  -.0700311   .1204734    -0.58   0.562    -.3075167    .1674546
+            div6 |  -.1051374   .1199185    -0.88   0.382    -.3415293    .1312544
+            div7 |  -.1987121   .1397763    -1.42   0.157    -.4742491    .0768249
+            div8 |  -.2307822   .1532054    -1.51   0.133    -.5327914    .0712271
+            div9 |  -.3057265   .1682564    -1.82   0.071    -.6374055    .0259525
+           _cons |   5.026902   .6964188     7.22   0.000     3.654072    6.399732
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(28, 199)        =     260.22
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9611
+                                                Root MSE          =     .27334
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .7795956   .0404526    19.27   0.000     .6998248    .8593663
+       l_max_bus |   .0455661   .0199241     2.29   0.023     .0062767    .0848556
+           l_pop |   .3892582   .2467558     1.58   0.116    -.0973334    .8758498
+elevat_range_msa |  -.0490099   .0538312    -0.91   0.364    -.1551626    .0571428
+  ruggedness_msa |   3.366968   3.128313     1.08   0.283    -2.801929    9.535865
+      heating_dd |  -.0145815   .0037007    -3.94   0.000    -.0218792   -.0072838
+      cooling_dd |  -.0251289    .009332    -2.69   0.008    -.0435311   -.0067267
+          sprawl |   .0032582   .0029505     1.10   0.271    -.0025601    .0090765
+   S_somecollege |   .6885615   .4352281     1.58   0.115    -.1696894    1.546812
+   l_mean_income |  -.5923307   .3373639    -1.76   0.081    -1.257598    .0729362
+  seg1980_ghetto |   .0814056   .0494194     1.65   0.101    -.0160472    .1788585
+          S_poor |   -.091363   .6612816    -0.14   0.890    -1.395382    1.212656
+         S_manuf |   .4454752   .2984565     1.49   0.137     -.143068    1.034018
+         l_pop80 |   .7162745   .4559172     1.57   0.118    -.1827744    1.615323
+         l_pop70 |  -.4343139   .4844307    -0.90   0.371     -1.38959    .5209623
+         l_pop60 |  -.2394751   .3960417    -0.60   0.546    -1.020452     .541502
+         l_pop50 |  -.3381879   .3167503    -1.07   0.287    -.9628059      .28643
+         l_pop40 |   .2800017   .3050508     0.92   0.360    -.3215453    .8815487
+         l_pop30 |  -.0754595   .2555946    -0.30   0.768    -.5794811     .428562
+         l_pop20 |   .1471579   .1335348     1.10   0.272    -.1161669    .4104827
+            div1 |          0  (omitted)
+            div2 |  -.2875909   .1116652    -2.58   0.011    -.5077899   -.0673919
+            div3 |   .0575158   .1144097     0.50   0.616    -.1680951    .2831267
+            div4 |  -.0436008   .1192066    -0.37   0.715    -.2786711    .1914695
+            div5 |   -.135576    .132697    -1.02   0.308    -.3972487    .1260967
+            div6 |  -.1743647    .129512    -1.35   0.180    -.4297567    .0810272
+            div7 |  -.1682405   .1562388    -1.08   0.283    -.4763366    .1398556
+            div8 |  -.2372467   .1749105    -1.36   0.177    -.5821627    .1076693
+            div9 |  -.2021697   .1818166    -1.11   0.268    -.5607042    .1563647
+           _cons |   10.83585   3.331128     3.25   0.001     4.267007    17.40468
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.00109
+lambda          =1.00109
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         228                Number of obs =      228
+                                                      F( 16,   227) =   257.48
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  382.1768951                Centered R2   =   0.9273
+Total (uncentered) SS   =  53826.89945                Uncentered R2 =   0.9995
+Residual SS             =  27.77615326                Root MSE      =     .349
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.105042   .1601544     6.90   0.000     .7911453    1.418939
+       l_max_bus |   .1413659   .0848634     1.67   0.096    -.0249633    .3076951
+           l_pop |   .0172321   .2157395     0.08   0.936    -.4056096    .4400738
+elevat_range_msa |  -.0096785   .0697648    -0.14   0.890    -.1464151    .1270581
+  ruggedness_msa |   4.648746   4.440327     1.05   0.295    -4.054134    13.35163
+      heating_dd |  -.0202821   .0055621    -3.65   0.000    -.0311835   -.0093806
+      cooling_dd |  -.0260969   .0092858    -2.81   0.005    -.0442968    -.007897
+          sprawl |   .0041552     .00422     0.98   0.325    -.0041159    .0124263
+            div1 |   .5426889   .2629368     2.06   0.039     .0273423    1.058035
+            div2 |   .1862233   .2144355     0.87   0.385    -.2340626    .6065092
+            div3 |   .4610434   .2291901     2.01   0.044     .0118391    .9102477
+            div4 |   .3471126      .2342     1.48   0.138     -.111911    .8061361
+            div5 |   .2766836   .1870289     1.48   0.139    -.0898864    .6432536
+            div6 |   .2240511   .1842631     1.22   0.224    -.1370979    .5852002
+            div7 |    .123115   .1926915     0.64   0.523    -.2545535    .5007835
+            div8 |   -.061963   .1734101    -0.36   0.721    -.4018406    .2779146
+            div9 |          0  (omitted)
+           _cons |   8.250791   1.849569     4.46   0.000     4.625703    11.87588
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             11.411
+                                                   Chi-sq(2) P-val =    0.0033
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                5.639
+                         (Kleibergen-Paap rk Wald F statistic):          5.411
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.162
+                                                   Chi-sq(1) P-val =    0.6870
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+
+Linear regression                               Number of obs     =        228
+                                                F(3, 224)         =    1300.79
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9416
+                                                Root MSE          =     .31198
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .7102523   .0455549    15.59   0.000     .6204813    .8000233
+   l_max_bus |  -.0438731   .0236662    -1.85   0.065      -.09051    .0027638
+       l_pop |   .5883149   .0531835    11.06   0.000      .483511    .6931189
+       _cons |   3.509055   .4566024     7.69   0.000      2.60927    4.408841
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(16, 211)        =     396.88
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9552
+                                                Root MSE          =     .28142
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .7502694   .0416588    18.01   0.000     .6681486    .8323902
+       l_max_bus |   -.005837    .029564    -0.20   0.844    -.0641156    .0524417
+           l_pop |    .499442   .0603765     8.27   0.000     .3804236    .6184605
+elevat_range_msa |  -.0264488   .0536293    -0.49   0.622    -.1321666     .079269
+  ruggedness_msa |   5.807018   3.208021     1.81   0.072    -.5168589     12.1309
+      heating_dd |  -.0113552   .0035495    -3.20   0.002    -.0183523   -.0043581
+      cooling_dd |   -.019164   .0077951    -2.46   0.015    -.0345304   -.0037977
+          sprawl |   .0019343   .0028295     0.68   0.495    -.0036434     .007512
+            div1 |          0  (omitted)
+            div2 |  -.2090176   .0971314    -2.15   0.033    -.4004899   -.0175454
+            div3 |   .0339403   .0976111     0.35   0.728    -.1584775    .2263581
+            div4 |   .0010528   .1121137     0.01   0.993    -.2199537    .2220592
+            div5 |   -.005211    .121079    -0.04   0.966    -.2438904    .2334684
+            div6 |  -.0466041   .1243719    -0.37   0.708    -.2917748    .1985665
+            div7 |  -.1325913   .1361387    -0.97   0.331    -.4009576     .135775
+            div8 |  -.2698387   .1491745    -1.81   0.072     -.563902    .0242247
+            div9 |  -.3258851   .1766533    -1.84   0.066    -.6741167    .0223464
+           _cons |   5.004046   .7144688     7.00   0.000     3.595635    6.412458
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+note: div1 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        228
+                                                F(29, 198)        =     265.28
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9617
+                                                Root MSE          =     .26869
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .7681304   .0435749    17.63   0.000        .6822    .8540609
+       l_max_bus |   .0220387   .0326487     0.68   0.500    -.0423451    .0864226
+           l_pop |   .3515316   .3574343     0.98   0.327    -.3533351    1.056398
+elevat_range_msa |  -.0318944   .0478714    -0.67   0.506    -.1262977    .0625089
+  ruggedness_msa |   3.193555   3.348678     0.95   0.341    -3.410096    9.797206
+      heating_dd |  -.0133427   .0036975    -3.61   0.000    -.0206342   -.0060512
+      cooling_dd |  -.0209891    .009122    -2.30   0.022    -.0389779   -.0030004
+          sprawl |   .0019291   .0028731     0.67   0.503    -.0037367    .0075948
+   S_somecollege |   .8309256   .3808637     2.18   0.030     .0798556    1.581996
+   l_mean_income |  -.6124482   .3188848    -1.92   0.056    -1.241295    .0163981
+  seg1980_ghetto |    .065787   .0491813     1.34   0.183    -.0311994    .1627735
+          S_poor |  -1.026469   .8331567    -1.23   0.219    -2.669468    .6165307
+         S_manuf |   .5368759   .3859399     1.39   0.166    -.2242044    1.297956
+         l_pop90 |  -.1994931   .5703068    -0.35   0.727    -1.324148    .9251618
+         l_pop80 |   .9809853   .5615708     1.75   0.082     -.126442    2.088413
+         l_pop70 |  -.3996252   .5244365    -0.76   0.447    -1.433823    .6345728
+         l_pop60 |  -.3759579   .4174141    -0.90   0.369    -1.199106      .44719
+         l_pop50 |  -.1041282   .3117152    -0.33   0.739    -.7188359    .5105795
+         l_pop40 |   .1293556   .2670335     0.48   0.629    -.3972391    .6559504
+         l_pop30 |  -.0254651   .2452833    -0.10   0.917    -.5091681    .4582378
+         l_pop20 |    .099356    .123184     0.81   0.421    -.1435651     .342277
+            div1 |          0  (omitted)
+            div2 |   -.154816    .107155    -1.44   0.150    -.3661275    .0564954
+            div3 |   .0381424   .1129501     0.34   0.736    -.1845972     .260882
+            div4 |  -.0235554    .124665    -0.19   0.850    -.2693968    .2222861
+            div5 |  -.1065287    .138109    -0.77   0.441    -.3788821    .1658246
+            div6 |  -.1305678    .139274    -0.94   0.350    -.4052186    .1440829
+            div7 |  -.1097856    .160092    -0.69   0.494    -.4254898    .2059185
+            div8 |  -.2647534   .1899314    -1.39   0.165    -.6393015    .1097947
+            div9 |  -.2147879   .2049018    -1.05   0.296    -.6188578     .189282
+           _cons |   11.14158    3.13208     3.56   0.000     4.965059    17.31809
+----------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.00000
+lambda          =1.00000
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         228                Number of obs =      228
+                                                      F( 16,   227) =   294.05
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  373.0395124                Centered R2   =   0.9457
+Total (uncentered) SS   =  56130.10455                Uncentered R2 =   0.9996
+Residual SS             =   20.2713936                Root MSE      =    .2982
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9342871   .1410485     6.62   0.000     .6578371    1.210737
+       l_max_bus |   .1106937   .1013634     1.09   0.275     -.087975    .3093623
+           l_pop |   .2006932   .2090082     0.96   0.337    -.2089553    .6103417
+elevat_range_msa |  -.0089484   .0563354    -0.16   0.874    -.1193638     .101467
+  ruggedness_msa |   4.333013   4.551167     0.95   0.341    -4.587111    13.25314
+      heating_dd |  -.0146069   .0044037    -3.32   0.001    -.0232379   -.0059758
+      cooling_dd |  -.0209613   .0085804    -2.44   0.015    -.0377787    -.004144
+          sprawl |   .0029677    .003544     0.84   0.402    -.0039785    .0099138
+            div1 |   .3404826   .1702251     2.00   0.045     .0068475    .6741178
+            div2 |   .1779789   .1490425     1.19   0.232    -.1141391    .4700969
+            div3 |   .3678985   .1641625     2.24   0.025     .0461459    .6896511
+            div4 |   .3152413   .1701011     1.85   0.064    -.0181506    .6486333
+            div5 |   .3150229   .1403088     2.25   0.025     .0400227     .590023
+            div6 |   .2753925   .1410582     1.95   0.051    -.0010765    .5518616
+            div7 |   .1955657   .1493573     1.31   0.190    -.0971691    .4883006
+            div8 |   .0112148   .1324932     0.08   0.933    -.2484672    .2708967
+            div9 |          0  (omitted)
+           _cons |   7.020054   1.735917     4.04   0.000     3.617719    10.42239
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             17.956
+                                                   Chi-sq(2) P-val =    0.0001
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                7.950
+                         (Kleibergen-Paap rk Wald F statistic):          5.726
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.000
+                                                   Chi-sq(1) P-val =    0.9949
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5a.tex
+revision/tableA5a.xls
+dir : seeout
+
+Linear regression                               Number of obs     =        192
+                                                F(3, 188)         =    1665.85
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9641
+                                                Root MSE          =      .3571
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   1.041357   .0296788    35.09   0.000     .9828103    1.099903
+   l_max_bus |  -.0149182   .0228027    -0.65   0.514    -.0599002    .0300637
+       l_pop |   .3576268   .0544802     6.56   0.000     .2501558    .4650978
+       _cons |   3.901532   .5722082     6.82   0.000     2.772759    5.030306
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(16, 175)        =     456.10
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9719
+                                                Root MSE          =      .3276
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.058858   .0295251    35.86   0.000     1.000587     1.11713
+       l_max_bus |   .0538887   .0245026     2.20   0.029     .0055302    .1022473
+           l_pop |   .2318085   .0574024     4.04   0.000     .1185184    .3450987
+elevat_range_msa |    .088755   .0578964     1.53   0.127      -.02551    .2030201
+  ruggedness_msa |  -.0818255    3.62177    -0.02   0.982    -7.229796    7.066145
+      heating_dd |  -.0069357   .0046538    -1.49   0.138    -.0161205    .0022491
+      cooling_dd |    .001617   .0107021     0.15   0.880    -.0195048    .0227389
+          sprawl |   .0083291   .0040157     2.07   0.040     .0004037    .0162545
+            div1 |   .1777363   .1913132     0.93   0.354    -.1998418    .5553145
+            div2 |  -.0591494   .1815589    -0.33   0.745    -.4174763    .2991775
+            div3 |    .097094   .1833429     0.53   0.597    -.2647539    .4589418
+            div4 |   .1140486   .1870983     0.61   0.543    -.2552109    .4833082
+            div5 |   .0060286   .1699604     0.04   0.972    -.3294072    .3414645
+            div6 |  -.0736558   .1842151    -0.40   0.690    -.4372251    .2899135
+            div7 |    .117197   .1770753     0.66   0.509     -.232281     .466675
+            div8 |  -.0438515     .15159    -0.29   0.773    -.3430314    .2553285
+            div9 |          0  (omitted)
+           _cons |    5.03183   .7381551     6.82   0.000     3.574998    6.488662
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(27, 164)        =     313.26
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9748
+                                                Root MSE          =     .32045
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.069133   .0337766    31.65   0.000      1.00244    1.135826
+       l_max_bus |   .0587265   .0244623     2.40   0.017     .0104248    .1070282
+           l_pop |   1.038897   .3934688     2.64   0.009     .2619789    1.815815
+elevat_range_msa |   .0762065   .0622754     1.22   0.223    -.0467584    .1991714
+  ruggedness_msa |    .282624   3.723075     0.08   0.940    -7.068716    7.633964
+      heating_dd |  -.0078153   .0050349    -1.55   0.123    -.0177568    .0021263
+      cooling_dd |  -.0082435   .0127573    -0.65   0.519    -.0334333    .0169462
+          sprawl |   .0055799   .0044031     1.27   0.207    -.0031142    .0142739
+   S_somecollege |  -.3273121   .6380339    -0.51   0.609    -1.587132    .9325079
+   l_mean_income |   .1094567   .4387053     0.25   0.803    -.7567822    .9756955
+  seg1980_ghetto |   .1087347   .0615031     1.77   0.079    -.0127054    .2301748
+          S_poor |    .481729   .7141325     0.67   0.501    -.9283503    1.891808
+         S_manuf |  -.1378388   .2732076    -0.50   0.615    -.6772967    .4016191
+         l_pop70 |  -.7251713   .6605969    -1.10   0.274    -2.029543       .5792
+         l_pop60 |   .0844261   .5610258     0.15   0.881    -1.023339    1.192191
+         l_pop50 |  -.1290279   .5041151    -0.26   0.798    -1.124421    .8663648
+         l_pop40 |  -.2630255   .3651539    -0.72   0.472    -.9840345    .4579835
+         l_pop30 |  -.1389492   .2536112    -0.55   0.585    -.6397132    .3618148
+         l_pop20 |   .3333498   .1416586     2.35   0.020       .05364    .6130596
+            div1 |   .2695758    .242495     1.11   0.268    -.2092391    .7483906
+            div2 |   .0701348   .2400377     0.29   0.771     -.403828    .5440976
+            div3 |   .1767761   .2451391     0.72   0.472    -.3072595    .6608118
+            div4 |   .1933096   .2375545     0.81   0.417      -.27575    .6623691
+            div5 |   .0771039   .2059971     0.37   0.709    -.3296445    .4838524
+            div6 |   -.006395   .2221315    -0.03   0.977    -.4450014    .4322114
+            div7 |    .218724   .2027361     1.08   0.282    -.1815854    .6190334
+            div8 |  -.1288871   .1540875    -0.84   0.404    -.4331381    .1753639
+            div9 |          0  (omitted)
+           _cons |   4.363708    4.14099     1.05   0.294     -3.81282    12.54024
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.00051
+lambda          =1.00051
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         192                Number of obs =      192
+                                                      F( 16,   191) =   283.39
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  668.5485227                Centered R2   =   0.9581
+Total (uncentered) SS   =  38161.08954                Uncentered R2 =   0.9993
+Residual SS             =  28.00303929                Root MSE      =    .3819
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.356179   .1739118     7.80   0.000     1.015318     1.69704
+       l_max_bus |   .0201741   .0953982     0.21   0.833    -.1668029    .2071511
+           l_pop |  -.0537248   .2868158    -0.19   0.851    -.6158734    .5084237
+elevat_range_msa |   .1332866   .0886871     1.50   0.133     -.040537    .3071103
+  ruggedness_msa |  -5.053771   6.298137    -0.80   0.422    -17.39789    7.290351
+      heating_dd |  -.0019561   .0056896    -0.34   0.731    -.0131075    .0091952
+      cooling_dd |    .014992   .0129485     1.16   0.247    -.0103867    .0403706
+          sprawl |   .0093602   .0065519     1.43   0.153    -.0034813    .0222017
+            div1 |   .1900046   .3549225     0.54   0.592    -.5056307    .8856399
+            div2 |  -.1145074   .2114971    -0.54   0.588    -.5290342    .3000194
+            div3 |   .0070702   .2238929     0.03   0.975    -.4317519    .4458923
+            div4 |  -.1978417   .2570245    -0.77   0.441    -.7016004    .3059169
+            div5 |  -.1445951   .2011743    -0.72   0.472    -.5388894    .2496992
+            div6 |  -.2798452   .2215879    -1.26   0.207    -.7141494     .154459
+            div7 |  -.0861364   .2206693    -0.39   0.696    -.5186402    .3463674
+            div8 |  -.2978182   .2294835    -1.30   0.194    -.7475976    .1519611
+            div9 |          0  (omitted)
+           _cons |   6.947957   2.463139     2.82   0.005     2.120293    11.77562
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):             12.051
+                                                   Chi-sq(2) P-val =    0.0024
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                4.973
+                         (Kleibergen-Paap rk Wald F statistic):          6.392
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.072
+                                                   Chi-sq(1) P-val =    0.7883
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+
+Linear regression                               Number of obs     =        192
+                                                F(3, 188)         =    1901.29
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9658
+                                                Root MSE          =      .3308
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |   .9444371   .0341337    27.67   0.000     .8771027    1.011771
+   l_max_bus |    .007892   .0201795     0.39   0.696    -.0319153    .0476992
+       l_pop |   .3787241   .0506072     7.48   0.000     .2788931     .478555
+       _cons |   4.420567   .5267939     8.39   0.000     3.381381    5.459754
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(16, 175)        =     589.90
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9727
+                                                Root MSE          =     .30654
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |    .958083   .0322122    29.74   0.000     .8945085    1.021657
+       l_max_bus |   .0443255   .0208278     2.13   0.035     .0032194    .0854316
+           l_pop |   .2852904   .0511696     5.58   0.000     .1843013    .3862794
+elevat_range_msa |   .0872738   .0561253     1.55   0.122    -.0234959    .1980434
+  ruggedness_msa |   3.611323    3.22979     1.12   0.265    -2.763031    9.985676
+      heating_dd |  -.0089051   .0042079    -2.12   0.036    -.0172098   -.0006004
+      cooling_dd |  -.0041477   .0096426    -0.43   0.668    -.0231785    .0148831
+          sprawl |   .0032707   .0035831     0.91   0.363    -.0038009    .0103423
+            div1 |   .3521183   .2138092     1.65   0.101    -.0698583    .7740949
+            div2 |    .099275   .1885009     0.53   0.599    -.2727527    .4713028
+            div3 |   .3047998   .2010673     1.52   0.131    -.0920292    .7016287
+            div4 |   .2583348   .2050152     1.26   0.209    -.1462858    .6629555
+            div5 |    .189652   .1781712     1.06   0.289     -.161989    .5412929
+            div6 |   .1471138   .1860093     0.79   0.430    -.2199966    .5142241
+            div7 |   .0158438    .200512     0.08   0.937    -.3798893    .4115768
+            div8 |   .0071605   .1532471     0.05   0.963    -.2952898    .3096108
+            div9 |          0  (omitted)
+           _cons |   5.514326    .718065     7.68   0.000     4.097144    6.931508
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(28, 163)        =     367.57
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9776
+                                                Root MSE          =     .28745
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9847117   .0341219    28.86   0.000     .9173337     1.05209
+       l_max_bus |   .0552513   .0206969     2.67   0.008     .0143826    .0961199
+           l_pop |   .3699028   .3354708     1.10   0.272    -.2925261    1.032332
+elevat_range_msa |   .0655161    .059535     1.10   0.273    -.0520431    .1830753
+  ruggedness_msa |   2.424102   3.689484     0.66   0.512    -4.861244    9.709447
+      heating_dd |  -.0102323   .0046502    -2.20   0.029    -.0194147   -.0010499
+      cooling_dd |  -.0100675   .0130607    -0.77   0.442    -.0358574    .0157224
+          sprawl |   .0003877    .003672     0.11   0.916    -.0068632    .0076385
+   S_somecollege |   .3996483   .5026756     0.80   0.428    -.5929473    1.392244
+   l_mean_income |  -.2777138   .4132391    -0.67   0.503    -1.093706    .5382783
+  seg1980_ghetto |   .0721014   .0562348     1.28   0.202    -.0389412    .1831441
+          S_poor |   .1215714   .7629458     0.16   0.874     -1.38496    1.628103
+         S_manuf |    .390516    .331319     1.18   0.240    -.2637146    1.044747
+         l_pop80 |    .672959   .6312602     1.07   0.288     -.573543    1.919461
+         l_pop70 |  -.6796435   .6495084    -1.05   0.297    -1.962179    .6028917
+         l_pop60 |   .0589628   .5228384     0.11   0.910    -.9734469    1.091372
+         l_pop50 |  -.5887051   .4542241    -1.30   0.197    -1.485627    .3082169
+         l_pop40 |   .2753587   .3804794     0.72   0.470    -.4759452    1.026663
+         l_pop30 |  -.2118976   .2902983    -0.73   0.466    -.7851278    .3613326
+         l_pop20 |   .3400093   .1619679     2.10   0.037     .0201836    .6598351
+            div1 |    .283458   .2356326     1.20   0.231    -.1818279    .7487439
+            div2 |   .0830377    .211608     0.39   0.695    -.3348087     .500884
+            div3 |   .2641146   .2236162     1.18   0.239    -.1774434    .7056726
+            div4 |   .1530064   .2252045     0.68   0.498    -.2916879    .5977007
+            div5 |   .0979455   .1939179     0.51   0.614    -.2849696    .4808605
+            div6 |   .0621788   .1995386     0.31   0.756    -.3318351    .4561927
+            div7 |  -.0081352   .2092972    -0.04   0.969    -.4214185    .4051482
+            div8 |  -.1408439   .1508173    -0.93   0.352    -.4386514    .1569636
+            div9 |          0  (omitted)
+           _cons |    8.76359   3.978568     2.20   0.029     .9074106    16.61977
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.00001
+lambda          =1.00001
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         192                Number of obs =      192
+                                                      F( 16,   191) =   269.34
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =  601.9610385                Centered R2   =   0.9443
+Total (uncentered) SS   =  41460.73344                Uncentered R2 =   0.9992
+Residual SS             =  33.53311261                Root MSE      =    .4179
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   1.391549   .3308496     4.21   0.000     .7430952    2.040002
+       l_max_bus |   .1380368   .1058299     1.30   0.192    -.0693859    .3454595
+           l_pop |  -.3452755   .4852351    -0.71   0.477    -1.296319    .6057678
+elevat_range_msa |    .196837   .1075542     1.83   0.067    -.0139654    .4076395
+  ruggedness_msa |  -3.332197   6.302918    -0.53   0.597    -15.68569    9.021296
+      heating_dd |  -.0109064   .0053342    -2.04   0.041    -.0213613   -.0004516
+      cooling_dd |   .0077036    .017688     0.44   0.663    -.0269642    .0423715
+          sprawl |   .0102386   .0079026     1.30   0.195    -.0052502    .0257274
+            div1 |   .4123427   .3049829     1.35   0.176    -.1854127    1.010098
+            div2 |   .2477992   .2590152     0.96   0.339    -.2598613    .7554597
+            div3 |   .4489249   .2825657     1.59   0.112    -.1048936    1.002744
+            div4 |   .2121671   .2805995     0.76   0.450    -.3377978     .762132
+            div5 |   .1088565   .2313311     0.47   0.638    -.3445441    .5622572
+            div6 |  -.0725969   .2882664    -0.25   0.801    -.6375888    .4923949
+            div7 |  -.0900308    .264643    -0.34   0.734    -.6087215    .4286599
+            div8 |  -.0892321   .2177171    -0.41   0.682    -.5159498    .3374856
+            div9 |          0  (omitted)
+           _cons |   10.58111   3.796356     2.79   0.005     3.140393    18.02184
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):              4.467
+                                                   Chi-sq(2) P-val =    0.1072
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                2.643
+                         (Kleibergen-Paap rk Wald F statistic):          1.918
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.001
+                                                   Chi-sq(1) P-val =    0.9749
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+
+Linear regression                               Number of obs     =        192
+                                                F(3, 188)         =    1709.51
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9719
+                                                Root MSE          =     .28774
+
+------------------------------------------------------------------------------
+             |               Robust
+       l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        l_ln |    .925475   .0319099    29.00   0.000     .8625274    .9884226
+   l_max_bus |  -.0216337   .0281721    -0.77   0.444    -.0772077    .0339404
+       l_pop |   .3992385   .0533253     7.49   0.000     .2940457    .5044313
+       _cons |   4.584463    .529998     8.65   0.000     3.538956     5.62997
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(16, 175)        =     498.75
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9767
+                                                Root MSE          =     .27163
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9438648   .0339162    27.83   0.000     .8769274    1.010802
+       l_max_bus |   .0087382   .0346848     0.25   0.801    -.0597162    .0771925
+           l_pop |     .31761    .063894     4.97   0.000     .1915081    .4437119
+elevat_range_msa |   .0476733   .0498462     0.96   0.340    -.0507038    .1460504
+  ruggedness_msa |   4.559117   3.203227     1.42   0.156    -1.762811    10.88105
+      heating_dd |  -.0082917   .0038682    -2.14   0.033    -.0159261   -.0006574
+      cooling_dd |  -.0070227   .0079842    -0.88   0.380    -.0227805     .008735
+          sprawl |   .0010648   .0034379     0.31   0.757    -.0057204    .0078499
+            div1 |   .2763356   .1781819     1.55   0.123    -.0753263    .6279976
+            div2 |   .0824863   .1568612     0.53   0.600    -.2270969    .3920694
+            div3 |   .2429656   .1633529     1.49   0.139    -.0794298    .5653609
+            div4 |   .2304752   .1654915     1.39   0.165    -.0961409    .5570913
+            div5 |   .1637311    .144181     1.14   0.258    -.1208263    .4482886
+            div6 |   .1314894   .1536672     0.86   0.393      -.17179    .4347689
+            div7 |   .0652678   .1474386     0.44   0.659    -.2257189    .3562544
+            div8 |   .0001889   .1336958     0.00   0.999    -.2636748    .2640526
+            div9 |          0  (omitted)
+           _cons |   5.651029   .7423373     7.61   0.000     4.185942    7.116115
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+note: div9 omitted because of collinearity.
+
+Linear regression                               Number of obs     =        192
+                                                F(29, 162)        =     370.46
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9809
+                                                Root MSE          =     .25526
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |   .9698188   .0357642    27.12   0.000     .8991947    1.040443
+       l_max_bus |    .033028   .0355409     0.93   0.354    -.0371552    .1032113
+           l_pop |   .5469416   .4580137     1.19   0.234    -.3575053    1.451388
+elevat_range_msa |   .0183882   .0534078     0.34   0.731     -.087077    .1238535
+  ruggedness_msa |   3.640152   3.487922     1.04   0.298    -3.247501    10.52781
+      heating_dd |  -.0095731   .0041991    -2.28   0.024    -.0178651   -.0012812
+      cooling_dd |  -.0115934   .0101806    -1.14   0.256    -.0316972    .0085103
+          sprawl |  -.0000959   .0034429    -0.03   0.978    -.0068946    .0067028
+   S_somecollege |   .5652222   .4380774     1.29   0.199    -.2998561    1.430301
+   l_mean_income |  -.3492045    .358558    -0.97   0.332    -1.057255    .3588457
+  seg1980_ghetto |    .068158   .0509881     1.34   0.183     -.032529    .1688449
+          S_poor |  -.7377399   1.032409    -0.71   0.476    -2.776454    1.300974
+         S_manuf |   .5735457   .4364991     1.31   0.191    -.2884161    1.435507
+         l_pop90 |    -.30335   .7443261    -0.41   0.684    -1.773182    1.166483
+         l_pop80 |   .4734857   .6616595     0.72   0.475    -.8331038    1.780075
+         l_pop70 |  -.1337195   .6280011    -0.21   0.832    -1.373843    1.106404
+         l_pop60 |  -.3992694   .4621119    -0.86   0.389    -1.311809    .5132703
+         l_pop50 |   .0413456   .3506501     0.12   0.906    -.6510886    .7337798
+         l_pop40 |  -.0626321   .2901977    -0.22   0.829    -.6356901    .5104258
+         l_pop30 |  -.1140388   .2496317    -0.46   0.648    -.6069905    .3789129
+         l_pop20 |   .1900954   .1139184     1.67   0.097     -.034861    .4150518
+            div1 |   .2572555   .2243375     1.15   0.253    -.1857474    .7002583
+            div2 |   .1378678   .2052153     0.67   0.503    -.2673741    .5431097
+            div3 |    .219552    .210492     1.04   0.298    -.1961098    .6352138
+            div4 |   .1672682    .204466     0.82   0.415    -.2364939    .5710304
+            div5 |   .0887162   .1875678     0.47   0.637    -.2816769    .4591093
+            div6 |   .0862989    .192774     0.45   0.655    -.2943749    .4669727
+            div7 |    .099052   .1819162     0.54   0.587    -.2601808    .4582847
+            div8 |  -.1047817   .1422098    -0.74   0.462    -.3856057    .1760423
+            div9 |          0  (omitted)
+           _cons |   9.712649   3.459905     2.81   0.006      2.88032    16.54498
+----------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+Warning - collinearities detected
+Vars dropped:       div9
+
+LIML estimation
+---------------
+k               =1.00007
+lambda          =1.00007
+
+Estimates efficient for homoskedasticity only
+Statistics robust to heteroskedasticity and clustering on msa
+
+Number of clusters (msa) =         192                Number of obs =      192
+                                                      F( 16,   191) =   375.20
+                                                      Prob > F      =   0.0000
+Total (centered) SS     =   553.314042                Centered R2   =   0.9742
+Total (uncentered) SS   =  43852.04919                Uncentered R2 =   0.9997
+Residual SS             =   14.2776423                Root MSE      =    .2727
+
+----------------------------------------------------------------------------------
+                 |               Robust
+           l_vmt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-----------------+----------------------------------------------------------------
+            l_ln |    1.07794   .1453917     7.41   0.000     .7929777    1.362903
+       l_max_bus |   .0254721   .0745617     0.34   0.733     -.120666    .1716103
+           l_pop |   .1476434    .198494     0.74   0.457    -.2413976    .5366844
+elevat_range_msa |   .0777449   .0577835     1.35   0.178    -.0355086    .1909984
+  ruggedness_msa |   2.920382   3.859475     0.76   0.449     -4.64405    10.48481
+      heating_dd |   -.008061   .0039593    -2.04   0.042     -.015821   -.0003009
+      cooling_dd |  -.0021671   .0095623    -0.23   0.821    -.0209088    .0165746
+          sprawl |   .0019705   .0040121     0.49   0.623    -.0058931    .0098341
+            div1 |   .2332064   .1803527     1.29   0.196    -.1202784    .5866912
+            div2 |   .0699255   .1489217     0.47   0.639    -.2219557    .3618066
+            div3 |   .2254724   .1588998     1.42   0.156    -.0859655    .5369102
+            div4 |   .1630134   .1824626     0.89   0.372    -.1946068    .5206336
+            div5 |   .0995606   .1553706     0.64   0.522    -.2049602    .4040815
+            div6 |   .0364574   .1818341     0.20   0.841    -.3199308    .3928456
+            div7 |    -.00092   .1627612    -0.01   0.995    -.3199261    .3180862
+            div8 |   -.074981   .1747187    -0.43   0.668    -.4174233    .2674614
+            div9 |          0  (omitted)
+           _cons |   6.962854   1.694123     4.11   0.000     3.642433    10.28327
+----------------------------------------------------------------------------------
+Underidentification test (Kleibergen-Paap rk LM statistic):              8.300
+                                                   Chi-sq(2) P-val =    0.0158
+------------------------------------------------------------------------------
+Weak identification test (Cragg-Donald Wald F statistic):                5.346
+                         (Kleibergen-Paap rk Wald F statistic):          3.479
+Stock-Yogo weak ID test critical values: 10% maximal LIML size            5.44
+                                         15% maximal LIML size            3.81
+                                         20% maximal LIML size            3.32
+                                         25% maximal LIML size            3.09
+Source: Stock-Yogo (2005).  Reproduced by permission.
+NB: Critical values are for Cragg-Donald F statistic and i.i.d. errors.
+------------------------------------------------------------------------------
+Hansen J statistic (overidentification test of all instruments):         0.008
+                                                   Chi-sq(1) P-val =    0.9268
+------------------------------------------------------------------------------
+Instrumented:         l_ln l_max_bus
+Included instruments: l_pop elevat_range_msa ruggedness_msa heating_dd
+                      cooling_dd sprawl div1 div2 div3 div4 div5 div6 div7 div8
+Excluded instruments: l_rail1898 l_hwy1947 demvote_sh72
+Dropped collinear:    div9
+------------------------------------------------------------------------------
+revision/tableA5b.tex
+revision/tableA5b.xls
+dir : seeout
+. 
+.         log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\OneDrive - Universidad de los Andes\Uniandes\Urban Economics\Proyecto\Revised-reproduction-package-for-Duranton-G.-Turn
+> er-M.-A.-2011-\Deliverable_1\Data_original\revision/tableA5.log
+  log type:  text
+ closed on:  29 May 2022, 23:25:46
+-----------------------------------------------------------------------------------------------------------------------------------------------------
